@@ -12,29 +12,23 @@ const INITIAL_STATE = {
   genero: ''
 };
 
-const SchoolForm = ({ onSave }) => {
+const SchoolForm = ({ onSave }: any) => {
   const [formData, setFormData] = useState(INITIAL_STATE);
-  const [isSaved, setIsSaved] = useState(false); // ✅ agregado
+  const [isSaved, setIsSaved] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
 
     if (name === 'numControl') {
       if (!/^\d{0,9}$/.test(value)) return;
-      setFormData((prev) => ({ ...prev, numControl: value }));
-      return;
     }
 
     if (name === 'numProyecto') {
       if (!/^\d{0,2}$/.test(value)) return;
-      setFormData((prev) => ({ ...prev, numProyecto: value }));
-      return;
     }
 
     if (name === 'telefono') {
       if (!/^\d{0,10}$/.test(value)) return;
-      setFormData((prev) => ({ ...prev, telefono: value }));
-      return;
     }
 
     setFormData((prev) => ({
@@ -43,7 +37,7 @@ const SchoolForm = ({ onSave }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     if (formData.numControl.length !== 9) {
@@ -61,20 +55,38 @@ const SchoolForm = ({ onSave }) => {
       return;
     }
 
-    console.log('Datos enviados:', formData);
-    alert('¡Información guardada con éxito!');
+    try {
+      const email = localStorage.getItem("email");
 
-    if (onSave) {
-      onSave(formData); // ✅ pasa los datos a App
+      const res = await fetch("http://localhost:5000/student", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email,
+          data: formData
+        })
+      });
+
+      const data = await res.json();
+
+      console.log("GUARDADO EN BD:", data);
+
+      alert("¡Información guardada en base de datos!");
+
+      if (onSave) {
+        onSave({ ...formData, email });
+      }
+
+      setIsSaved(true);
+
+    } catch (err) {
+      console.log("ERROR:", err);
     }
-
-    setIsSaved(true); // ✅ evita reenvíos
   };
 
-  // ✅ Si ya se guardó, no muestra nada (App mostrará StudentMenu)
-  if (isSaved) {
-    return null;
-  }
+  if (isSaved) return null;
 
   return (
     <div className="school-container">
@@ -82,117 +94,56 @@ const SchoolForm = ({ onSave }) => {
         <h1>Datos Escolares</h1>
 
         <div className="form-grid">
+
           <div className="form-group">
             <label>Nombre</label>
-            <input
-              type="text"
-              name="nombre"
-              value={formData.nombre}
-              onChange={handleChange}
-              required
-            />
+            <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} required />
           </div>
 
           <div className="form-group">
             <label>Apellido Paterno</label>
-            <input
-              type="text"
-              name="apellidoPaterno"
-              value={formData.apellidoPaterno}
-              onChange={handleChange}
-              required
-            />
+            <input type="text" name="apellidoPaterno" value={formData.apellidoPaterno} onChange={handleChange} required />
           </div>
 
           <div className="form-group">
             <label>Apellido Materno</label>
-            <input
-              type="text"
-              name="apellidoMaterno"
-              value={formData.apellidoMaterno}
-              onChange={handleChange}
-            />
+            <input type="text" name="apellidoMaterno" value={formData.apellidoMaterno} onChange={handleChange} />
           </div>
 
           <div className="form-group">
             <label>Teléfono</label>
-            <input
-              type="text"
-              name="telefono"
-              value={formData.telefono}
-              onChange={handleChange}
-              maxLength={10}
-              inputMode="numeric"
-              required
-            />
+            <input type="text" name="telefono" value={formData.telefono} onChange={handleChange} maxLength={10} required />
           </div>
 
           <div className="form-group">
             <label>Número de Control</label>
-            <input
-              type="text"
-              name="numControl"
-              value={formData.numControl}
-              onChange={handleChange}
-              inputMode="numeric"
-              required
-            />
+            <input type="text" name="numControl" value={formData.numControl} onChange={handleChange} required />
           </div>
 
           <div className="form-group">
             <label>Número de Proyecto</label>
-            <input
-              type="text"
-              name="numProyecto"
-              value={formData.numProyecto}
-              onChange={handleChange}
-            />
+            <input type="text" name="numProyecto" value={formData.numProyecto} onChange={handleChange} />
           </div>
 
           <div className="form-group">
             <label>Periodo</label>
-            <input
-              type="text"
-              name="periodo"
-              value={formData.periodo}
-              onChange={handleChange}
-            />
+            <input type="text" name="periodo" value={formData.periodo} onChange={handleChange} />
           </div>
 
           <div className="gender-group">
             <label>Género</label>
+
             <div className="radio-options">
               <label>
-                <input
-                  type="radio"
-                  name="genero"
-                  value="Femenino"
-                  checked={formData.genero === 'Femenino'}
-                  onChange={handleChange}
-                />
-                Femenino
+                <input type="radio" name="genero" value="Femenino" onChange={handleChange} /> Femenino
               </label>
 
               <label>
-                <input
-                  type="radio"
-                  name="genero"
-                  value="Masculino"
-                  checked={formData.genero === 'Masculino'}
-                  onChange={handleChange}
-                />
-                Masculino
+                <input type="radio" name="genero" value="Masculino" onChange={handleChange} /> Masculino
               </label>
 
               <label>
-                <input
-                  type="radio"
-                  name="genero"
-                  value="Otro"
-                  checked={formData.genero === 'Otro'}
-                  onChange={handleChange}
-                />
-                Otro
+                <input type="radio" name="genero" value="Otro" onChange={handleChange} /> Otro
               </label>
             </div>
           </div>
@@ -200,6 +151,7 @@ const SchoolForm = ({ onSave }) => {
           <button type="submit" className="submit-btn">
             Guardar Información
           </button>
+
         </div>
       </form>
     </div>

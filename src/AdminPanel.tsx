@@ -1,43 +1,31 @@
 import React, { useState } from 'react';
-import './App.css';
-
-const mockStudents = [
-  { numControl: '123456789', nombre: 'Juan Pérez', pdfs: { apertura: [], asesorias: [], cierre: [], evaluaciones: [] } },
-  { numControl: '987654321', nombre: 'Ana Gómez', pdfs: { apertura: [], asesorias: [], cierre: [], evaluaciones: [] } },
-];
 
 const AdminPanel = () => {
-  const [search, setSearch] = useState('');
-  const [student, setStudent] = useState(null);
 
-  const handleSearch = () => {
-    const s = mockStudents.find(st => st.numControl === search);
-    if(!s) {
-      alert('Alumno no encontrado');
-      setStudent(null);
-    } else {
-      setStudent(s);
+  const [email, setEmail] = useState('');
+  const [user, setUser] = useState<any>(null);
+
+  const buscar = async () => {
+    const res = await fetch("http://localhost:5000/login", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ email })
+    });
+
+    if(res.ok){
+      const data = await res.json();
+      setUser(data);
     }
   };
 
   return (
-    <div className="admin-panel">
-      <h1 className="admin-title">Panel Administrador</h1>
-      <input
-        type="text"
-        placeholder="Número de control"
-        value={search}
-        onChange={e=>setSearch(e.target.value)}
-        style={{padding: "10px", width:"70%", marginRight:"10px", borderRadius:"5px", border:"1px solid #ddd"}}
-      />
-      <button onClick={handleSearch} style={{padding:"10px 15px", borderRadius:"5px", backgroundColor:"#007BFF", color:"white", border:"none"}}>Buscar</button>
+    <div>
+      <h1>Admin</h1>
 
-      {student && (
-        <div style={{marginTop:"20px"}}>
-          <h2>Alumno: {student.nombre}</h2>
-          <p>Número de Control: {student.numControl}</p>
-        </div>
-      )}
+      <input onChange={(e)=>setEmail(e.target.value)} placeholder="email" />
+      <button onClick={buscar}>Buscar</button>
+
+      {user && <pre>{JSON.stringify(user,null,2)}</pre>}
     </div>
   );
 };

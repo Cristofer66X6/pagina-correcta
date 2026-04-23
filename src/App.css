@@ -9,9 +9,9 @@
   font-family: 'Montserrat', sans-serif;
 }
 
-html, body {
-  width: 100%;
+html, body, #root {
   height: 100%;
+  margin: 0;
 }
 
 /* =========================
@@ -32,7 +32,7 @@ body {
   width: 100vw;
   height: 100vh;
 
-  background-image: url('./assets/color.jpg');
+  background-image: url('./imagenes/fondo2.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -40,16 +40,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* =========================
-   FONDO DESPUÉS DEL LOGIN
-========================= */
-.app-background {
-  min-height: 100vh;
-  width: 100vw;
-  background-color: #38bdf8; /* Celeste */
-  padding: 20px;
 }
 
 /* =========================
@@ -82,33 +72,6 @@ body {
   text-align: center;
 }
 
-.info-childs {
-  padding: 0 30px;
-}
-
-.info-childs h2 {
-  font-size: 2rem;
-  margin-bottom: 15px;
-}
-
-.info-childs p {
-  margin-bottom: 25px;
-}
-
-.info-childs button {
-  background-color: #2f4dd3;
-  border: none;
-  border-radius: 20px;
-  padding: 10px 25px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.info-childs button:hover {
-  background-color: #1a34a8;
-}
-
 /* =========================
    PANEL DERECHO
 ========================= */
@@ -121,85 +84,55 @@ body {
   justify-content: center;
 }
 
-.form-information-childs {
-  width: 100%;
-  padding: 0 40px;
-  text-align: center;
-}
-
-.form-information-childs h2 {
-  font-size: 2rem;
-  color: #141414;
-}
-
-.form-information-childs p {
-  margin: 10px 0;
-}
-
 /* =========================
-   ICONOS
+   FORMULARIO 🔥 CORRECTO
 ========================= */
-.icons {
+.form-information-childs form {
   display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin: 20px 0;
-}
-
-.icons i {
-  border: 1px solid #ddd;
-  border-radius: 50%;
-  padding: 12px;
-  cursor: pointer;
-  color: #2f4dd3;
-}
-
-.icons i:hover {
-  background-color: #2f4dd3;
-  color: #fff;
-}
-
-/* =========================
-   FORMULARIO
-========================= */
-.form {
-  margin-top: 20px;
-}
-
-.form label {
-  display: flex;
+  flex-direction: column;
   align-items: center;
-  background: #fff;
-  border-radius: 20px;
-  padding: 5px 15px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
+  gap: 20px;
 }
 
-.form label i {
-  margin-right: 10px;
-  color: #888;
-}
-
-.form label input {
-  border: none;
-  outline: none;
+/* 🔥 INPUTS CENTRADOS */
+.form-information-childs form input {
   width: 100%;
-  padding: 10px;
+  max-width: 320px;
+
+  padding: 15px;
+
+  border-radius: 30px;
+  border: 1px solid #ccc;
+
+  font-size: 16px;
+  text-align: center;
+
+  outline: none;
 }
 
-.form input[type="submit"] {
+/* 🔥 BOTÓN */
+.form-information-childs form button {
+  width: 100%;
+  max-width: 320px;
+
+  padding: 15px;
+
+  border-radius: 30px;
+  border: none;
+
   background-color: #2f4dd3;
   color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 12px 35px;
-  cursor: pointer;
+
+  font-size: 16px;
   font-weight: bold;
+
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.form input[type="submit"]:hover {
+.form-information-childs form button:hover {
   background-color: #1a34a8;
+  transform: scale(1.05);
 }
 
 /* =========================
@@ -216,6 +149,18 @@ body {
     width: 100%;
     padding: 30px 20px;
   }
+}
+.info-childs {
+  padding: 0 30px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px; /* 🔥 separación entre texto y botón */
+}
+
+.info-childs button {
+  margin-top: 10px; /* 🔥 espacio extra arriba del botón */
 }
 
 /* =========================

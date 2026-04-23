@@ -1,151 +1,89 @@
 import React, { useState } from 'react';
 import './StudentMenu.css';
 
-const StudentMenu = ({ studentData, onSaveDocs }) => {
-  const [activeSection, setActiveSection] = useState(null);
+const StudentMenu = ({ studentData }: any) => {
 
-  const [pdfs, setPdfs] = useState({
-    apertura: {},
-    asesorias: {},
-    cierre: {},
-    evaluaciones: {}
-  });
+  const [pdfs, setPdfs] = useState<any>({});
+  const [docs, setDocs] = useState<string[]>(studentData.documentos || []);
 
-  const toggleSection = (section) => {
-    setActiveSection(activeSection === section ? null : section);
-  };
+  const handleFileChange = (name: string, file: File | null) => {
+    if (!file) return;
 
-  const handleFileChange = (section, name, file) => {
-    setPdfs((prev) => ({
+    setPdfs((prev: any) => ({
       ...prev,
-      [section]: {
-        ...prev[section],
-        [name]: file
-      }
+      [name]: file
     }));
   };
 
-  // 🔥 CONECTADO AL APP.JSX
-  const handleSave = () => {
-    console.log("PDFs del alumno:", pdfs);
+  const handleSave = async () => {
+    try {
+      let newDocs: string[] = [];
 
-    if (onSaveDocs) {
-      onSaveDocs(pdfs, studentData); // 👈 ENVÍA AL APP
+      for (const key of Object.keys(pdfs)) {
+
+        const file = pdfs[key];
+        if (!(file instanceof File)) continue;
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("email", studentData.email);
+
+        const res = await fetch("http://localhost:5000/upload", {
+          method: "POST",
+          body: formData
+        });
+
+        const updatedUser = await res.json();
+        newDocs = updatedUser.documentos;
+      }
+
+      setDocs(newDocs);
+      alert("Documentos guardados correctamente");
+    } catch (err) {
+      console.log(err);
     }
-
-    alert("Documentos guardados correctamente");
   };
-
-  const renderItem = (section, label) => (
-    <div className="file-row" key={label}>
-      <span className="file-label">{label}</span>
-
-      <input
-        type="file"
-        accept=".pdf"
-        onChange={(e) =>
-          handleFileChange(section, label, e.target.files[0])
-        }
-      />
-
-      {pdfs[section][label] && (
-        <span className="file-name">
-          {pdfs[section][label].name}
-        </span>
-      )}
-    </div>
-  );
 
   return (
     <div className="student-menu">
-      <h1 className="student-name">{studentData.nombre}</h1>
-      <h2 className="section-title">Residencias</h2>
+      <div className="student-card">
 
-      {/* APERTURA */}
-      <div className="menu-section">
-        <button onClick={() => toggleSection('apertura')}>
-          CARPETA DE APERTURA
-        </button>
+        <h1 className="student-name">{studentData.nombre}</h1>
+        <h2 className="section-title">Subir Documentos</h2>
 
-        {activeSection === 'apertura' && (
-          <div className="file-upload">
-            <h3 className="section-header">Documentos requeridos</h3>
+        {/* 🔥 AGRUPAR INPUTS */}
+        <div className="file-upload">
+          <input 
+            type="file" 
+            accept="application/pdf"
+            onChange={(e) => handleFileChange("doc1", e.target.files?.[0] || null)} 
+          />
 
-            {[
-              "Autorización de RP",
-              "Carta Presentación",
-              "Carta Aceptación",
-              "Asignación de asesor interno",
-              "Solicitud de residencias profesionales",
-              "Carnet IMSS",
-              "Anteproyecto"
-            ].map((item) => renderItem('apertura', item))}
-          </div>
-        )}
-      </div>
+          <input 
+            type="file" 
+            accept="application/pdf"
+            onChange={(e) => handleFileChange("doc2", e.target.files?.[0] || null)} 
+          />
 
-      {/* ASESORÍAS */}
-      <div className="menu-section">
-        <button onClick={() => toggleSection('asesorias')}>
-          CARPETA DE ASESORÍAS SEMANALES
-        </button>
+          <button className="upload-btn" onClick={handleSave}>
+            Subir PDFs
+          </button>
+        </div>
 
-        {activeSection === 'asesorias' && (
-          <div className="file-upload">
-            <h3 className="section-header">Documentos requeridos</h3>
+        {/* 🔥 MEJOR VISOR */}
+        <div className="pdf-viewer">
+          {docs.map((url, index) => (
+            <iframe
+              key={index}
+              src={url}
+              title={`pdf-${index}`}
+              width="100%"
+              height="500px"
+              style={{ border: "none", marginBottom: "15px" }}
+            />
+          ))}
+        </div>
 
-            {[
-              "Asesorías semanales",
-              "Bitácora de sellos",
-              "Informe semestral de asesorías"
-            ].map((item) => renderItem('asesorias', item))}
-          </div>
-        )}
-      </div>
-
-      {/* CIERRE */}
-      <div className="menu-section">
-        <button onClick={() => toggleSection('cierre')}>
-          CIERRE
-        </button>
-
-        {activeSection === 'cierre' && (
-          <div className="file-upload">
-            <h3 className="section-header">Documentos requeridos</h3>
-
-            {[
-              "Informe técnico",
-              "Carta término",
-              "Formato de liberación"
-            ].map((item) => renderItem('cierre', item))}
-          </div>
-        )}
-      </div>
-
-      {/* EVALUACIONES */}
-      <div className="menu-section">
-        <button onClick={() => toggleSection('evaluaciones')}>
-          CARPETA DE EVALUACIONES
-        </button>
-
-        {activeSection === 'evaluaciones' && (
-          <div className="file-upload">
-            <h3 className="section-header">Documentos requeridos</h3>
-
-            {[
-              "1era evaluación de RP",
-              "2da evaluación de RP",
-              "3era evaluación de RP"
-            ].map((item) => renderItem('evaluaciones', item))}
-          </div>
-        )}
-      </div>
-
-      {/* BOTÓN GUARDAR */}
-      <div className="save-container">
-        <button className="save-button" onClick={handleSave}>
-          Guardar documentos
-        </button>
       </div>
     </div>
   );
