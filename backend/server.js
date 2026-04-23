@@ -64,18 +64,29 @@ app.post("/register", async (req, res) => {
 // 📌 LOGIN
 app.post("/login", async (req, res) => {
   try {
+    console.log("🔥 BODY LOGIN:", req.body); // 🔥 primero
+
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email, password });
-    console.log("BODY LOGIN:", req.body);
-    if (!user) {
-      return res.status(401).json({ msg: "No existe" });
+    // 🔥 VALIDACIÓN
+    if (!email || !password) {
+      return res.status(400).json({ msg: "Faltan datos" });
     }
 
-    res.json(user);
+    const user = await User.findOne({ email, password });
+
+    console.log("🔍 USER:", user);
+
+    if (!user) {
+      return res.status(401).json({ msg: "Credenciales incorrectas" });
+    }
+
+    // 🔥 RESPUESTA SEGURA
+    return res.status(200).json(user);
+
   } catch (err) {
     console.log("❌ ERROR LOGIN:", err);
-    res.status(500).json(err);
+    return res.status(500).json({ msg: "Error del servidor" });
   }
 });
 
