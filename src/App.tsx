@@ -4,7 +4,7 @@ import SchoolForm from './SchoolForm';
 import StudentMenu from './StudentMenu';
 import AdminPanel from './AdminPanel';
 
-// 🔥 URL dinámica (LOCAL + PRODUCCIÓN)
+// 🔥 API dinámica
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 function App() {
@@ -12,8 +12,6 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [studentData, setStudentData] = useState<any>(null);
-
-  // 🔥 NUEVO: evita flash
   const [loading, setLoading] = useState(true);
 
   const handleToggle = () => setIsLogin(!isLogin);
@@ -33,51 +31,53 @@ function App() {
       }
     }
 
-    // 🔥 TERMINA CARGA
     setLoading(false);
   }, []);
 
+  // =====================
   // 🔐 LOGIN
+  // =====================
   const handleLoginSubmit = async (e: any) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const email = e.target.email.value;
-  const password = e.target.password.value;
+    const email = e.target.email.value;
+    const password = e.target.password.value;
 
-  try {
-    const res = await fetch(`${API}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, password })
-    });
+    try {
+      const res = await fetch(`${API}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      });
 
-    const text = await res.text(); // 🔥 primero texto
+      const data = await res.json();
 
-    console.log("RESPUESTA CRUDA:", text);
+      if (!res.ok) {
+        alert(data.msg || "Error en login");
+        return;
+      }
 
-    if (!text) {
-      throw new Error("Servidor respondió vacío");
+      // 🔥 GUARDAR SESIÓN
+      localStorage.setItem("user", JSON.stringify(data));
+
+      setStudentData(data);
+      setIsAuthenticated(true);
+
+      if (data.email === "admin@escuela.com") {
+        setIsAdmin(true);
+      }
+
+    } catch (err) {
+      console.log(err);
+      alert("Error conectando con el servidor");
     }
+  };
 
-    const data = JSON.parse(text);
-
-    if (!res.ok) {
-      alert(data.msg || "Error en login");
-      return;
-    }
-
-    setStudentData(data);
-    setIsAuthenticated(true);
-
-  } catch (err) {
-    console.log("ERROR LOGIN:", err);
-    alert("Error conectando con el servidor");
-  }
-};
-
-  // 📝 REGISTRO
+  // =====================
+  // 📝 REGISTER
+  // =====================
   const handleRegisterSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -88,20 +88,31 @@ function App() {
     };
 
     try {
-      await fetch(`${API}/register`, {
+      const res = await fetch(`${API}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       });
 
+      const result = await res.json();
+
+      if (!res.ok) {
+        alert(result.msg);
+        return;
+      }
+
       alert("Registrado correctamente");
       setIsLogin(true);
+
     } catch (err) {
-      console.log("ERROR REGISTER:", err);
+      console.log(err);
+      alert("Error en registro");
     }
   };
 
-  // 🎓 GUARDAR DATOS ESCOLARES
+  // =====================
+  // 🎓 GUARDAR DATOS
+  // =====================
   const handleSchoolSave = async (data: any) => {
     try {
       const res = await fetch(`${API}/student`, {
@@ -116,92 +127,44 @@ function App() {
       const updatedUser = await res.json();
 
       setStudentData(updatedUser);
-
-      // 🔥 ACTUALIZA LOCALSTORAGE
       localStorage.setItem("user", JSON.stringify(updatedUser));
 
     } catch (err) {
-      console.log("ERROR SCHOOL:", err);
+      console.log(err);
     }
   };
 
-  // 🔥 EVITA FLASH (MUY IMPORTANTE)
-  if (loading) {
-    return (
-      <div style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center"
-      }}>
-        <h2>Cargando...</h2>
-      </div>
-    );
-  }
+  if (loading) return <h2>Cargando...</h2>;
 
-  // 🔐 LOGIN / REGISTRO
   if (!isAuthenticated) {
     return (
-      <div className="auth-background">
-        <div className="container-form">
-
-          <div className="information">
-            <div className="info-childs">
-              {isLogin ? (
-                <>
-                  <h2>¡Bienvenido nuevamente!</h2>
-                  <p>Inicia sesión</p>
-                  <button onClick={handleToggle}>Registrarse</button>
-                </>
-              ) : (
-                <>
-                  <h2>Crear cuenta</h2>
-                  <button onClick={handleToggle}>Iniciar sesión</button>
-                </>
-              )}
-            </div>
-          </div>
-
-          <div className="form-information">
-            <div className="form-information-childs">
-
-              {isLogin ? (
-                <>
-                  <h2>Login</h2>
-                  <form onSubmit={handleLoginSubmit}>
-                    <input name="email" type="email" placeholder="Correo" required />
-                    <input name="password" type="password" placeholder="Contraseña" required />
-                    <button type="submit">Entrar</button>
-                  </form>
-                </>
-              ) : (
-                <>
-                  <h2>Registro</h2>
-                  <form onSubmit={handleRegisterSubmit}>
-                    <input placeholder="Nombre" required />
-                    <input type="email" placeholder="Correo" required />
-                    <input type="password" placeholder="Contraseña" required />
-                    <button type="submit">Registrar</button>
-                  </form>
-                </>
-              )}
-
-            </div>
-          </div>
-        </div>
+      <div>
+        {isLogin ? (
+          <form onSubmit={handleLoginSubmit}>
+            <input name="email" placeholder="Correo" />
+            <input name="password" type="password" placeholder="Contraseña" />
+            <button>Login</button>
+            <button type="button" onClick={handleToggle}>Ir a registro</button>
+          </form>
+        ) : (
+          <form onSubmit={handleRegisterSubmit}>
+            <input placeholder="Nombre" />
+            <input placeholder="Correo" />
+            <input placeholder="Password" />
+            <button>Registrar</button>
+            <button type="button" onClick={handleToggle}>Ir a login</button>
+          </form>
+        )}
       </div>
     );
   }
 
-  // 🧑‍💻 ADMIN
   if (isAdmin) return <AdminPanel />;
 
-  // 📋 FORMULARIO
   if (!studentData?.numControl) {
     return <SchoolForm onSave={handleSchoolSave} />;
   }
 
-  // 📂 PANEL ESTUDIANTE
   return <StudentMenu studentData={studentData} />;
 }
 

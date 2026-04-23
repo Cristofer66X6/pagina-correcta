@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+import bcrypt from "bcrypt";
 import User from "./models/User.js";
 import { v2 as cloudinary } from "cloudinary";
 import multer from "multer";
@@ -9,88 +10,112 @@ import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 dotenv.config();
 
-// 🔥 CONFIG CLOUDINARY (CORRECTO)
+const app = express();
+
+// ✅ CORS (IMPORTANTE PARA RENDER)
+app.use(cors({
+  origin: "*"
+}));
+
+app.use(express.json());
+
+// 🔥 CLOUDINARY CONFIG
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.API_KEY,
   api_secret: process.env.API_SECRET
 });
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-
 // 🔥 STORAGE CLOUDINARY
 const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: async (req, file) => {
-    return {
-      folder: "pdfs",
-
-      resource_type: "auto",   // 🔥 necesario para PDF
-      type: "upload",         // 🔥 público
-      access_mode: "public",  // 🔥 evita 401
-
-      public_id: Date.now() + "-" + file.originalname,
-
-      use_filename: true,
-      unique_filename: false
-    };
-  }
+  cloudinary,
+  params: async (req, file) => ({
+    folder: "pdfs",
+    resource_type: "auto",
+    public_id: Date.now() + "-" + file.originalname
+  })
 });
 
 const upload = multer({ storage });
 
-// 🔌 CONEXIÓN DB
+// 🔌 MONGO
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ Mongo conectado"))
   .catch(err => console.log("❌ Mongo error:", err));
 
-// 📌 REGISTRO
+
+// =============================
+// 📌 REGISTER
+// =============================
 app.post("/register", async (req, res) => {
   try {
-    console.log("🔥 REGISTER:", req.body);
+    const { nombre, email, password } = req.body;
 
-    const user = new User(req.body);
+    if (!nombre || !email || !password) {
+      return res.status(400).json({ msg: "Faltan datos" });
+    }
+
+    // 🔥 EVITA DUPLICADOS
+    const exists = await User.findOne({ email });
+    if (exists) {
+      return res.status(400).json({ msg: "Usuario ya existe" });
+    }
+
+    // 🔐 HASH PASSWORD
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = new User({
+      nombre,
+      email,
+      password: hashedPassword
+    });
+
     await user.save();
 
     res.json(user);
+
   } catch (err) {
-    console.log("❌ ERROR REGISTER:", err);
-    res.status(500).json(err);
+    console.log("❌ REGISTER:", err);
+    res.status(500).json({ msg: "Error al registrar" });
   }
 });
 
+
+// =============================
 // 📌 LOGIN
+// =============================
 app.post("/login", async (req, res) => {
   try {
-    console.log("🔥 BODY LOGIN:", req.body); // 🔥 primero
-
     const { email, password } = req.body;
 
-    // 🔥 VALIDACIÓN
     if (!email || !password) {
       return res.status(400).json({ msg: "Faltan datos" });
     }
 
-    const user = await User.findOne({ email, password });
-
-    console.log("🔍 USER:", user);
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(401).json({ msg: "Credenciales incorrectas" });
     }
 
-    // 🔥 RESPUESTA SEGURA
-    return res.status(200).json(user);
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ msg: "Credenciales incorrectas" });
+    }
+
+    res.json(user);
 
   } catch (err) {
-    console.log("❌ ERROR LOGIN:", err);
-    return res.status(500).json({ msg: "Error del servidor" });
+    console.log("❌ LOGIN:", err);
+    res.status(500).json({ msg: "Error del servidor" });
   }
 });
 
-// 📌 GUARDAR DATOS ESCOLARES
+
+// =============================
+// 📌 DATOS ESCOLARES
+// =============================
 app.post("/student", async (req, res) => {
   try {
     const { email, data } = req.body;
@@ -103,48 +128,56 @@ app.post("/student", async (req, res) => {
 
     res.json(user);
   } catch (err) {
-    console.log("❌ ERROR STUDENT:", err);
-    res.status(500).json(err);
+    console.log("❌ STUDENT:", err);
+    res.status(500).json({ msg: "Error guardando datos" });
   }
 });
 
-// 🔥 SUBIR PDF (CORREGIDO + DEBUG)
+
+// =============================
+// 📌 SUBIR PDF
+// =============================
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
-    console.log("🔥 ENTRE A UPLOAD");
-    console.log("FILE:", req.file);
-    console.log("BODY:", req.body);
-
     if (!req.file) {
-      return res.status(400).json({ msg: "No file recibido" });
+      return res.status(400).json({ msg: "No file" });
     }
 
     const { email } = req.body;
 
-   const fileUrl = req.file.secure_url;
+    const fileUrl = req.file.secure_url;
 
     const user = await User.findOneAndUpdate(
       { email },
       {
-        $push: {
-          documentos: fileUrl
-        }
+        $push: { documentos: fileUrl }
       },
       { new: true }
     );
 
-    console.log("✅ USER ACTUALIZADO:", user);
-
     res.json(user);
+
   } catch (err) {
-    console.log("❌ ERROR UPLOAD:", err);
-    res.status(500).json(err);
+    console.log("❌ UPLOAD:", err);
+    res.status(500).json({ msg: "Error subiendo archivo" });
   }
 });
 
-// 🚀 SERVIDOR
+
+// =============================
+// 🔥 ERROR GLOBAL
+// =============================
+app.use((err, req, res, next) => {
+  console.error("🔥 ERROR GLOBAL:", err);
+  res.status(500).json({ msg: "Error interno" });
+});
+
+
+// =============================
+// 🚀 SERVER
+// =============================
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`🚀 http://localhost:${PORT}`);
 });
