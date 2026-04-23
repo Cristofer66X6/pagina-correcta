@@ -15,35 +15,37 @@ const StudentMenu = ({ studentData }: any) => {
     }));
   };
 
-  const handleSave = async () => {
-    try {
-      let newDocs: string[] = [];
+  const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-      for (const key of Object.keys(pdfs)) {
+const handleSave = async () => {
+  try {
+    let newDocs: string[] = [];
 
-        const file = pdfs[key];
-        if (!(file instanceof File)) continue;
+    for (const key of Object.keys(pdfs)) {
 
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("email", studentData.email);
+      const file = pdfs[key];
+      if (!(file instanceof File)) continue;
 
-        const res = await fetch("http://localhost:5000/upload", {
-          method: "POST",
-          body: formData
-        });
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("email", studentData.email);
 
-        const updatedUser = await res.json();
-        newDocs = updatedUser.documentos;
-      }
+      const res = await fetch(`${API}/upload`, {
+        method: "POST",
+        body: formData
+      });
 
-      setDocs(newDocs);
-      alert("Documentos guardados correctamente");
-    } catch (err) {
-      console.log(err);
+      const updatedUser = await res.json();
+      newDocs = updatedUser.documentos;
     }
-  };
 
+    setDocs(newDocs);
+    alert("Documentos guardados correctamente");
+
+  } catch (err) {
+    console.log(err);
+  }
+};
   return (
     <div className="student-menu">
       <div className="student-card">
