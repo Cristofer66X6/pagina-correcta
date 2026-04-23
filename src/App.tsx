@@ -38,7 +38,7 @@ function App() {
   }, []);
 
   // 🔐 LOGIN
-  const handleLoginSubmit = async (e: any) => {
+ const handleLoginSubmit = async (e: any) => {
   e.preventDefault();
 
   const email = e.target.email.value;
@@ -53,20 +53,15 @@ function App() {
       body: JSON.stringify({ email, password })
     });
 
-    const text = await res.text(); // 🔥 primero texto
-
-    console.log("RESPUESTA CRUDA:", text);
-
-    if (!text) {
-      throw new Error("Servidor respondió vacío");
-    }
-
-    const data = JSON.parse(text);
+    const data = await res.json();
 
     if (!res.ok) {
       alert(data.msg || "Error en login");
       return;
     }
+
+    // 🔥 GUARDAR SESIÓN (TE FALTABA)
+    localStorage.setItem("user", JSON.stringify(data));
 
     setStudentData(data);
     setIsAuthenticated(true);

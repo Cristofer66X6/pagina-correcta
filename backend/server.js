@@ -6,6 +6,7 @@ import User from "./models/User.js";
 import { v2 as cloudinary } from "cloudinary";
 import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
+import bcrypt from "bcrypt";
 
 dotenv.config();
 
@@ -17,7 +18,9 @@ cloudinary.config({
 });
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "*"
+}));
 app.use(express.json());
 
 // 🔥 STORAGE CLOUDINARY
@@ -51,37 +54,61 @@ app.post("/register", async (req, res) => {
   try {
     console.log("🔥 REGISTER:", req.body);
 
-    const user = new User(req.body);
+    const { nombre, email, password } = req.body;
+
+    // 🔥 VALIDACIÓN
+    if (!nombre || !email || !password) {
+      return res.status(400).json({ msg: "Faltan datos" });
+    }
+
+    // 🔥 EVITA DUPLICADOS
+    const exists = await User.findOne({ email });
+    if (exists) {
+      return res.status(400).json({ msg: "Usuario ya existe" });
+    }
+
+    // 🔐 HASH PASSWORD
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = new User({
+      nombre,
+      email,
+      password: hashedPassword
+    });
+
     await user.save();
 
     res.json(user);
+
   } catch (err) {
     console.log("❌ ERROR REGISTER:", err);
-    res.status(500).json(err);
+    res.status(500).json({ msg: "Error al registrar" });
   }
 });
 
 // 📌 LOGIN
 app.post("/login", async (req, res) => {
   try {
-    console.log("🔥 BODY LOGIN:", req.body); // 🔥 primero
+    console.log("🔥 BODY LOGIN:", req.body);
 
     const { email, password } = req.body;
 
-    // 🔥 VALIDACIÓN
     if (!email || !password) {
       return res.status(400).json({ msg: "Faltan datos" });
     }
 
-    const user = await User.findOne({ email, password });
-
-    console.log("🔍 USER:", user);
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(401).json({ msg: "Credenciales incorrectas" });
     }
 
-    // 🔥 RESPUESTA SEGURA
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ msg: "Credenciales incorrectas" });
+    }
+
     return res.status(200).json(user);
 
   } catch (err) {
