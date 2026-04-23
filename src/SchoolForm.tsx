@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './SchoolForm.css';
 
 const INITIAL_STATE = {

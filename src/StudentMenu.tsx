@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './StudentMenu.css';
 
 const StudentMenu = ({ studentData }: any) => {

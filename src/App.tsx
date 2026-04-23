@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './App.css';
 import SchoolForm from './SchoolForm';
 import StudentMenu from './StudentMenu';
