@@ -39,44 +39,43 @@ function App() {
 
   // 🔐 LOGIN
   const handleLoginSubmit = async (e: any) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const email = e.target.email.value;
-    const password = e.target.password.value;
+  const email = e.target.email.value;
+  const password = e.target.password.value;
 
-    // ADMIN
-    if (email === "admin@escuela.com" && password === "admin123") {
-      const adminUser = { email };
+  try {
+    const res = await fetch(`${API}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    });
 
-      localStorage.setItem("user", JSON.stringify(adminUser));
+    const text = await res.text(); // 🔥 primero texto
 
-      setIsAuthenticated(true);
-      setIsAdmin(true);
+    console.log("RESPUESTA CRUDA:", text);
+
+    if (!text) {
+      throw new Error("Servidor respondió vacío");
+    }
+
+    const data = JSON.parse(text);
+
+    if (!res.ok) {
+      alert(data.msg || "Error en login");
       return;
     }
 
-    try {
-      const res = await fetch(`${API}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-      });
+    setStudentData(data);
+    setIsAuthenticated(true);
 
-      if (res.ok) {
-        const user = await res.json();
-
-        // 🔥 GUARDAR SESIÓN
-        localStorage.setItem("user", JSON.stringify(user));
-
-        setStudentData(user);
-        setIsAuthenticated(true);
-      } else {
-        alert("Credenciales incorrectas");
-      }
-    } catch (err) {
-      console.log("ERROR LOGIN:", err);
-    }
-  };
+  } catch (err) {
+    console.log("ERROR LOGIN:", err);
+    alert("Error conectando con el servidor");
+  }
+};
 
   // 📝 REGISTRO
   const handleRegisterSubmit = async (e: any) => {
