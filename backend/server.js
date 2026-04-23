@@ -67,7 +67,7 @@ app.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email, password });
-
+    console.log("BODY LOGIN:", req.body);
     if (!user) {
       return res.status(401).json({ msg: "No existe" });
     }
