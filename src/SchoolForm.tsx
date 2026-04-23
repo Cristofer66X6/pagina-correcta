@@ -56,7 +56,8 @@ const SchoolForm = ({ onSave }: any) => {
     }
 
     try {
-      const email = localStorage.getItem("email");
+     const user = JSON.parse(localStorage.getItem("user") || "{}");
+const email = user.email;
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const res = await fetch(`${API}/student`, {
