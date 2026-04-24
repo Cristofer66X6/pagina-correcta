@@ -9,78 +9,89 @@
 }
 
 /* =========================
-   LAYOUT GENERAL (CAMBIO REAL)
+   FONDO GENERAL
 ========================= */
-.student-layout {
+.student-menu {
   min-height: 100vh;
   width: 100%;
-  background: #0f172a;
 
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start; /* 🔥 CAMBIO IMPORTANTE */
+
+  padding: 40px 20px;
+
+  background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+              url("./imagenes/fondo1.jpg");
+
+  background-size: cover;
+  background-position: center;
 }
 
 /* =========================
-   HEADER
+   TARJETA GRANDE (FIX REAL)
 ========================= */
-.student-header {
+.student-card {
   width: 100%;
-  padding: 25px 40px;
+  max-width: 1400px; /* 🔥 MÁS ANCHO */
 
-  background: linear-gradient(135deg, #1e3a8a, #0ea5e9);
-  color: white;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(15px);
 
-  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-}
+  border-radius: 25px;
+  padding: 40px;
 
-.student-header h1 {
-  font-size: 28px;
-}
-
-.student-header p {
-  font-size: 14px;
-  opacity: 0.8;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
 }
 
 /* =========================
-   CONTENIDO PRINCIPAL
+   TEXTOS
 ========================= */
-.student-content {
-  width: 100%;
-  max-width: 1400px;
-  margin: auto;
+.student-name {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+  color: #fff;
+}
 
-  padding: 30px;
+.section-title {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #ddd;
 }
 
 /* =========================
-   ACORDEÓN
+   GRID (🔥 AQUÍ SE ARREGLA TODO)
 ========================= */
 .accordion {
   margin-bottom: 20px;
+  border-radius: 18px;
+  transition: all 0.3s ease;
 }
 
+/* HEADER */
 .accordion-header {
-  padding: 18px;
-  border-radius: 12px;
-
-  background: #1e293b;
-  color: white;
-
-  cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  transition: 0.3s;
+  padding: 20px 25px;
+
+  background: linear-gradient(135deg, #007bff, #00c6ff);
+  color: #fff;
+
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+
+  border-radius: 18px;
 }
 
-.accordion-header:hover {
-  background: #334155;
-}
-
+/* FLECHA */
 .arrow {
-  transition: 0.3s;
+  transition: transform 0.3s ease;
 }
 
 .arrow.open {
@@ -88,99 +99,101 @@
 }
 
 /* =========================
-   GRID (AQUÍ ESTÁ EL CAMBIO REAL)
+   CONTENIDO (GRID BONITO)
 ========================= */
 .accordion-content {
-  margin-top: 10px;
+  margin-top: 12px;
+  padding: 20px;
+
+  background: rgba(255,255,255,0.95);
+  border-radius: 18px;
 
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* 🔥 GRID */
   gap: 20px;
 
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 /* =========================
-   TARJETAS DE ARCHIVOS
+   ITEMS
 ========================= */
 .file-item {
-  background: white;
-  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 
   padding: 15px;
 
-  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  border-radius: 15px;
+  background: #ffffff;
 
-  transition: 0.3s;
-}
-
-.file-item:hover {
-  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 /* LABEL */
 .file-item label {
-  font-weight: bold;
   font-size: 14px;
+  font-weight: 600;
   color: #333;
 }
 
 /* TEXTO SUBIDO */
 .uploaded {
-  color: #22c55e;
+  color: #28a745;
   font-size: 12px;
   margin-left: 8px;
 }
 
-/* INPUT */
+/* INPUT FILE */
 .file-item input[type="file"] {
-  margin-top: 8px;
-  padding: 8px;
-
-  border-radius: 8px;
-  border: 2px dashed #0ea5e9;
-
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px dashed #007bff;
+  background: #f5faff;
   cursor: pointer;
 }
 
-/* PDF */
+.file-item input[type="file"]:hover {
+  background: #e6f2ff;
+}
+
+/* =========================
+   PDF PREVIEW
+========================= */
 .file-item iframe {
-  width: 100%;
-  height: 200px;
-
-  margin-top: 10px;
-
   border-radius: 10px;
-  border: none;
-
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  margin-top: 10px;
+  height: 220px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.2);
 }
 
 /* =========================
    BOTÓN
 ========================= */
 .upload-btn {
-  margin-top: 30px;
+  margin-top: 40px;
 
   width: 100%;
-  padding: 15px;
+  padding: 18px;
 
+  border-radius: 50px;
   border: none;
-  border-radius: 10px;
 
-  background: #0ea5e9;
+  background: linear-gradient(135deg, #007bff, #00c6ff);
   color: white;
 
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
 
   cursor: pointer;
+
   transition: 0.3s;
 }
 
 .upload-btn:hover {
-  background: #0284c7;
-  transform: scale(1.03);
+  transform: scale(1.04);
+  box-shadow: 0 10px 25px rgba(0,123,255,0.6);
 }
 
 /* =========================
@@ -201,11 +214,11 @@
    RESPONSIVE
 ========================= */
 @media (max-width: 768px) {
-  .student-content {
-    padding: 15px;
+  .accordion-content {
+    grid-template-columns: 1fr; /* 🔥 1 columna en móvil */
   }
 
-  .accordion-content {
-    grid-template-columns: 1fr;
+  .student-card {
+    padding: 20px;
   }
 }
