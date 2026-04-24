@@ -31,18 +31,19 @@
    TARJETA PRINCIPAL (MEJORADA)
 ========================= */
 .student-card {
-  width: 100%;
-  max-width: 1200px; /* 🔥 equilibrio perfecto */
+  width: 95%;
+  max-width: 1350px; /* 🔥 un poco menos para que no se vea gigante */
 
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(12px);
+  margin: 0 auto; /* 🔥 centrado real */
+
+  background: rgba(255, 255, 255, 0.80);
+  backdrop-filter: blur(14px);
 
   border-radius: 20px;
   padding: 50px;
 
   box-shadow: 0 25px 60px rgba(0,0,0,0.35);
 }
-
 /* =========================
    TEXTOS
 ========================= */
