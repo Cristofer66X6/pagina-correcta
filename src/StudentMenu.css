@@ -1,5 +1,5 @@
 /* =========================
-   RESET
+   RESET GLOBAL (🔥 CLAVE)
 ========================= */
 * {
   margin: 0;
@@ -8,12 +8,23 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 /* =========================
-   CONTENEDOR GENERAL (🔥 CLAVE)
+   CONTENEDOR GENERAL
 ========================= */
 .student-menu {
-  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+
   width: 100%;
+  height: 100%;
 
   display: flex;
   justify-content: center;
@@ -79,9 +90,7 @@
   transition: all 0.3s ease;
 }
 
-/* =========================
-   HEADER
-========================= */
+/* HEADER */
 .accordion-header {
   display: flex;
   justify-content: space-between;
@@ -104,7 +113,6 @@
   box-shadow: 0 10px 25px rgba(42,82,152,0.6);
 }
 
-/* ACTIVO */
 .accordion.active .accordion-header {
   background: linear-gradient(135deg, #162c52, #1e3c72);
 }
