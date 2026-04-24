@@ -134,21 +134,13 @@ app.post("/student", async (req, res) => {
     res.status(500).json(err);
   }
 });
-
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
-    console.log("🔥 ENTRE A UPLOAD");
-    console.log("FILE:", req.file);
-    console.log("BODY:", req.body);
+    const { email, name } = req.body;
 
     if (!req.file) {
       return res.status(400).json({ msg: "No file recibido" });
     }
-
-    const { email, name } = req.body;
-
-    // 🔥 👉 AQUÍ VA
-    const safeKey = name.replace(/\./g, "_");
 
     const fileUrl = req.file.path;
 
@@ -158,8 +150,16 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       return res.status(404).json({ msg: "Usuario no encontrado" });
     }
 
-    // 🔥 USAS safeKey (NO name)
-    user.documentos.set(safeKey, fileUrl);
+    // 🔥 ARREGLAR USUARIOS VIEJOS
+    if (Array.isArray(user.documentos)) {
+      user.documentos = {};
+    }
+
+    // 🔥 LIMPIAR KEY
+    const safeKey = name.replace(/\./g, "_");
+
+    // 🔥 GUARDAR
+    user.documentos[safeKey] = fileUrl;
 
     await user.save();
 
