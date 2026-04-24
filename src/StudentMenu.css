@@ -18,9 +18,9 @@
 
 /* ===== TARJETA PRINCIPAL (GLASS) ===== */
 .student-card {
-  width: 100%;
-  max-width: none; /* 🔥 quita el límite */
-  margin: 0;
+  display: grid;
+  gap: 20px;
+
 
 
   background: rgba(255, 255, 255, 0.08);
@@ -98,9 +98,9 @@
 
 /* CONTENIDO */
 .accordion-content {
-  margin-top: 10px;
-  padding: 15px;
-  border-radius: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 15px;
 
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
