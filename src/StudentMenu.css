@@ -5,111 +5,94 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 /* =========================
-   FONDO CENTRADO
+   FONDO GENERAL
 ========================= */
 .student-menu {
   min-height: 100vh;
+  width: 100%;
+
   display: flex;
   justify-content: center;
-  align-items: center;
 
-  padding: 40px;
+  padding: 80px 40px;
 
-  background: 
-    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)),
-    url("./imagenes/fondo1.jpg");
+  background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+              url("./imagenes/fondo1.jpg");
 
   background-size: cover;
   background-position: center;
 }
 
 /* =========================
-   TARJETA
+   TARJETA PRINCIPAL
 ========================= */
 .student-card {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1500px; /* 🔥 más ancho */
 
-  background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(15px);
+  margin: 0 auto;
+
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
 
   border-radius: 20px;
-  padding: 40px;
+  padding: 50px;
 
-  border: 1px solid rgba(255,255,255,0.2);
-
-  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.35);
 }
 
 /* =========================
    TEXTOS
 ========================= */
 .student-name {
+  font-size: 2.6rem;
+  font-weight: bold;
   text-align: center;
-  font-size: 2.5rem;
-  color: #fff;
   margin-bottom: 10px;
+  color: #000;
 }
 
 .section-title {
+  font-size: 1.4rem;
   text-align: center;
-  font-size: 1.3rem;
-  color: #cce6ff;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
+  color: #333;
 }
 
 /* =========================
    ACORDEÓN
 ========================= */
 .accordion {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 /* HEADER */
 .accordion-header {
-  position: relative; /* 🔥 IMPORTANTE PARA EFECTO */
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  padding: 18px 22px;
-  border-radius: 12px;
+  padding: 22px 28px;
 
+  background: linear-gradient(135deg, #007bff, #00c6ff);
   color: #fff;
-  font-weight: 600;
+
   cursor: pointer;
+  font-weight: 600;
+  font-size: 17px;
 
-  background: linear-gradient(135deg, #007bff, #00cfff);
+  border-radius: 15px;
 
-  box-shadow: 0 6px 20px rgba(0,123,255,0.5);
-
-  overflow: hidden;
+  transition: 0.3s;
 }
 
-/* REFLEJO */
-.accordion-header::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -120%;
-  width: 100%;
-  height: 100%;
-
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255,255,255,0.6),
-    transparent
-  );
-
-  transition: 0.5s;
-}
-
-.accordion-header:hover::before {
-  left: 120%;
+.accordion-header:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,123,255,0.4);
 }
 
 /* FLECHA */
@@ -122,136 +105,127 @@
 }
 
 /* =========================
-   CONTENIDO
+   CONTENIDO (🔥 CLAVE)
 ========================= */
 .accordion-content {
-  margin-top: 10px;
-  padding: 20px;
+  margin-top: 15px;
+  padding: 30px;
 
-  border-radius: 12px;
-
-  background: rgba(255,255,255,0.08);
+  background: #ffffff;
+  border-radius: 15px;
 
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 15px;
+
+  /* 🔥 AQUÍ ESTÁ LA MAGIA */
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+
+  gap: 25px;
 }
 
 /* =========================
-   ITEMS
+   ITEMS (TARJETAS MÁS GRANDES)
 ========================= */
 .file-item {
-  background: rgba(255,255,255,0.15);
-  padding: 15px;
-  border-radius: 10px;
-
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
+
+  padding: 22px; /* 🔥 más espacio interno */
+
+  border-radius: 14px;
+  background: #f9f9f9;
+
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
 
   transition: 0.2s;
 }
 
 .file-item:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
 }
 
 /* LABEL */
 .file-item label {
-  color: #fff;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
+  color: #333;
 }
 
 /* SUBIDO */
 .uploaded {
-  color: #00ff9d;
-  font-size: 12px;
+  color: #28a745;
+  font-size: 13px;
+  margin-left: 6px;
 }
 
 /* INPUT */
 .file-item input[type="file"] {
-  padding: 8px;
-  border-radius: 8px;
-
-  border: 2px dashed #00cfff;
-  background: rgba(255,255,255,0.2);
-
-  color: white;
+  padding: 12px;
+  border-radius: 10px;
+  border: 2px dashed #007bff;
+  background: #eef6ff;
   cursor: pointer;
 }
 
-/* PDF */
+.file-item input[type="file"]:hover {
+  background: #e0efff;
+}
+
+/* PDF (🔥 MÁS GRANDE) */
 .file-item iframe {
-  height: 180px;
-  border-radius: 8px;
-  margin-top: 5px;
+  border-radius: 10px;
+  margin-top: 10px;
+  height: 260px; /* 🔥 más alto */
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
 }
 
 /* =========================
    BOTÓN
 ========================= */
 .upload-btn {
-  margin-top: 30px;
-  width: 100%;
-  padding: 15px;
+  margin-top: 40px;
 
-  border-radius: 40px;
+  width: 100%;
+  padding: 18px;
+
+  border-radius: 50px;
   border: none;
 
-  font-size: 16px;
-  font-weight: bold;
+  background: linear-gradient(135deg, #007bff, #00c6ff);
   color: white;
 
+  font-size: 18px;
+  font-weight: bold;
+
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
 
-  background: linear-gradient(135deg, #007bff, #00d4ff);
-
-  box-shadow: 0 10px 30px rgba(0,123,255,0.6);
-}
-
-/* REFLEJO BOTÓN */
-.upload-btn::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -120%;
-  width: 100%;
-  height: 100%;
-
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255,255,255,0.7),
-    transparent
-  );
-
-  transition: 0.5s;
-}
-
-.upload-btn:hover::before {
-  left: 120%;
+  transition: all 0.3s ease;
 }
 
 .upload-btn:hover {
-  transform: scale(1.03);
+  transform: scale(1.04);
+  box-shadow: 0 12px 30px rgba(0,123,255,0.6);
+}
+
+.upload-btn:active {
+  transform: scale(0.97);
 }
 
 /* =========================
    RESPONSIVE
 ========================= */
+@media (max-width: 1024px) {
+  .accordion-content {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
   .student-card {
-    padding: 20px;
+    padding: 25px;
   }
 
   .accordion-content {
     grid-template-columns: 1fr;
-  }
-
-  .student-name {
-    font-size: 2rem;
   }
 }
