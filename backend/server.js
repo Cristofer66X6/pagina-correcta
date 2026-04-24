@@ -146,26 +146,36 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       return res.status(400).json({ msg: "No file recibido" });
     }
 
-    const { email } = req.body;
+    const { email, name } = req.body;
 
-   const fileUrl = req.file.secure_url;
+    if (!email || !name) {
+      return res.status(400).json({ msg: "Faltan datos (email o name)" });
+    }
 
+    const fileUrl = req.file.secure_url;
+
+    // 🔥 GUARDAR POR NOMBRE (CLAVE DINÁMICA)
     const user = await User.findOneAndUpdate(
       { email },
       {
-        $push: {
-          documentos: fileUrl
+        $set: {
+          [`documentos.${name}`]: fileUrl
         }
       },
       { new: true }
     );
 
+    if (!user) {
+      return res.status(404).json({ msg: "Usuario no encontrado" });
+    }
+
     console.log("✅ USER ACTUALIZADO:", user);
 
     res.json(user);
+
   } catch (err) {
     console.log("❌ ERROR UPLOAD:", err);
-    res.status(500).json(err);
+    res.status(500).json({ msg: "Error al subir archivo" });
   }
 });
 

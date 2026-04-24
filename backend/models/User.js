@@ -14,9 +14,9 @@ const userSchema = new mongoose.Schema({
   genero: String,
 
   documentos: {
-    type: [String],
-    default: []
-  }
+  type: Object,
+  default: {}
+}
 });
 
 export default mongoose.model("User", userSchema);
