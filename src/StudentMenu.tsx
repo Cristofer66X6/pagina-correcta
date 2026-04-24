@@ -110,92 +110,87 @@ const StudentMenu = ({ studentData }: any) => {
     }
   };
 
-  return (
-      <div className="student-card">
+ return (
+  <div className="student-menu"> {/* 🔥 CONTENEDOR PADRE */}
+    
+    <div className="student-card">
 
-        <h1 className="student-name">{studentData.nombre}</h1>
-        <h2 className="section-title">Subir Documentos</h2>
+      <h1 className="student-name">{studentData.nombre}</h1>
+      <h2 className="section-title">Subir Documentos</h2>
 
-        {sections.map((section, i) => (
+      {sections.map((section, i) => (
+        <div 
+          key={i} 
+          className={`accordion ${openSection === i ? "active" : ""}`}
+        >
+
           <div 
-            key={i} 
-            className={`accordion ${openSection === i ? "active" : ""}`}
+            className="accordion-header"
+            onClick={() => toggleSection(i)}
           >
-
-            {/* HEADER */}
-            <div 
-              className="accordion-header"
-              onClick={() => toggleSection(i)}
-            >
-              <span>{section.title}</span>
-              <span className={`arrow ${openSection === i ? "open" : ""}`}>
-                ▼
-              </span>
-            </div>
-
-            {/* CONTENIDO */}
-            {openSection === i && (
-              <div className="accordion-content">
-
-                {section.items.map((item, j) => {
-
-                  const rawKey = `${section.title}-${item}`;
-                  const key = normalizeKey(rawKey);
-
-                  const uploaded = docs?.[key];
-
-                  return (
-                    <div key={j} className="file-item">
-
-                      <label>
-                        {item}
-                        {uploaded && (
-                          <span className="uploaded"> ✔ Subido</span>
-                        )}
-                      </label>
-
-                      <input
-                        type="file"
-                        accept="application/pdf"
-                        onChange={(e) =>
-                          handleFileChange(
-                            key,
-                            e.target.files?.[0] || null
-                          )
-                        }
-                      />
-
-                      {/* 🔥 Vista previa */}
-                      {uploaded && typeof uploaded === "string" && (
-                        <iframe
-                          src={uploaded}
-                          title={key}
-                          width="100%"
-                          height="200px"
-                          style={{
-                            border: "none",
-                            marginTop: "10px"
-                          }}
-                        />
-                      )}
-
-                    </div>
-                  );
-                })}
-
-              </div>
-            )}
-
+            <span>{section.title}</span>
+            <span className={`arrow ${openSection === i ? "open" : ""}`}>
+              ▼
+            </span>
           </div>
-        ))}
 
-        <button className="upload-btn" onClick={handleSave}>
-          Subir PDFs
-        </button>
+          {openSection === i && (
+            <div className="accordion-content">
 
-      </div>
-  
-  );
+              {section.items.map((item, j) => {
+
+                const rawKey = `${section.title}-${item}`;
+                const key = normalizeKey(rawKey);
+                const uploaded = docs?.[key];
+
+                return (
+                  <div key={j} className="file-item">
+
+                    <label>
+                      {item}
+                      {uploaded && (
+                        <span className="uploaded"> ✔ Subido</span>
+                      )}
+                    </label>
+
+                    <input
+                      type="file"
+                      accept="application/pdf"
+                      onChange={(e) =>
+                        handleFileChange(
+                          key,
+                          e.target.files?.[0] || null
+                        )
+                      }
+                    />
+
+                    {uploaded && typeof uploaded === "string" && (
+                      <iframe
+                        src={uploaded}
+                        title={key}
+                        width="100%"
+                        height="200px"
+                      />
+                    )}
+
+                  </div>
+                );
+              })}
+
+            </div>
+          )}
+
+        </div>
+      ))}
+
+      <button className="upload-btn" onClick={handleSave}>
+        Subir PDFs
+      </button>
+
+    </div>
+
+  </div>
+);
 };
 
 export default StudentMenu;
