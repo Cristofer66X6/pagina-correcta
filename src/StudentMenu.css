@@ -1,5 +1,5 @@
 /* =========================
-   RESET GLOBAL 🔥
+   RESET REAL
 ========================= */
 * {
   margin: 0;
@@ -8,28 +8,23 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
-/* 🔥 CLAVE: eliminar cualquier limitación */
 html, body, #root {
-  width: 100vw;
-  height: 100vh;
-  max-width: 100%;
-  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 /* =========================
-   CONTENEDOR FULL SCREEN REAL
+   CONTENEDOR FULL
 ========================= */
 .student-menu {
-  position: fixed;
-  inset: 0; /* 🔥 reemplaza top/left/right/bottom */
-
-  width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  width: 100%;
 
   display: flex;
   justify-content: center;
   align-items: center;
 
+  /* 🔥 IMPORTANTE: usamos padding interno SIN romper ancho */
   padding: 20px;
 
   background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.75)),
@@ -38,8 +33,6 @@ html, body, #root {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
-  overflow-y: auto;
 }
 
 /* =========================
@@ -71,7 +64,6 @@ html, body, #root {
   font-weight: 600;
   text-align: center;
   margin-bottom: 5px;
-  color: #ffffff;
 }
 
 .section-title {
@@ -87,7 +79,7 @@ html, body, #root {
 .accordion {
   margin-bottom: 15px;
   border-radius: 18px;
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
 .accordion-header {
@@ -101,10 +93,9 @@ html, body, #root {
   color: #fff;
 
   cursor: pointer;
-  font-weight: 500;
 
   border-radius: 18px;
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
 .accordion-header:hover {
@@ -116,9 +107,8 @@ html, body, #root {
   background: linear-gradient(135deg, #162c52, #1e3c72);
 }
 
-/* FLECHA */
 .arrow {
-  transition: transform 0.3s ease;
+  transition: 0.3s;
 }
 
 .arrow.open {
@@ -147,10 +137,6 @@ html, body, #root {
    ITEMS
 ========================= */
 .file-item {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-
   padding: 14px;
 
   border-radius: 12px;
@@ -167,7 +153,6 @@ html, body, #root {
 
 .file-item label {
   font-size: 14px;
-  font-weight: 500;
   color: #eee;
 }
 
@@ -177,8 +162,8 @@ html, body, #root {
   margin-left: 10px;
 }
 
-/* INPUT */
 .file-item input[type="file"] {
+  margin-top: 8px;
   padding: 10px;
 
   border-radius: 10px;
@@ -188,20 +173,11 @@ html, body, #root {
   color: white;
 
   cursor: pointer;
-  transition: 0.3s;
 }
 
 .file-item input[type="file"]:hover {
   border-color: #00c6ff;
   background: rgba(0,198,255,0.1);
-}
-
-/* PDF */
-.file-item iframe {
-  border-radius: 10px;
-  margin-top: 8px;
-  height: 200px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.5);
 }
 
 /* =========================
@@ -220,46 +196,15 @@ html, body, #root {
 
   color: white;
 
-  font-size: 16px;
   font-weight: bold;
 
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
-
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
 .upload-btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 15px 30px rgba(0,198,255,0.6);
-}
-
-.upload-btn:active {
-  transform: scale(0.97);
-}
-
-/* BRILLO */
-.upload-btn::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255,255,255,0.6),
-    transparent
-  );
-
-  transition: 0.5s;
-}
-
-.upload-btn:hover::before {
-  left: 100%;
 }
 
 /* =========================
