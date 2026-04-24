@@ -9,7 +9,7 @@
 }
 
 /* =========================
-   FONDO GENERAL
+   FONDO GENERAL (FULL WIDTH)
 ========================= */
 .student-menu {
   min-height: 100vh;
@@ -18,7 +18,7 @@
   display: flex;
   justify-content: center;
 
-  padding: 80px 20px;
+  padding: 60px 40px;
 
   background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
               url("./imagenes/fondo1.jpg");
@@ -28,27 +28,28 @@
 }
 
 /* =========================
-   TARJETA PRINCIPAL (MEJORADA)
+   TARJETA PRINCIPAL (ANCHA 🔥)
 ========================= */
 .student-card {
-  width: 95%;
-  max-width: 1350px; /* 🔥 un poco menos para que no se vea gigante */
+  width: 100%;
+  max-width: 1700px; /* 🔥 MÁS ANCHO */
 
-  margin: 0 auto; /* 🔥 centrado real */
+  margin: 0 auto;
 
-  background: rgba(255, 255, 255, 0.80);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(14px);
 
   border-radius: 20px;
-  padding: 50px;
+  padding: 60px;
 
   box-shadow: 0 25px 60px rgba(0,0,0,0.35);
 }
+
 /* =========================
    TEXTOS
 ========================= */
 .student-name {
-  font-size: 2.6rem;
+  font-size: 3rem;
   font-weight: bold;
   text-align: center;
   margin-bottom: 10px;
@@ -56,9 +57,9 @@
 }
 
 .section-title {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 50px;
   color: #333;
 }
 
@@ -66,7 +67,7 @@
    ACORDEÓN
 ========================= */
 .accordion {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 /* HEADER */
@@ -75,14 +76,14 @@
   justify-content: space-between;
   align-items: center;
 
-  padding: 20px 25px;
+  padding: 25px 30px;
 
   background: linear-gradient(135deg, #007bff, #00c6ff);
   color: #fff;
 
   cursor: pointer;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 18px;
 
   border-radius: 15px;
 
@@ -104,18 +105,18 @@
 }
 
 /* =========================
-   CONTENIDO GRID
+   CONTENIDO GRID (MEJORADO 🔥)
 ========================= */
 .accordion-content {
   margin-top: 15px;
-  padding: 25px;
+  padding: 30px;
 
   background: #ffffff;
   border-radius: 15px;
 
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* 🔥 MÁS AMPLIO */
+  gap: 25px;
 
   animation: fadeIn 0.3s ease-in-out;
 }
@@ -126,9 +127,9 @@
 .file-item {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 
-  padding: 15px;
+  padding: 18px;
 
   border-radius: 12px;
   background: #f9f9f9;
@@ -144,7 +145,7 @@
 
 /* LABEL */
 .file-item label {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: #333;
 }
@@ -152,14 +153,14 @@
 /* SUBIDO */
 .uploaded {
   color: #28a745;
-  font-size: 12px;
+  font-size: 13px;
   margin-left: 6px;
 }
 
 /* INPUT */
 .file-item input[type="file"] {
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 10px;
   border: 2px dashed #007bff;
   background: #eef6ff;
   cursor: pointer;
@@ -171,20 +172,20 @@
 
 /* PDF */
 .file-item iframe {
-  border-radius: 8px;
-  margin-top: 8px;
-  height: 200px;
+  border-radius: 10px;
+  margin-top: 10px;
+  height: 220px;
   box-shadow: 0 3px 10px rgba(0,0,0,0.15);
 }
 
 /* =========================
-   BOTÓN GLASS 🔥
+   BOTÓN
 ========================= */
 .upload-btn {
-  margin-top: 40px;
+  margin-top: 50px;
 
   width: 100%;
-  padding: 18px;
+  padding: 20px;
 
   border-radius: 50px;
   border: none;
@@ -192,7 +193,7 @@
   background: linear-gradient(135deg, #007bff, #00c6ff);
   color: white;
 
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
 
   cursor: pointer;
@@ -253,12 +254,30 @@
 /* =========================
    RESPONSIVE
 ========================= */
+@media (max-width: 1024px) {
+  .student-card {
+    padding: 35px;
+  }
+
+  .accordion-content {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
+  .student-menu {
+    padding: 40px 15px;
+  }
+
   .student-card {
     padding: 25px;
   }
 
   .accordion-content {
     grid-template-columns: 1fr;
+  }
+
+  .student-name {
+    font-size: 2rem;
   }
 }
