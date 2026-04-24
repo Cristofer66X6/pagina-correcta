@@ -27,12 +27,36 @@ app.use(express.json());
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
-    return {
-      folder: "pdfs",
 
-      resource_type: "auto",   // 🔥 necesario para PDF
-      type: "upload",         // 🔥 público
-      access_mode: "public",  // 🔥 evita 401
+    const { email } = req.body;
+
+    // 🔥 buscar usuario para obtener nombre
+    const user = await User.findOne({ email });
+
+    // 🔥 fallback por si algo falla
+    let nombre = user?.nombre || "usuario";
+
+    // 🔥 limpiar nombre
+    nombre = nombre
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "_")
+      .replace(/[^\w]/g, "");
+
+    // 🔥 limpiar email
+    const safeEmail = email
+      .toLowerCase()
+      .replace(/[@.]/g, "_");
+
+    // 🔥 carpeta final
+    const folderName = `pdfs/${nombre}_${safeEmail}`;
+
+    return {
+      folder: folderName, // 👈 AQUÍ ESTÁ LA MAGIA
+
+      resource_type: "auto",
+      type: "upload",
+      access_mode: "public",
 
       public_id: Date.now() + "-" + file.originalname,
 
