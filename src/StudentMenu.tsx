@@ -85,10 +85,13 @@ const StudentMenu = ({ studentData }: any) => {
         formData.append("email", studentData.email);
         formData.append("name", key);
 
-        const res = await fetch(`${API}/upload`, {
-          method: "POST",
-          body: formData
-        });
+        const res = await fetch(
+  `${API}/upload?email=${studentData.email}&name=${key}`,
+  {
+    method: "POST",
+    body: formData
+  }
+);
 
         console.log("STATUS:", res.status);
 

@@ -28,12 +28,13 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
 
-    const email = req.body?.email;
-    const name = req.body?.name;
+    // 🔥 AQUÍ EL TRUCO REAL
+    // multer sí tiene acceso a query params SIEMPRE
+    const email = req.query.email || "sin_email";
+    const name = req.query.name || "sin_nombre";
 
-    // 🔥 fallback en vez de romper
-    const safeEmail = (email || "sin_email").replace(/[@.]/g, "_");
-    const safeName = (name || "sin_nombre")
+    const safeEmail = email.replace(/[@.]/g, "_");
+    const safeName = name
       .replace(/\s+/g, "_")
       .replace(/\./g, "_");
 
