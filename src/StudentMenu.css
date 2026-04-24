@@ -19,9 +19,9 @@
 /* ===== TARJETA PRINCIPAL (GLASS) ===== */
 .student-card {
   width: 100%;
-  max-width: 900px;
-  padding: 25px;
-  border-radius: 20px;
+  max-width: none; /* 🔥 quita el límite */
+  margin: 0;
+
 
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(15px);
