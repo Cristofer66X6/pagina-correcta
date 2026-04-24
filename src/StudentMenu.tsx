@@ -83,6 +83,7 @@ const StudentMenu = ({ studentData }: any) => {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("email", studentData.email);
+formData.append("nombre", studentData.nombre); // 👈 NUEVO
         formData.append("name", key);
 
         const res = await fetch(`${API}/upload`, {
