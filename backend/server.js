@@ -151,7 +151,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       return res.status(400).json({ msg: "Faltan datos" });
     }
 
-    const fileUrl = req.file.secure_url;
+    const fileUrl = req.file.path;
 
     // 🔥 BUSCAR USUARIO PRIMERO
     const user = await User.findOne({ email });
