@@ -4,7 +4,12 @@ import './StudentMenu.css';
 const StudentMenu = ({ studentData }: any) => {
 
   const [pdfs, setPdfs] = useState<any>({});
-  const [docs, setDocs] = useState<string[]>(studentData.documentos || []);
+  const [docs, setDocs] = useState<any>(studentData.documentos || {});
+  const [openSection, setOpenSection] = useState<number | null>(null);
+
+  const toggleSection = (index: number) => {
+    setOpenSection(openSection === index ? null : index);
+  };
 
   const sections = [
     {
@@ -58,7 +63,7 @@ const StudentMenu = ({ studentData }: any) => {
 
   const handleSave = async () => {
     try {
-      let newDocs: string[] = [];
+      let updatedDocs: any = {};
 
       for (const key of Object.keys(pdfs)) {
         const file = pdfs[key];
@@ -75,10 +80,10 @@ const StudentMenu = ({ studentData }: any) => {
         });
 
         const updatedUser = await res.json();
-        newDocs = updatedUser.documentos;
+        updatedDocs = updatedUser.documentos;
       }
 
-      setDocs(newDocs);
+      setDocs(updatedDocs);
       alert("Documentos guardados correctamente");
 
     } catch (err) {
@@ -94,44 +99,67 @@ const StudentMenu = ({ studentData }: any) => {
         <h2 className="section-title">Subir Documentos</h2>
 
         {sections.map((section, i) => (
-          <div key={i} className="section-block">
-            <h3>{section.title}</h3>
+          <div key={i} className="accordion">
 
-            {section.items.map((item, j) => {
-              const key = `${section.title}-${item}`;
+            {/* HEADER */}
+            <div 
+              className="accordion-header"
+              onClick={() => toggleSection(i)}
+            >
+              <span>{section.title}</span>
+              <span className={`arrow ${openSection === i ? "open" : ""}`}>
+                ▼
+              </span>
+            </div>
 
-              return (
-                <div key={j} className="file-item">
-                  <label>{item}</label>
-                  <input
-                    type="file"
-                    accept="application/pdf"
-                    onChange={(e) =>
-                      handleFileChange(key, e.target.files?.[0] || null)
-                    }
-                  />
-                </div>
-              );
-            })}
+            {/* CONTENIDO */}
+            {openSection === i && (
+              <div className="accordion-content">
+
+                {section.items.map((item, j) => {
+                  const key = `${section.title}-${item}`;
+                  const uploaded = docs[key];
+
+                  return (
+                    <div key={j} className="file-item">
+
+                      <label>
+                        {item}
+                        {uploaded && <span className="uploaded"> ✔ Subido</span>}
+                      </label>
+
+                      <input
+                        type="file"
+                        accept="application/pdf"
+                        onChange={(e) =>
+                          handleFileChange(key, e.target.files?.[0] || null)
+                        }
+                      />
+
+                      {/* Vista previa si ya existe */}
+                      {uploaded && (
+                        <iframe
+                          src={uploaded}
+                          title={key}
+                          width="100%"
+                          height="200px"
+                          style={{ border: "none", marginTop: "10px" }}
+                        />
+                      )}
+
+                    </div>
+                  );
+                })}
+
+              </div>
+            )}
+
           </div>
         ))}
 
         <button className="upload-btn" onClick={handleSave}>
           Subir PDFs
         </button>
-
-        <div className="pdf-viewer">
-          {docs.map((url, index) => (
-            <iframe
-              key={index}
-              src={url}
-              title={`pdf-${index}`}
-              width="100%"
-              height="500px"
-              style={{ border: "none", marginBottom: "15px" }}
-            />
-          ))}
-        </div>
 
       </div>
     </div>
