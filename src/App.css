@@ -32,16 +32,25 @@ body {
   width: 100vw;
   height: 100vh;
 
-  background-image: url('./imagenes/fondo2.jpg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+  body {
+  margin: 0;
+  padding: 0;
+}
+
+.tu-clase {
+  width: 100%;
+  height: 100vh; /* ocupa toda la pantalla */
+
+  background-image: url('./imagenes/tec.jpg');
+  background-size: cover;        /* cubre todo */
+  background-repeat: no-repeat;  /* no se repite */
+  background-position: center;   /* centrada */
+  background-attachment: fixed;  /* opcional: efecto bonito tipo parallax */
 
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
 /* =========================
    CONTENEDOR LOGIN
 ========================= */
