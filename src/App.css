@@ -1,4 +1,3 @@
-
 /* =========================
    RESET TOTAL
 ========================= */
@@ -11,14 +10,9 @@
 
 html, body, #root {
   height: 100%;
-  margin: 0;
 }
 
-/* =========================
-   BODY
-========================= */body {
-  margin: 0;
-  padding: 0;
+body {
   overflow-x: hidden;
 }
 
@@ -33,26 +27,25 @@ html, body, #root {
   height: 100%;
 
   background-image: url('./imagenes/tec.jpg');
-  background-size: cover;          /* 🔥 cubre toda la pantalla */
-  background-repeat: no-repeat;    /* 🔥 no se repite */
-  background-position: center;     /* 🔥 centrada */
-  background-attachment: fixed;    /* 🔥 efecto elegante (tipo parallax) */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
 
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* 🔥 OPCIONAL: overlay para que se vea más profesional */
+/* Overlay oscuro elegante */
 .auth-background::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3); /* oscurece ligeramente */
-  z-index: 0;
+  background: rgba(0, 0, 0, 0.4);
 }
 
-/* 🔥 asegura que tu contenido quede encima */
+/* Asegura contenido encima */
 .auth-background > * {
   position: relative;
   z-index: 1;
@@ -64,36 +57,77 @@ html, body, #root {
 .container-form {
   display: flex;
   width: 90%;
-  max-width: 900px;
+  max-width: 950px;
   height: 550px;
 
-  background-color: #ffffff;
-  border-radius: 20px;
+  border-radius: 25px;
   overflow: hidden;
 
-  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.15);
+
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
 }
 
 /* =========================
    PANEL IZQUIERDO
 ========================= */
 .information {
-  width: 40%;
-  background-color: #00bfff;
+  width: 45%;
+  background: linear-gradient(135deg, #2f4dd3, #00c6ff);
+
   color: white;
 
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
+
+  padding: 40px;
+}
+
+.info-childs {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.info-childs h2 {
+  font-size: 2rem;
+}
+
+.info-childs p {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* Botón izquierdo */
+.info-childs button {
+  margin-top: 15px;
+  padding: 12px 25px;
+
+  border-radius: 30px;
+  border: 2px solid white;
+
+  background: transparent;
+  color: white;
+
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.info-childs button:hover {
+  background: white;
+  color: #2f4dd3;
 }
 
 /* =========================
    PANEL DERECHO
 ========================= */
 .form-information {
-  width: 60%;
-  background-color: #f8f8f8;
+  width: 55%;
+  background: rgba(255, 255, 255, 0.95);
 
   display: flex;
   align-items: center;
@@ -101,42 +135,54 @@ html, body, #root {
 }
 
 /* =========================
-   FORMULARIO 🔥 CORRECTO
+   FORMULARIO
 ========================= */
+.form-information-childs {
+  width: 100%;
+  max-width: 350px;
+}
+
+.form-information-childs h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
 .form-information-childs form {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
 }
 
-/* 🔥 INPUTS CENTRADOS */
+/* INPUTS */
 .form-information-childs form input {
   width: 100%;
-  max-width: 320px;
-
-  padding: 15px;
-
-  border-radius: 30px;
-  border: 1px solid #ccc;
-
-  font-size: 16px;
-  text-align: center;
-
-  outline: none;
-}
-
-/* 🔥 BOTÓN */
-.form-information-childs form button {
-  width: 100%;
-  max-width: 320px;
-
-  padding: 15px;
+  padding: 14px 18px;
+  margin-bottom: 15px;
 
   border-radius: 30px;
   border: none;
 
-  background-color: #2f4dd3;
+  background: #f1f1f1;
+  font-size: 15px;
+
+  transition: 0.3s;
+}
+
+.form-information-childs form input:focus {
+  background: #e0e7ff;
+  outline: none;
+  box-shadow: 0 0 0 2px #2f4dd3;
+}
+
+/* BOTÓN LOGIN */
+.form-information-childs form button {
+  width: 100%;
+  padding: 14px;
+
+  border-radius: 30px;
+  border: none;
+
+  background: linear-gradient(135deg, #2f4dd3, #00c6ff);
   color: white;
 
   font-size: 16px;
@@ -147,8 +193,120 @@ html, body, #root {
 }
 
 .form-information-childs form button:hover {
-  background-color: #1a34a8;
-  transform: scale(1.05);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+}
+
+/* =========================
+   STUDENT / ADMIN PANEL
+========================= */
+.student-menu,
+.admin-login,
+.admin-panel {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 25px;
+
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.student-name,
+.admin-title {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 1.3rem;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.menu-section {
+  margin-bottom: 20px;
+}
+
+.menu-section button {
+  width: 100%;
+  padding: 12px;
+
+  font-size: 1rem;
+
+  background: linear-gradient(135deg, #007BFF, #00c6ff);
+  color: white;
+
+  border: none;
+  border-radius: 10px;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.menu-section button:hover {
+  transform: translateY(-2px);
+}
+
+/* =========================
+   ARCHIVOS
+========================= */
+.file-upload {
+  margin-top: 10px;
+}
+
+.file-upload input[type="file"] {
+  margin-bottom: 10px;
+}
+
+.file-item {
+  background-color: #f1f1f1;
+  padding: 10px;
+
+  border-radius: 8px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 5px;
+}
+
+.file-item button {
+  background-color: #dc3545;
+  color: white;
+
+  border: none;
+  padding: 5px 10px;
+
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.file-item button:hover {
+  background-color: #c82333;
+}
+
+/* BOTÓN GUARDAR */
+.save-button {
+  background: linear-gradient(135deg, #28a745, #5cd65c);
+  color: white;
+
+  border: none;
+  padding: 12px 25px;
+
+  border-radius: 10px;
+  cursor: pointer;
+
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.save-button:hover {
+  transform: translateY(-2px);
 }
 
 /* =========================
@@ -165,115 +323,4 @@ html, body, #root {
     width: 100%;
     padding: 30px 20px;
   }
-}
-.info-childs {
-  padding: 0 30px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px; /* 🔥 separación entre texto y botón */
-}
-
-.info-childs button {
-  margin-top: 10px; /* 🔥 espacio extra arriba del botón */
-}
-
-/* =========================
-   STUDENT MENU / ADMIN PANEL
-========================= */
-.student-menu,
-.admin-login,
-.admin-panel {
-  max-width: 900px;
-  margin: 30px auto;
-  padding: 20px;
-  background-color: #ffffffcc;
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-
-.student-name,
-.admin-title {
-  font-size: 2rem;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 20px;
-  color: #141414;
-}
-
-.section-title {
-  font-size: 1.5rem;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.menu-section {
-  margin-bottom: 20px;
-}
-
-.menu-section button {
-  width: 100%;
-  padding: 10px;
-  font-size: 1.2rem;
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  cursor: pointer;
-  margin-bottom: 10px;
-  border-radius: 5px;
-}
-
-.menu-section button:hover {
-  background-color: #0056b3;
-}
-
-.file-upload {
-  margin-top: 10px;
-}
-
-.file-upload input[type="file"] {
-  margin-bottom: 10px;
-}
-
-.file-list {
-  margin-top: 10px;
-}
-
-.file-item {
-  background-color: #f8f9fa;
-  padding: 10px;
-  border-radius: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
-}
-
-.file-item button {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 5px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.file-item button:hover {
-  background-color: #c82333;
-}
-
-.save-button {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: bold;
-  margin-top: 20px;
-}
-
-.save-button:hover {
-  background-color: #218838;
 }
