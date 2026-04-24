@@ -13,35 +13,36 @@
   background-repeat: no-repeat;
 }
 
-/* 🔥 TARJETA MEJORADA */
+/* 🔥 TARJETA PRO */
 .school-form {
   width: 100%;
   max-width: 650px;
 
-  padding: 35px 30px;
+  padding: 40px 35px;
 
   display: flex;
   flex-direction: column;
   gap: 20px;
 
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: rgba(0, 0, 0, 0.55); /* 🔥 oscuro elegante */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 
   border-radius: 25px;
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.15);
 
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.5);
 
-  color: #000;
+  color: #ffffff; /* 🔥 TODO el texto blanco */
 }
 
 /* 🔥 TÍTULO */
 .school-form h1 {
   text-align: center;
   margin-bottom: 10px;
-  font-size: 1.8rem;
+  font-size: 2rem;
   letter-spacing: 1px;
+  font-weight: 600;
 }
 
 /* 🔥 GRID */
@@ -58,24 +59,35 @@
 }
 
 .form-group label {
-  margin-bottom: 5px;
-  font-weight: 600;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #e0e0e0; /* 🔥 gris claro elegante */
 }
 
+/* 🔥 INPUT BONITO */
 .form-group input {
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(0,0,0,0.2);
+  padding: 12px 15px;
 
-  background: rgba(255,255,255,0.8);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.2);
+
+  background: rgba(255,255,255,0.08);
+  color: white;
 
   outline: none;
-  transition: 0.25s;
+  transition: all 0.3s ease;
 }
 
+/* placeholder blanco suave */
+.form-group input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+/* foco elegante */
 .form-group input:focus {
-  border: 1px solid #007BFF;
-  box-shadow: 0 0 8px rgba(0,123,255,0.3);
+  border: 1px solid #00c6ff;
+  background: rgba(255,255,255,0.12);
+  box-shadow: 0 0 10px rgba(0,198,255,0.4);
 }
 
 /* 🔥 GÉNERO */
@@ -89,32 +101,37 @@
   margin-top: 5px;
 }
 
-/* 🔥 BOTÓN MÁS PEQUEÑO Y CENTRADO */
+/* radios blancos */
+.radio-options label {
+  color: #ddd;
+}
+
+/* 🔥 BOTÓN PRO */
 .submit-btn {
   grid-column: span 2;
 
-  width: 200px;
-  padding: 10px;
+  width: 220px;
+  padding: 12px;
 
-  margin: 10px auto 0;
+  margin: 15px auto 0;
 
   border: none;
-  border-radius: 25px;
+  border-radius: 30px;
 
-  background: linear-gradient(135deg, #007BFF, #00c6ff);
+  background: linear-gradient(135deg, #2f4dd3, #00c6ff);
   color: white;
 
-  font-size: 14px;
+  font-size: 15px;
   font-weight: bold;
 
   cursor: pointer;
-
   transition: all 0.3s ease;
 }
 
+/* hover premium */
 .submit-btn:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 10px 20px rgba(0,123,255,0.4);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 15px 30px rgba(0,198,255,0.5);
 }
 
 /* 🔥 RESPONSIVE */
