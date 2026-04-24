@@ -197,6 +197,9 @@ app.get("/students", async (req, res) => {
     res.status(500).json({ msg: "Error buscando alumnos" });
   }
 });
+bcrypt.hash("admin123", 10).then(hash => {
+  console.log("🔐 HASH:", hash);
+});
 // 🚀 SERVIDOR
 const PORT = process.env.PORT || 5000;
 
