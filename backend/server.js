@@ -135,7 +135,6 @@ app.post("/student", async (req, res) => {
   }
 });
 
-// 🔥 SUBIR PDF (CORREGIDO + DEBUG)
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
     console.log("🔥 ENTRE A UPLOAD");
@@ -149,27 +148,30 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     const { email, name } = req.body;
 
     if (!email || !name) {
-      return res.status(400).json({ msg: "Faltan datos (email o name)" });
+      return res.status(400).json({ msg: "Faltan datos" });
     }
 
     const fileUrl = req.file.secure_url;
 
-    // 🔥 GUARDAR POR NOMBRE (CLAVE DINÁMICA)
-    const user = await User.findOneAndUpdate(
-      { email },
-      {
-        $set: {
-          [`documentos.${name}`]: fileUrl
-        }
-      },
-      { new: true }
-    );
+    // 🔥 BUSCAR USUARIO PRIMERO
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({ msg: "Usuario no encontrado" });
     }
 
-    console.log("✅ USER ACTUALIZADO:", user);
+    // 🔥 ASEGURAR QUE documentos ES OBJETO
+    if (!user.documentos || typeof user.documentos !== "object") {
+      user.documentos = {};
+    }
+
+    // 🔥 ASIGNAR ARCHIVO
+    user.documentos[name] = fileUrl;
+
+    // 🔥 GUARDAR MANUALMENTE
+    await user.save();
+
+    console.log("✅ GUARDADO REAL:", user.documentos);
 
     res.json(user);
 
@@ -178,7 +180,6 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     res.status(500).json({ msg: "Error al subir archivo" });
   }
 });
-
 // 🚀 SERVIDOR
 const PORT = process.env.PORT || 5000;
 
