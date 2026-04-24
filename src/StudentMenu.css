@@ -1,4 +1,14 @@
 /* =========================
+   RESET
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* =========================
    FONDO GENERAL
 ========================= */
 .student-menu {
@@ -9,86 +19,170 @@
   justify-content: center;
   align-items: center;
 
-  background-image: url("./imagenes/fondo1.jpg"); /* 👈 cambia si quieres */
+  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+              url("./imagenes/fondo1.jpg");
+
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
 }
 
 /* =========================
-   TARJETA (GLASS)
+   TARJETA GLASS
 ========================= */
 .student-card {
   width: 100%;
-  max-width: 900px;
+  max-width: 950px;
 
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(15px);
 
-  border-radius: 20px;
-  padding: 30px;
+  border-radius: 25px;
+  padding: 35px;
 
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
 /* =========================
    TEXTOS
 ========================= */
 .student-name {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 20px;
-  color: #000;
+  margin-bottom: 10px;
+  color: #fff;
 }
 
 .section-title {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   text-align: center;
   margin-bottom: 25px;
-  color: #000;
+  color: #ddd;
 }
 
 /* =========================
-   SUBIDA DE ARCHIVOS
+   ACORDEÓN
 ========================= */
-.file-upload {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
+.accordion {
+  margin-bottom: 15px;
+  border-radius: 15px;
+  overflow: hidden;
 }
 
-/* INPUT FILE BONITO */
-.file-upload input[type="file"] {
-  width: 100%;
-  max-width: 300px;
+/* HEADER */
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-  padding: 12px;
+  padding: 16px 20px;
 
-  border-radius: 15px;
-  border: 2px dashed #007bff;
+  background: rgba(0, 123, 255, 0.25);
+  color: #fff;
 
-  background: rgba(255,255,255,0.6);
   cursor: pointer;
-  text-align: center;
+  font-weight: 600;
+  border-radius: 15px;
+
   transition: 0.3s;
 }
 
-.file-upload input[type="file"]:hover {
-  background: rgba(0,123,255,0.15);
+.accordion-header:hover {
+  background: rgba(0, 123, 255, 0.5);
+}
+
+/* FLECHA */
+.arrow {
+  transition: transform 0.3s ease;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+/* CONTENIDO */
+.accordion-content {
+  margin-top: 8px;
+  padding: 15px;
+
+  background: rgba(255,255,255,0.9);
+
+  border-radius: 15px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+/* =========================
+   ITEMS (ARCHIVOS)
+========================= */
+.file-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  padding: 12px;
+
+  border-radius: 12px;
+  background: #ffffff;
+
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* LABEL */
+.file-item label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* TEXTO SUBIDO */
+.uploaded {
+  color: #28a745;
+  font-size: 12px;
+  margin-left: 10px;
+}
+
+/* INPUT FILE MODERNO */
+.file-item input[type="file"] {
+  padding: 10px;
+
+  border-radius: 10px;
+  border: 2px dashed #007bff;
+
+  background: #f5faff;
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.file-item input[type="file"]:hover {
+  background: #e6f2ff;
+  border-color: #0056b3;
+}
+
+/* =========================
+   PDF PREVIEW
+========================= */
+.file-item iframe {
+  border-radius: 10px;
+  margin-top: 8px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
 }
 
 /* =========================
    BOTÓN SUBIR
 ========================= */
 .upload-btn {
-  margin-top: 15px;
+  margin-top: 25px;
 
-  padding: 14px 30px;
+  width: 100%;
+  padding: 15px;
 
-  border-radius: 25px;
+  border-radius: 30px;
   border: none;
 
   background: linear-gradient(135deg, #007bff, #00c6ff);
@@ -98,85 +192,50 @@
   font-weight: bold;
 
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s ease;
 }
 
 .upload-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 15px rgba(0,123,255,0.4);
+  transform: scale(1.03);
+  box-shadow: 0 8px 20px rgba(0,123,255,0.5);
 }
 
 /* =========================
-   LISTA DE ARCHIVOS
+   ANIMACIONES
 ========================= */
-.file-list {
-  margin-top: 20px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* ITEM */
-.file-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  padding: 12px;
-  margin-bottom: 10px;
-
-  border-radius: 12px;
-  background: rgba(255,255,255,0.6);
+/* =========================
+   SCROLL BONITO
+========================= */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-/* TEXTO */
-.file-item span {
-  color: #000;
-}
-
-/* BOTÓN ELIMINAR */
-.file-item button {
-  background: #ff4d4d;
-  color: white;
-  border: none;
-
-  padding: 6px 10px;
-  border-radius: 8px;
-
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.file-item button:hover {
-  background: #cc0000;
+::-webkit-scrollbar-thumb {
+  background: rgba(0,123,255,0.5);
+  border-radius: 10px;
 }
 
 /* =========================
    RESPONSIVE
 ========================= */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .student-card {
-    margin: 20px;
+    margin: 15px;
     padding: 20px;
   }
-}
-.pdf-viewer {
-  width: 100%;
-  margin-top: 20px;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-}
 
-.pdf-item button {
-  padding: 10px 15px;
-  border-radius: 20px;
-  border: none;
-
-  background: rgba(0,0,0,0.1);
-  color: #000;
-
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.pdf-item button:hover {
-  background: rgba(0,0,0,0.2);
+  .student-name {
+    font-size: 1.8rem;
+  }
 }
