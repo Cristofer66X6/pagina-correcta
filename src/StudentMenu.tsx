@@ -95,7 +95,7 @@ const StudentMenu = ({ studentData }: any) => {
         updatedDocs = updatedUser.documentos;
       }
 
-      setDocs(updatedDocs);
+      setDocs({ ...updatedDocs });
       alert("Documentos guardados correctamente");
 
     } catch (err) {
