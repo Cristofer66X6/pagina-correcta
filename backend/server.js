@@ -150,16 +150,21 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       return res.status(404).json({ msg: "Usuario no encontrado" });
     }
 
-    // 🔥 ARREGLAR USUARIOS VIEJOS
+    // 🔥 SI VIENE COMO ARRAY (usuarios viejos)
     if (Array.isArray(user.documentos)) {
-      user.documentos = {};
+      user.documentos = new Map();
+    }
+
+    // 🔥 SI VIENE COMO OBJETO NORMAL
+    if (!(user.documentos instanceof Map)) {
+      user.documentos = new Map(Object.entries(user.documentos || {}));
     }
 
     // 🔥 LIMPIAR KEY
     const safeKey = name.replace(/\./g, "_");
 
-    // 🔥 GUARDAR
-    user.documentos[safeKey] = fileUrl;
+    // 🔥 AQUÍ ESTÁ EL FIX REAL
+    user.documentos.set(safeKey, fileUrl);
 
     await user.save();
 
