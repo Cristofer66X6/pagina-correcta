@@ -5,186 +5,92 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
 }
 
 /* =========================
-   FONDO APP
+   FONDO CENTRADO
 ========================= */
 .student-menu {
   min-height: 100vh;
-  width: 100%;
-
   display: flex;
   justify-content: center;
   align-items: center;
 
-  padding: 20px;
+  padding: 40px;
 
-  background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+  background: 
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)),
+    url("./imagenes/fondo1.jpg");
+
+  background-size: cover;
+  background-position: center;
 }
 
 /* =========================
-   CARD PRINCIPAL
+   TARJETA
 ========================= */
 .student-card {
   width: 100%;
-  max-width: 1100px;
+  max-width: 1200px;
 
-  background: #ffffff;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(15px);
+
   border-radius: 20px;
+  padding: 40px;
 
-  padding: 25px;
+  border: 1px solid rgba(255,255,255,0.2);
 
-  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
 }
 
 /* =========================
-   HEADER
+   TEXTOS
 ========================= */
 .student-name {
-  font-size: 1.8rem;
-  font-weight: bold;
   text-align: center;
-  color: #111;
+  font-size: 2.5rem;
+  color: #fff;
+  margin-bottom: 10px;
 }
 
 .section-title {
   text-align: center;
-  font-size: 1rem;
-  color: #666;
+  font-size: 1.3rem;
+  color: #cce6ff;
+  margin-bottom: 30px;
 }
 
 /* =========================
    ACORDEÓN
 ========================= */
 .accordion {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  margin-bottom: 15px;
 }
 
 /* HEADER */
 .accordion-header {
-  background: linear-gradient(135deg, #007bff, #00c6ff);
-  color: #fff;
-
-  padding: 14px 18px;
-  border-radius: 12px;
-
+  position: relative; /* 🔥 IMPORTANTE PARA EFECTO */
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-
-  transition: 0.2s;
-}
-
-.accordion-header:hover {
-  transform: translateY(-2px);
-}
-
-/* FLECHA */
-.arrow {
-  transition: 0.3s;
-}
-
-.arrow.open {
-  transform: rotate(180deg);
-}
-
-/* =========================
-   CONTENIDO
-========================= */
-.accordion-content {
-  background: #f5f7fb;
+  padding: 18px 22px;
   border-radius: 12px;
-  padding: 15px;
 
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-
-  animation: fadeIn 0.3s ease;
-}
-
-/* =========================
-   ITEMS
-========================= */
-.file-item {
-  background: #fff;
-  border-radius: 10px;
-
-  padding: 12px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-}
-
-.file-item label {
-  font-size: 13px;
+  color: #fff;
   font-weight: 600;
-  color: #333;
-}
-
-.uploaded {
-  color: #28a745;
-  font-size: 11px;
-}
-
-/* INPUT */
-.file-item input[type="file"] {
-  border: 2px dashed #007bff;
-  border-radius: 8px;
-  padding: 8px;
-  background: #eef5ff;
   cursor: pointer;
-}
 
-/* PDF */
-.file-item iframe {
-  width: 100%;
-  height: 180px;
-  border-radius: 8px;
-}
+  background: linear-gradient(135deg, #007bff, #00cfff);
 
-/* =========================
-   BOTÓN (TU ESTILO 🔥)
-========================= */
-.upload-btn {
-  margin-top: 20px;
+  box-shadow: 0 6px 20px rgba(0,123,255,0.5);
 
-  width: 100%;
-  padding: 16px;
-
-  border-radius: 40px;
-  border: none;
-
-  background: linear-gradient(135deg, #007bff, #00c6ff);
-  color: white;
-
-  font-size: 16px;
-  font-weight: bold;
-
-  cursor: pointer;
-  position: relative;
   overflow: hidden;
-
-  transition: all 0.3s ease;
 }
 
-/* EFECTO GLASS */
-.upload-btn::before {
+/* REFLEJO */
+.accordion-header::before {
   content: "";
   position: absolute;
   top: 0;
@@ -202,56 +108,150 @@
   transition: 0.5s;
 }
 
+.accordion-header:hover::before {
+  left: 120%;
+}
+
+/* FLECHA */
+.arrow {
+  transition: transform 0.3s;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+/* =========================
+   CONTENIDO
+========================= */
+.accordion-content {
+  margin-top: 10px;
+  padding: 20px;
+
+  border-radius: 12px;
+
+  background: rgba(255,255,255,0.08);
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+}
+
+/* =========================
+   ITEMS
+========================= */
+.file-item {
+  background: rgba(255,255,255,0.15);
+  padding: 15px;
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  transition: 0.2s;
+}
+
+.file-item:hover {
+  transform: translateY(-3px);
+}
+
+/* LABEL */
+.file-item label {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* SUBIDO */
+.uploaded {
+  color: #00ff9d;
+  font-size: 12px;
+}
+
+/* INPUT */
+.file-item input[type="file"] {
+  padding: 8px;
+  border-radius: 8px;
+
+  border: 2px dashed #00cfff;
+  background: rgba(255,255,255,0.2);
+
+  color: white;
+  cursor: pointer;
+}
+
+/* PDF */
+.file-item iframe {
+  height: 180px;
+  border-radius: 8px;
+  margin-top: 5px;
+}
+
+/* =========================
+   BOTÓN
+========================= */
+.upload-btn {
+  margin-top: 30px;
+  width: 100%;
+  padding: 15px;
+
+  border-radius: 40px;
+  border: none;
+
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  background: linear-gradient(135deg, #007bff, #00d4ff);
+
+  box-shadow: 0 10px 30px rgba(0,123,255,0.6);
+}
+
+/* REFLEJO BOTÓN */
+.upload-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 100%;
+  height: 100%;
+
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.7),
+    transparent
+  );
+
+  transition: 0.5s;
+}
+
 .upload-btn:hover::before {
   left: 120%;
 }
 
 .upload-btn:hover {
   transform: scale(1.03);
-  box-shadow: 0 10px 25px rgba(0,123,255,0.5);
 }
 
 /* =========================
-   ANIMACIÓN
+   RESPONSIVE
 ========================= */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* =========================
-   TABLET
-========================= */
-@media (min-width: 768px) {
+@media (max-width: 768px) {
   .student-card {
-    padding: 35px;
+    padding: 20px;
+  }
+
+  .accordion-content {
+    grid-template-columns: 1fr;
   }
 
   .student-name {
-    font-size: 2.2rem;
-  }
-
-  .accordion-content {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* =========================
-   PC GRANDE
-========================= */
-@media (min-width: 1024px) {
-  .student-card {
-    max-width: 1200px;
-  }
-
-  .accordion-content {
-    grid-template-columns: repeat(3, 1fr);
+    font-size: 2rem;
   }
 }
