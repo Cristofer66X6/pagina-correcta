@@ -28,22 +28,23 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
 
-    const email = req.body.email || "sin_email";
-    const name = req.body.name || "sin_nombre";
+    // 🔥 AQUÍ EL FIX REAL
+    const email = req.body?.email;
+    const name = req.body?.name;
 
-    // 🔥 limpiar caracteres
+    if (!email || !name) {
+      throw new Error("Faltan datos para crear carpeta");
+    }
+
     const safeEmail = email.replace(/[@.]/g, "_");
     const safeName = name.replace(/\s+/g, "_").replace(/\./g, "_");
 
     return {
       folder: `pdfs/${safeEmail}/${safeName}`,
-
       resource_type: "auto",
       type: "upload",
       access_mode: "public",
-
       public_id: Date.now() + "-" + file.originalname,
-
       use_filename: true,
       unique_filename: false
     };
