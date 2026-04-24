@@ -1,0 +1,76 @@
+.admin-container {
+  padding: 30px;
+  text-align: center;
+}
+
+/* 🔍 BUSCADOR CENTRADO */
+.search-box.center {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.search-box input {
+  padding: 12px;
+  width: 300px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.search-box button {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #007bff, #00c6ff);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* 📋 RESULTADOS */
+.results {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.student-card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  width: 250px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.student-card button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* 📂 DETALLE */
+.student-info {
+  margin-top: 30px;
+  text-align: left;
+  background: #f5f5f5;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.admin-section {
+  margin-top: 20px;
+}
+
+.admin-file {
+  margin-bottom: 20px;
+}
+
+.missing {
+  color: red;
+  font-weight: bold;
+}
