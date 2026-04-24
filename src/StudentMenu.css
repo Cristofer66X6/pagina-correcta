@@ -29,6 +29,24 @@
 /* =========================
    TARJETA GLASS
 ========================= */
+.student-menu {
+  min-height: 100vh;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+              url("./imagenes/fondo1.jpg");
+
+  background-size: cover;
+  background-position: center;
+}
+
+/* =========================
+   TARJETA GLASS
+========================= */
 .student-card {
   width: 1000%;
   max-width: 950px;
