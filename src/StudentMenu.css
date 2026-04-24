@@ -25,7 +25,7 @@
 
 /* ===== TARJETA PRINCIPAL (AHORA SI FULL WIDTH) ===== */
 .student-card {
-  width: 100%;
+  width: 1000%;
   max-width: none; /* 🔥 sin límite */
 
   padding: 30px;
