@@ -28,16 +28,14 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
 
-    // 🔥 AQUÍ EL FIX REAL
     const email = req.body?.email;
     const name = req.body?.name;
 
-    if (!email || !name) {
-      throw new Error("Faltan datos para crear carpeta");
-    }
-
-    const safeEmail = email.replace(/[@.]/g, "_");
-    const safeName = name.replace(/\s+/g, "_").replace(/\./g, "_");
+    // 🔥 fallback en vez de romper
+    const safeEmail = (email || "sin_email").replace(/[@.]/g, "_");
+    const safeName = (name || "sin_nombre")
+      .replace(/\s+/g, "_")
+      .replace(/\./g, "_");
 
     return {
       folder: `pdfs/${safeEmail}/${safeName}`,
@@ -159,20 +157,20 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       return res.status(404).json({ msg: "Usuario no encontrado" });
     }
 
-    // 🔥 NORMALIZAR documentos (evita error de array)
-    if (!user.documentos || Array.isArray(user.documentos)) {
-      user.documentos = {};
+    // 🔥 SI VIENE COMO ARRAY (usuarios viejos)
+    if (Array.isArray(user.documentos)) {
+      user.documentos = new Map();
     }
 
-    // 🔥 convertir a Map si no lo es
+    // 🔥 SI VIENE COMO OBJETO NORMAL
     if (!(user.documentos instanceof Map)) {
-      user.documentos = new Map(Object.entries(user.documentos));
+      user.documentos = new Map(Object.entries(user.documentos || {}));
     }
 
-    // 🔥 limpiar key (Mongoose no acepta ".")
+    // 🔥 LIMPIAR KEY
     const safeKey = name.replace(/\./g, "_");
 
-    // 🔥 guardar archivo
+    // 🔥 AQUÍ ESTÁ EL FIX REAL
     user.documentos.set(safeKey, fileUrl);
 
     await user.save();
