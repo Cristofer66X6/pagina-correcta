@@ -27,20 +27,12 @@ app.use(express.json());
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
-
-    const email = req.body.email || "sin_email";
-
-    // 🔥 limpiar email (muy importante)
-    const safeEmail = email
-      .toLowerCase()
-      .replace(/[@.]/g, "_");
-
     return {
-      folder: `pdfs/${safeEmail}`, // 👈 SOLO ESTE CAMBIO
+      folder: "pdfs",
 
-      resource_type: "auto",
-      type: "upload",
-      access_mode: "public",
+      resource_type: "auto",   // 🔥 necesario para PDF
+      type: "upload",         // 🔥 público
+      access_mode: "public",  // 🔥 evita 401
 
       public_id: Date.now() + "-" + file.originalname,
 
@@ -158,16 +150,21 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       return res.status(404).json({ msg: "Usuario no encontrado" });
     }
 
-    // 🔥 FORZAR SIEMPRE OBJETO (NO ARRAY, NO MAP)
-    if (!user.documentos || Array.isArray(user.documentos)) {
-      user.documentos = {};
+    // 🔥 SI VIENE COMO ARRAY (usuarios viejos)
+    if (Array.isArray(user.documentos)) {
+      user.documentos = new Map();
+    }
+
+    // 🔥 SI VIENE COMO OBJETO NORMAL
+    if (!(user.documentos instanceof Map)) {
+      user.documentos = new Map(Object.entries(user.documentos || {}));
     }
 
     // 🔥 LIMPIAR KEY
     const safeKey = name.replace(/\./g, "_");
 
-    // 🔥 GUARDAR NORMAL (SIN MAP)
-    user.documentos[safeKey] = fileUrl;
+    // 🔥 AQUÍ ESTÁ EL FIX REAL
+    user.documentos.set(safeKey, fileUrl);
 
     await user.save();
 
