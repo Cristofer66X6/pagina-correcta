@@ -5,6 +5,7 @@ const StudentMenu = ({ studentData }: any) => {
 
   const [pdfs, setPdfs] = useState<any>({});
 
+  // 🔥 SOPORTA OBJETO (nuevo) o array (viejo)
   const [docs, setDocs] = useState<any>(
     typeof studentData.documentos === "object" && !Array.isArray(studentData.documentos)
       ? studentData.documentos
@@ -17,6 +18,7 @@ const StudentMenu = ({ studentData }: any) => {
     setOpenSection(openSection === index ? null : index);
   };
 
+  // 🔥 NORMALIZAR KEY (IMPORTANTE)
   const normalizeKey = (text: string) =>
     text.replace(/\./g, "_");
 
@@ -84,19 +86,23 @@ const StudentMenu = ({ studentData }: any) => {
         formData.append("name", key);
 
         const res = await fetch(
-          `${API}/upload?email=${studentData.email}&name=${key}`,
-          {
-            method: "POST",
-            body: formData
-          }
-        );
+  `${API}/upload?email=${studentData.email}&name=${key}`,
+  {
+    method: "POST",
+    body: formData
+  }
+);
+
+        console.log("STATUS:", res.status);
 
         const updatedUser = await res.json();
+        console.log("RESPONSE:", updatedUser);
+
         updatedDocs = updatedUser.documentos;
       }
 
       setDocs({ ...updatedDocs });
-      setPdfs({});
+      setPdfs({}); // 🔥 limpiar inputs
       alert("Documentos guardados correctamente");
 
     } catch (err) {
@@ -111,77 +117,78 @@ const StudentMenu = ({ studentData }: any) => {
         <h1 className="student-name">{studentData.nombre}</h1>
         <h2 className="section-title">Subir Documentos</h2>
 
-        <div className="accordion-wrapper">
+        {sections.map((section, i) => (
+          <div 
+            key={i} 
+            className={`accordion ${openSection === i ? "active" : ""}`}
+          >
 
-          {sections.map((section, i) => (
+            {/* HEADER */}
             <div 
-              key={i} 
-              className={`accordion ${openSection === i ? "active" : ""}`}
+              className="accordion-header"
+              onClick={() => toggleSection(i)}
             >
-
-              {/* HEADER */}
-              <div 
-                className="accordion-header"
-                onClick={() => toggleSection(i)}
-              >
-                <span>{section.title}</span>
-                <span className={`arrow ${openSection === i ? "open" : ""}`}>
-                  ▼
-                </span>
-              </div>
-
-              {/* 🔥 CONTENIDO SIEMPRE EXISTE */}
-              <div className={`accordion-content ${openSection === i ? "open" : ""}`}>
-
-                <div className="accordion-body">
-
-                  {section.items.map((item, j) => {
-
-                    const rawKey = `${section.title}-${item}`;
-                    const key = normalizeKey(rawKey);
-
-                    const uploaded = docs?.[key];
-
-                    return (
-                      <div key={j} className="file-item">
-
-                        <label>
-                          {item}
-                          {uploaded && (
-                            <span className="uploaded"> ✔ Subido</span>
-                          )}
-                        </label>
-
-                        <input
-                          type="file"
-                          accept="application/pdf"
-                          onChange={(e) =>
-                            handleFileChange(
-                              key,
-                              e.target.files?.[0] || null
-                            )
-                          }
-                        />
-
-                        {uploaded && typeof uploaded === "string" && (
-                          <iframe
-                            src={uploaded}
-                            title={key}
-                          />
-                        )}
-
-                      </div>
-                    );
-                  })}
-
-                </div>
-
-              </div>
-
+              <span>{section.title}</span>
+              <span className={`arrow ${openSection === i ? "open" : ""}`}>
+                ▼
+              </span>
             </div>
-          ))}
 
-        </div>
+            {/* CONTENIDO */}
+            {openSection === i && (
+              <div className="accordion-content">
+
+                {section.items.map((item, j) => {
+
+                  const rawKey = `${section.title}-${item}`;
+                  const key = normalizeKey(rawKey);
+
+                  const uploaded = docs?.[key];
+
+                  return (
+                    <div key={j} className="file-item">
+
+                      <label>
+                        {item}
+                        {uploaded && (
+                          <span className="uploaded"> ✔ Subido</span>
+                        )}
+                      </label>
+
+                      <input
+                        type="file"
+                        accept="application/pdf"
+                        onChange={(e) =>
+                          handleFileChange(
+                            key,
+                            e.target.files?.[0] || null
+                          )
+                        }
+                      />
+
+                      {/* 🔥 Vista previa */}
+                      {uploaded && typeof uploaded === "string" && (
+                        <iframe
+                          src={uploaded}
+                          title={key}
+                          width="100%"
+                          height="200px"
+                          style={{
+                            border: "none",
+                            marginTop: "10px"
+                          }}
+                        />
+                      )}
+
+                    </div>
+                  );
+                })}
+
+              </div>
+            )}
+
+          </div>
+        ))}
 
         <button className="upload-btn" onClick={handleSave}>
           Subir PDFs
