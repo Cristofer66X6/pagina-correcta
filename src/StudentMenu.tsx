@@ -111,7 +111,6 @@ const StudentMenu = ({ studentData }: any) => {
   };
 
   return (
-    <div className="student-menu">
       <div className="student-card">
 
         <h1 className="student-name">{studentData.nombre}</h1>
@@ -195,7 +194,7 @@ const StudentMenu = ({ studentData }: any) => {
         </button>
 
       </div>
-    </div>
+  
   );
 };
 

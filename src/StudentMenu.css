@@ -1,4 +1,16 @@
-/* CONTENEDOR PRINCIPAL */
+/* =========================
+   RESET
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* =========================
+   FONDO GENERAL
+========================= */
 .student-menu {
   min-height: 100vh;
   width: 100%;
@@ -7,79 +19,96 @@
   justify-content: center;
   align-items: center;
 
-  padding: 20px;
-
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)),
+  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
               url("./imagenes/fondo1.jpg");
+
   background-size: cover;
   background-position: center;
 }
 
-/* CARD PRINCIPAL */
+/* =========================
+   TARJETA GLASS
+========================= */
 .student-card {
-  width: 900px; /* 🔥 tamaño del card */
-  max-width: 95%;
+  width: 100%;
+  max-width: 950px;
 
-  padding: 30px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
 
-  border-radius: 20px;
+  border-radius: 25px;
+  padding: 35px;
 
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-
-  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-
-  color: white;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
 }
 
-/* TITULOS */
+/* =========================
+   TEXTOS
+========================= */
 .student-name {
-  font-size: 28px;
+  font-size: 2.2rem;
+  font-weight: bold;
+  text-align: center;
   margin-bottom: 10px;
+  color: #fff;
 }
 
 .section-title {
-  margin-bottom: 20px;
-  font-weight: normal;
-  opacity: 0.8;
+  font-size: 1.3rem;
+  text-align: center;
+  margin-bottom: 25px;
+  color: #ddd;
 }
 
-/* ACORDEON */
+/* =========================
+   ACORDEÓN PRO
+========================= */
 .accordion {
   margin-bottom: 15px;
-  border-radius: 12px;
-  overflow: hidden;
-
-  background: rgba(255,255,255,0.05);
-  transition: 0.3s;
+  border-radius: 18px;
+  transition: all 0.3s ease;
 }
 
 .accordion.active {
-  background: rgba(255,255,255,0.1);
+  transform: scale(1.01);
 }
 
 /* HEADER */
 .accordion-header {
-  padding: 15px 20px;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
 
+  padding: 18px 22px;
+
+  background: linear-gradient(135deg, rgba(0,123,255,0.6), rgba(0,198,255,0.5));
+  color: #fff;
+
   cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
 
-  font-weight: bold;
+  border-radius: 18px;
 
-  transition: 0.3s;
+  transition: all 0.3s ease;
 }
 
+/* HOVER */
 .accordion-header:hover {
-  background: rgba(255,255,255,0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,123,255,0.4);
+}
+
+/* ACTIVO */
+.accordion.active .accordion-header {
+  background: linear-gradient(135deg, #007bff, #00c6ff);
 }
 
 /* FLECHA */
 .arrow {
-  transition: transform 0.3s;
+  transition: transform 0.3s ease;
+  font-size: 14px;
 }
 
 .arrow.open {
@@ -88,73 +117,140 @@
 
 /* CONTENIDO */
 .accordion-content {
-  padding: 15px 20px;
-  animation: fadeIn 0.3s ease;
+  margin-top: 10px;
+  padding: 18px;
+
+  background: rgba(255,255,255,0.95);
+
+  border-radius: 18px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-/* ITEM DE ARCHIVO */
+/* =========================
+   ITEMS (ARCHIVOS)
+========================= */
 .file-item {
-  margin-bottom: 15px;
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 
-  border-radius: 10px;
+  padding: 12px;
 
-  background: rgba(0,0,0,0.2);
+  border-radius: 12px;
+  background: #ffffff;
+
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 
 /* LABEL */
 .file-item label {
-  display: block;
-  margin-bottom: 8px;
   font-size: 14px;
+  font-weight: 600;
+  color: #333;
 }
 
 /* TEXTO SUBIDO */
 .uploaded {
-  color: #00ff99;
+  color: #28a745;
+  font-size: 12px;
   margin-left: 10px;
-  font-weight: bold;
 }
 
 /* INPUT FILE */
 .file-item input[type="file"] {
-  width: 100%;
-  padding: 6px;
+  padding: 10px;
 
-  border-radius: 6px;
-  border: none;
-
-  background: rgba(255,255,255,0.1);
-  color: white;
-  cursor: pointer;
-}
-
-/* BOTON */
-.upload-btn {
-  margin-top: 20px;
-  width: 100%;
-  padding: 12px;
-
-  border: none;
   border-radius: 10px;
+  border: 2px dashed #007bff;
 
-  background: #00bcd4;
-  color: white;
-
-  font-size: 16px;
-  font-weight: bold;
-
+  background: #f5faff;
   cursor: pointer;
 
   transition: 0.3s;
 }
 
-.upload-btn:hover {
-  background: #0097a7;
-  transform: scale(1.02);
+.file-item input[type="file"]:hover {
+  background: #e6f2ff;
+  border-color: #0056b3;
 }
 
-/* ANIMACION */
+/* =========================
+   PDF PREVIEW
+========================= */
+.file-item iframe {
+  border-radius: 10px;
+  margin-top: 8px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+}
+
+/* =========================
+   BOTÓN SUBIR PRO
+========================= */
+.upload-btn {
+  margin-top: 30px;
+
+  width: 100%;
+  padding: 16px;
+
+  border-radius: 40px;
+  border: none;
+
+  background: linear-gradient(135deg, #007bff, #00c6ff);
+  color: white;
+
+  font-size: 17px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  transition: all 0.3s ease;
+}
+
+/* HOVER */
+.upload-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0,123,255,0.6);
+}
+
+/* CLICK */
+.upload-btn:active {
+  transform: scale(0.97);
+}
+
+/* BRILLO */
+.upload-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.6),
+    transparent
+  );
+
+  transition: 0.5s;
+}
+
+.upload-btn:hover::before {
+  left: 100%;
+}
+
+/* =========================
+   ANIMACIONES
+========================= */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -163,5 +259,31 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* =========================
+   SCROLL
+========================= */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0,123,255,0.5);
+  border-radius: 10px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+  .student-card {
+    margin: 15px;
+    padding: 20px;
+  }
+
+  .student-name {
+    font-size: 1.8rem;
   }
 }
