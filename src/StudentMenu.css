@@ -19,7 +19,7 @@
   justify-content: center;
   align-items: center;
 
-  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
               url("./imagenes/fondo1.jpg");
 
   background-size: cover;
@@ -35,11 +35,12 @@
 
   background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
 
   border-radius: 25px;
   padding: 35px;
 
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
 }
 
 /* =========================
@@ -61,12 +62,16 @@
 }
 
 /* =========================
-   ACORDEÓN
+   ACORDEÓN PRO
 ========================= */
 .accordion {
   margin-bottom: 15px;
-  border-radius: 15px;
-  overflow: hidden;
+  border-radius: 18px;
+  transition: all 0.3s ease;
+}
+
+.accordion.active {
+  transform: scale(1.01);
 }
 
 /* HEADER */
@@ -75,25 +80,35 @@
   justify-content: space-between;
   align-items: center;
 
-  padding: 16px 20px;
+  padding: 18px 22px;
 
-  background: rgba(0, 123, 255, 0.25);
+  background: linear-gradient(135deg, rgba(0,123,255,0.6), rgba(0,198,255,0.5));
   color: #fff;
 
   cursor: pointer;
   font-weight: 600;
-  border-radius: 15px;
+  font-size: 15px;
 
-  transition: 0.3s;
+  border-radius: 18px;
+
+  transition: all 0.3s ease;
 }
 
+/* HOVER */
 .accordion-header:hover {
-  background: rgba(0, 123, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,123,255,0.4);
+}
+
+/* ACTIVO */
+.accordion.active .accordion-header {
+  background: linear-gradient(135deg, #007bff, #00c6ff);
 }
 
 /* FLECHA */
 .arrow {
   transition: transform 0.3s ease;
+  font-size: 14px;
 }
 
 .arrow.open {
@@ -102,18 +117,18 @@
 
 /* CONTENIDO */
 .accordion-content {
-  margin-top: 8px;
-  padding: 15px;
+  margin-top: 10px;
+  padding: 18px;
 
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.95);
 
-  border-radius: 15px;
+  border-radius: 18px;
 
   display: flex;
   flex-direction: column;
   gap: 12px;
 
-  animation: fadeIn 0.25s ease-in-out;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 /* =========================
@@ -146,7 +161,7 @@
   margin-left: 10px;
 }
 
-/* INPUT FILE MODERNO */
+/* INPUT FILE */
 .file-item input[type="file"] {
   padding: 10px;
 
@@ -174,30 +189,63 @@
 }
 
 /* =========================
-   BOTÓN SUBIR
+   BOTÓN SUBIR PRO
 ========================= */
 .upload-btn {
-  margin-top: 25px;
+  margin-top: 30px;
 
   width: 100%;
-  padding: 15px;
+  padding: 16px;
 
-  border-radius: 30px;
+  border-radius: 40px;
   border: none;
 
   background: linear-gradient(135deg, #007bff, #00c6ff);
   color: white;
 
-  font-size: 16px;
+  font-size: 17px;
   font-weight: bold;
+  letter-spacing: 0.5px;
 
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
   transition: all 0.3s ease;
 }
 
+/* HOVER */
 .upload-btn:hover {
-  transform: scale(1.03);
-  box-shadow: 0 8px 20px rgba(0,123,255,0.5);
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0,123,255,0.6);
+}
+
+/* CLICK */
+.upload-btn:active {
+  transform: scale(0.97);
+}
+
+/* BRILLO */
+.upload-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.6),
+    transparent
+  );
+
+  transition: 0.5s;
+}
+
+.upload-btn:hover::before {
+  left: 100%;
 }
 
 /* =========================
@@ -215,7 +263,7 @@
 }
 
 /* =========================
-   SCROLL BONITO
+   SCROLL
 ========================= */
 ::-webkit-scrollbar {
   width: 8px;
