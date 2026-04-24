@@ -12,10 +12,13 @@ const userSchema = new mongoose.Schema({
   numProyecto: String,
   periodo: String,
   genero: String,
+
+  // 🔥 FIX REAL
   documentos: {
-  type: Object,
-  default: {}
-}
+    type: Map,
+    of: String,
+    default: {}
+  }
 });
 
 export default mongoose.model("User", userSchema);

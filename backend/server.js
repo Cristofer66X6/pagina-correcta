@@ -137,38 +137,23 @@ app.post("/student", async (req, res) => {
 
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
-    console.log("🔥 ENTRE A UPLOAD");
-    console.log("FILE:", req.file);
-    console.log("BODY:", req.body);
+    const { email, name } = req.body;
 
     if (!req.file) {
       return res.status(400).json({ msg: "No file recibido" });
     }
 
-    const { email, name } = req.body;
-
-    if (!email || !name) {
-      return res.status(400).json({ msg: "Faltan datos" });
-    }
-
     const fileUrl = req.file.path;
 
-    // 🔥 BUSCAR USUARIO PRIMERO
     const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({ msg: "Usuario no encontrado" });
     }
 
-    // 🔥 ASEGURAR QUE documentos ES OBJETO
-    if (!user.documentos || typeof user.documentos !== "object") {
-      user.documentos = {};
-    }
+    // 🔥 MAP (esto sí persiste)
+    user.documentos.set(name, fileUrl);
 
-    // 🔥 ASIGNAR ARCHIVO
-    user.documentos[name] = fileUrl;
-
-    // 🔥 GUARDAR MANUALMENTE
     await user.save();
 
     console.log("✅ GUARDADO REAL:", user.documentos);
