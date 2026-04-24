@@ -12,7 +12,6 @@ const userSchema = new mongoose.Schema({
   numProyecto: String,
   periodo: String,
   genero: String,
-
   documentos: {
   type: Object,
   default: {}

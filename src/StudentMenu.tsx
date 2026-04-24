@@ -4,7 +4,14 @@ import './StudentMenu.css';
 const StudentMenu = ({ studentData }: any) => {
 
   const [pdfs, setPdfs] = useState<any>({});
-  const [docs, setDocs] = useState<any>(studentData.documentos || {});
+
+  // 🔥 CORRECCIÓN: soporta objeto o array
+  const [docs, setDocs] = useState<any>(
+    typeof studentData.documentos === "object" && !Array.isArray(studentData.documentos)
+      ? studentData.documentos
+      : {}
+  );
+
   const [openSection, setOpenSection] = useState<number | null>(null);
 
   const toggleSection = (index: number) => {
@@ -63,7 +70,7 @@ const StudentMenu = ({ studentData }: any) => {
 
   const handleSave = async () => {
     try {
-      let updatedDocs: any = {};
+      let updatedDocs: any = { ...docs };
 
       for (const key of Object.keys(pdfs)) {
         const file = pdfs[key];
@@ -79,7 +86,12 @@ const StudentMenu = ({ studentData }: any) => {
           body: formData
         });
 
+        console.log("STATUS:", res.status);
+
         const updatedUser = await res.json();
+        console.log("RESPONSE:", updatedUser);
+
+        // 🔥 IMPORTANTE: actualizar docs correctamente
         updatedDocs = updatedUser.documentos;
       }
 
@@ -87,7 +99,7 @@ const StudentMenu = ({ studentData }: any) => {
       alert("Documentos guardados correctamente");
 
     } catch (err) {
-      console.log(err);
+      console.log("❌ ERROR FRONT:", err);
     }
   };
 
@@ -99,7 +111,10 @@ const StudentMenu = ({ studentData }: any) => {
         <h2 className="section-title">Subir Documentos</h2>
 
         {sections.map((section, i) => (
-          <div key={i} className="accordion">
+          <div 
+            key={i} 
+            className={`accordion ${openSection === i ? "active" : ""}`}
+          >
 
             {/* HEADER */}
             <div 
@@ -118,32 +133,40 @@ const StudentMenu = ({ studentData }: any) => {
 
                 {section.items.map((item, j) => {
                   const key = `${section.title}-${item}`;
-                  const uploaded = docs[key];
+                  const uploaded = docs?.[key];
 
                   return (
                     <div key={j} className="file-item">
 
                       <label>
                         {item}
-                        {uploaded && <span className="uploaded"> ✔ Subido</span>}
+                        {uploaded && (
+                          <span className="uploaded"> ✔ Subido</span>
+                        )}
                       </label>
 
                       <input
                         type="file"
                         accept="application/pdf"
                         onChange={(e) =>
-                          handleFileChange(key, e.target.files?.[0] || null)
+                          handleFileChange(
+                            key,
+                            e.target.files?.[0] || null
+                          )
                         }
                       />
 
-                      {/* Vista previa si ya existe */}
-                      {uploaded && (
+                      {/* 🔥 Vista previa FIX */}
+                      {uploaded && typeof uploaded === "string" && (
                         <iframe
                           src={uploaded}
                           title={key}
                           width="100%"
                           height="200px"
-                          style={{ border: "none", marginTop: "10px" }}
+                          style={{
+                            border: "none",
+                            marginTop: "10px"
+                          }}
                         />
                       )}
 
