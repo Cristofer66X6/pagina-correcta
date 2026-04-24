@@ -27,12 +27,20 @@ app.use(express.json());
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
-    return {
-      folder: "pdfs",
 
-      resource_type: "auto",   // 🔥 necesario para PDF
-      type: "upload",         // 🔥 público
-      access_mode: "public",  // 🔥 evita 401
+    const email = req.body.email || "sin_email";
+    const name = req.body.name || "sin_nombre";
+
+    // 🔥 limpiar caracteres
+    const safeEmail = email.replace(/[@.]/g, "_");
+    const safeName = name.replace(/\s+/g, "_").replace(/\./g, "_");
+
+    return {
+      folder: `pdfs/${safeEmail}/${safeName}`,
+
+      resource_type: "auto",
+      type: "upload",
+      access_mode: "public",
 
       public_id: Date.now() + "-" + file.originalname,
 
@@ -150,20 +158,20 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       return res.status(404).json({ msg: "Usuario no encontrado" });
     }
 
-    // 🔥 SI VIENE COMO ARRAY (usuarios viejos)
-    if (Array.isArray(user.documentos)) {
-      user.documentos = new Map();
+    // 🔥 NORMALIZAR documentos (evita error de array)
+    if (!user.documentos || Array.isArray(user.documentos)) {
+      user.documentos = {};
     }
 
-    // 🔥 SI VIENE COMO OBJETO NORMAL
+    // 🔥 convertir a Map si no lo es
     if (!(user.documentos instanceof Map)) {
-      user.documentos = new Map(Object.entries(user.documentos || {}));
+      user.documentos = new Map(Object.entries(user.documentos));
     }
 
-    // 🔥 LIMPIAR KEY
+    // 🔥 limpiar key (Mongoose no acepta ".")
     const safeKey = name.replace(/\./g, "_");
 
-    // 🔥 AQUÍ ESTÁ EL FIX REAL
+    // 🔥 guardar archivo
     user.documentos.set(safeKey, fileUrl);
 
     await user.save();
