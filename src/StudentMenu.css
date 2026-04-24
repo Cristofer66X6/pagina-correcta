@@ -18,7 +18,7 @@
   display: flex;
   justify-content: center;
 
-  padding: 60px 20px;
+  padding: 80px 20px;
 
   background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
               url("./imagenes/fondo1.jpg");
@@ -28,23 +28,23 @@
 }
 
 /* =========================
-   TARJETA PRINCIPAL (BALANCEADA)
+   TARJETA PRINCIPAL (MEJORADA)
 ========================= */
 .student-card {
   width: 100%;
-  max-width: 1200px; /* 🔥 ancho equilibrado */
+  max-width: 1200px; /* 🔥 equilibrio perfecto */
 
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(18px);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
 
-  border-radius: 25px;
-  padding: 45px;
+  border-radius: 20px;
+  padding: 50px;
 
-  box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.35);
 }
 
 /* =========================
-   HEADER
+   TEXTOS
 ========================= */
 .student-name {
   font-size: 2.6rem;
@@ -55,10 +55,10 @@
 }
 
 .section-title {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   text-align: center;
-  margin-bottom: 35px;
-  color: #222;
+  margin-bottom: 40px;
+  color: #333;
 }
 
 /* =========================
@@ -68,6 +68,7 @@
   margin-bottom: 20px;
 }
 
+/* HEADER */
 .accordion-header {
   display: flex;
   justify-content: space-between;
@@ -82,13 +83,14 @@
   font-weight: 600;
   font-size: 16px;
 
-  border-radius: 18px;
+  border-radius: 15px;
+
   transition: 0.3s;
 }
 
 .accordion-header:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0,123,255,0.5);
+  box-shadow: 0 8px 20px rgba(0,123,255,0.4);
 }
 
 /* FLECHA */
@@ -107,28 +109,30 @@
   margin-top: 15px;
   padding: 25px;
 
-  background: rgba(255,255,255,0.97);
-  border-radius: 18px;
+  background: #ffffff;
+  border-radius: 15px;
 
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 20px;
+
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 /* =========================
-   TARJETAS
+   ITEMS
 ========================= */
 .file-item {
   display: flex;
   flex-direction: column;
   gap: 10px;
 
-  padding: 18px;
+  padding: 15px;
 
-  border-radius: 15px;
-  background: #ffffff;
+  border-radius: 12px;
+  background: #f9f9f9;
 
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 
   transition: 0.2s;
 }
@@ -148,32 +152,32 @@
 .uploaded {
   color: #28a745;
   font-size: 12px;
-  margin-left: 8px;
+  margin-left: 6px;
 }
 
 /* INPUT */
 .file-item input[type="file"] {
-  padding: 12px;
-  border-radius: 10px;
+  padding: 10px;
+  border-radius: 8px;
   border: 2px dashed #007bff;
-  background: #f5faff;
+  background: #eef6ff;
   cursor: pointer;
 }
 
 .file-item input[type="file"]:hover {
-  background: #e6f2ff;
+  background: #e0efff;
 }
 
 /* PDF */
 .file-item iframe {
-  border-radius: 10px;
-  margin-top: 10px;
-  height: 220px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  margin-top: 8px;
+  height: 200px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
 }
 
 /* =========================
-   BOTÓN GLASS PRO
+   BOTÓN GLASS 🔥
 ========================= */
 .upload-btn {
   margin-top: 40px;
@@ -194,15 +198,15 @@
   position: relative;
   overflow: hidden;
 
-  transition: 0.3s;
+  transition: all 0.3s ease;
 }
 
-/* 🔥 EFECTO CRISTAL */
+/* EFECTO GLASS */
 .upload-btn::before {
   content: "";
   position: absolute;
   top: 0;
-  left: -100%;
+  left: -120%;
   width: 100%;
   height: 100%;
 
@@ -213,17 +217,17 @@
     transparent
   );
 
-  transition: 0.6s;
+  transition: 0.5s;
 }
 
 .upload-btn:hover::before {
-  left: 100%;
+  left: 120%;
 }
 
 /* HOVER */
 .upload-btn:hover {
-  transform: scale(1.03);
-  box-shadow: 0 15px 35px rgba(0,123,255,0.6);
+  transform: scale(1.04);
+  box-shadow: 0 12px 30px rgba(0,123,255,0.6);
 }
 
 /* CLICK */
@@ -232,25 +236,28 @@
 }
 
 /* =========================
-   RESPONSIVE
+   ANIMACIÓN
 ========================= */
-@media (max-width: 1024px) {
-  .student-card {
-    max-width: 95%;
-    padding: 30px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
+/* =========================
+   RESPONSIVE
+========================= */
 @media (max-width: 768px) {
+  .student-card {
+    padding: 25px;
+  }
+
   .accordion-content {
     grid-template-columns: 1fr;
-  }
-
-  .student-card {
-    padding: 20px;
-  }
-
-  .student-name {
-    font-size: 2rem;
   }
 }
