@@ -18,7 +18,11 @@ const userSchema = new mongoose.Schema({
     type: Map,
     of: String,
     default: {}
-  }
+  },
+  role: {
+  type: String,
+  default: "student" // o "admin"
+}
 });
 
 export default mongoose.model("User", userSchema);

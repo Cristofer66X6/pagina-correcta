@@ -37,8 +37,7 @@ function App() {
     setLoading(false);
   }, []);
 
-  // 🔐 LOGIN
- const handleLoginSubmit = async (e: any) => {
+const handleLoginSubmit = async (e: any) => {
   e.preventDefault();
 
   const email = e.target.email.value;
@@ -60,11 +59,18 @@ function App() {
       return;
     }
 
-    // 🔥 GUARDAR SESIÓN (TE FALTABA)
+    // 🔥 GUARDAR SESIÓN
     localStorage.setItem("user", JSON.stringify(data));
 
     setStudentData(data);
     setIsAuthenticated(true);
+
+    // 🔥 DETECTAR ADMIN CORRECTAMENTE
+    if (data.role === "admin") {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
 
   } catch (err) {
     console.log("ERROR LOGIN:", err);

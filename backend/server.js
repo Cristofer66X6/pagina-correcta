@@ -177,6 +177,26 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     res.status(500).json({ msg: "Error al subir archivo" });
   }
 });
+// 🔎 BUSCAR ALUMNOS (SOLO ADMIN)
+app.get("/students", async (req, res) => {
+  try {
+    const { search = "" } = req.query;
+
+    const users = await User.find({
+      role: { $ne: "admin" }, // 🔥 excluir admin
+      $or: [
+        { nombre: { $regex: search, $options: "i" } },
+        { numControl: { $regex: search, $options: "i" } }
+      ]
+    });
+
+    res.json(users);
+
+  } catch (err) {
+    console.log("❌ ERROR SEARCH:", err);
+    res.status(500).json({ msg: "Error buscando alumnos" });
+  }
+});
 // 🚀 SERVIDOR
 const PORT = process.env.PORT || 5000;
 
