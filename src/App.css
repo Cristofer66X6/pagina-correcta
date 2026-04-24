@@ -16,9 +16,9 @@ html, body, #root {
 
 /* =========================
    BODY
-========================= */
-body {
-  background: none !important;
+========================= */body {
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
 }
 
@@ -27,30 +27,37 @@ body {
 ========================= */
 .auth-background {
   position: fixed;
-  inset: 0;
-
-  width: 100vw;
-  height: 100vh;
-}
-  body {
-  margin: 0;
-  padding: 0;
-}
-
-.tu-clase {
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 100vh; /* ocupa toda la pantalla */
+  height: 100%;
 
   background-image: url('./imagenes/tec.jpg');
-  background-size: cover;        /* cubre todo */
-  background-repeat: no-repeat;  /* no se repite */
-  background-position: center;   /* centrada */
-  background-attachment: fixed;  /* opcional: efecto bonito tipo parallax */
+  background-size: cover;          /* 🔥 cubre toda la pantalla */
+  background-repeat: no-repeat;    /* 🔥 no se repite */
+  background-position: center;     /* 🔥 centrada */
+  background-attachment: fixed;    /* 🔥 efecto elegante (tipo parallax) */
 
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
+/* 🔥 OPCIONAL: overlay para que se vea más profesional */
+.auth-background::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3); /* oscurece ligeramente */
+  z-index: 0;
+}
+
+/* 🔥 asegura que tu contenido quede encima */
+.auth-background > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* =========================
    CONTENEDOR LOGIN
 ========================= */
