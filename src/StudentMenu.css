@@ -1,5 +1,5 @@
 /* =========================
-   RESET GLOBAL (🔥 CLAVE)
+   RESET GLOBAL 🔥 IMPORTANTE
 ========================= */
 * {
   margin: 0;
@@ -8,23 +8,22 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
+/* 🔥 ESTO EVITA EL FONDO BLANCO */
 html, body, #root {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
+  background: #000; /* fallback oscuro */
+  overflow-x: hidden;
 }
 
 /* =========================
-   CONTENEDOR GENERAL
+   CONTENEDOR GENERAL (FULL SCREEN REAL)
 ========================= */
 .student-menu {
   position: fixed;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 100%;
+  inset: 0; /* 🔥 MEJOR QUE top/left/width/height */
 
   display: flex;
   justify-content: center;
@@ -32,7 +31,7 @@ html, body, #root {
 
   padding: 20px;
 
-  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.75)),
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)),
               url("./imagenes/fondoNegro2.jpg");
 
   background-size: cover;
@@ -43,7 +42,7 @@ html, body, #root {
 }
 
 /* =========================
-   TARJETA (GLASS EFFECT)
+   TARJETA (GLASS PRO)
 ========================= */
 .student-card {
   width: 100%;
@@ -71,7 +70,7 @@ html, body, #root {
   font-weight: 600;
   text-align: center;
   margin-bottom: 5px;
-  color: #ffffff;
+  color: #fff;
 }
 
 .section-title {
@@ -87,7 +86,6 @@ html, body, #root {
 .accordion {
   margin-bottom: 15px;
   border-radius: 18px;
-  transition: all 0.3s ease;
 }
 
 /* HEADER */
@@ -105,7 +103,7 @@ html, body, #root {
   font-weight: 500;
 
   border-radius: 18px;
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
 .accordion-header:hover {
@@ -119,7 +117,7 @@ html, body, #root {
 
 /* FLECHA */
 .arrow {
-  transition: transform 0.3s ease;
+  transition: transform 0.3s;
 }
 
 .arrow.open {
@@ -180,7 +178,7 @@ html, body, #root {
   margin-left: 10px;
 }
 
-/* INPUT FILE */
+/* INPUT */
 .file-item input[type="file"] {
   padding: 10px;
 
@@ -199,7 +197,7 @@ html, body, #root {
   background: rgba(0,198,255,0.1);
 }
 
-/* PDF PREVIEW */
+/* PDF */
 .file-item iframe {
   border-radius: 10px;
   margin-top: 8px;
@@ -227,10 +225,8 @@ html, body, #root {
   font-weight: bold;
 
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
 
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
 .upload-btn:hover {
@@ -240,29 +236,6 @@ html, body, #root {
 
 .upload-btn:active {
   transform: scale(0.97);
-}
-
-/* EFECTO BRILLO */
-.upload-btn::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255,255,255,0.6),
-    transparent
-  );
-
-  transition: 0.5s;
-}
-
-.upload-btn:hover::before {
-  left: 100%;
 }
 
 /* =========================
