@@ -111,8 +111,9 @@ const StudentMenu = ({ studentData }: any) => {
   };
 
   return (
-    <div className="student-menu">
-      <div className="student-card">
+    <div className="student-layout">
+
+  <div className="student-header">
 
         <h1 className="student-name">{studentData.nombre}</h1>
         <h2 className="section-title">Subir Documentos</h2>

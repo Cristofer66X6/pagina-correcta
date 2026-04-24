@@ -9,65 +9,48 @@
 }
 
 /* =========================
-   FONDO GENERAL
+   LAYOUT GENERAL (CAMBIO REAL)
 ========================= */
-.student-menu {
+.student-layout {
   min-height: 100vh;
   width: 100%;
+  background: #0f172a;
 
   display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
-              url("./imagenes/fondo1.jpg");
-
-  background-size: cover;
-  background-position: center;
+  flex-direction: column;
 }
 
 /* =========================
-   TARJETA PRINCIPAL
+   HEADER
 ========================= */
-.student-card {
-  width: 95%;
-  max-width: 1400px;
-  min-height: 90vh;
+.student-header {
+  width: 100%;
+  padding: 25px 40px;
 
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+  background: linear-gradient(135deg, #1e3a8a, #0ea5e9);
+  color: white;
 
-  border-radius: 25px;
-  padding: 45px;
-
-  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
 }
 
-/* =========================
-   TEXTOS
-========================= */
-.student-name {
-  font-size: 2.4rem;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 10px;
-  color: #fff;
+.student-header h1 {
+  font-size: 28px;
 }
 
-.student-subtitle {
-  text-align: center;
-  color: #bbb;
-  margin-bottom: 25px;
+.student-header p {
   font-size: 14px;
-  letter-spacing: 1px;
+  opacity: 0.8;
 }
 
-.section-title {
-  font-size: 1.4rem;
-  text-align: center;
-  margin-bottom: 30px;
-  color: #ddd;
+/* =========================
+   CONTENIDO PRINCIPAL
+========================= */
+.student-content {
+  width: 100%;
+  max-width: 1400px;
+  margin: auto;
+
+  padding: 30px;
 }
 
 /* =========================
@@ -75,49 +58,29 @@
 ========================= */
 .accordion {
   margin-bottom: 20px;
-  border-radius: 20px;
-  transition: all 0.3s ease;
 }
 
-.accordion.active {
-  transform: scale(1.01);
-}
-
-/* HEADER */
 .accordion-header {
+  padding: 18px;
+  border-radius: 12px;
+
+  background: #1e293b;
+  color: white;
+
+  cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  padding: 20px 25px;
-
-  background: linear-gradient(135deg, rgba(0,123,255,0.6), rgba(0,198,255,0.5));
-  color: #fff;
-
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 16px;
-
-  border-radius: 20px;
-
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
-/* HOVER */
 .accordion-header:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,123,255,0.4);
+  background: #334155;
 }
 
-/* ACTIVO */
-.accordion.active .accordion-header {
-  background: linear-gradient(135deg, #007bff, #00c6ff);
-}
-
-/* FLECHA */
 .arrow {
-  transition: transform 0.3s ease;
-  font-size: 14px;
+  transition: 0.3s;
 }
 
 .arrow.open {
@@ -125,89 +88,70 @@
 }
 
 /* =========================
-   CONTENIDO GRID (MEJORA CLAVE)
+   GRID (AQUÍ ESTÁ EL CAMBIO REAL)
 ========================= */
 .accordion-content {
-  margin-top: 15px;
-  padding: 25px;
-
-  background: rgba(255,255,255,0.97);
-
-  border-radius: 20px;
+  margin-top: 10px;
 
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
 
-  animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn 0.3s ease;
 }
 
 /* =========================
-   ITEMS DE ARCHIVOS
+   TARJETAS DE ARCHIVOS
 ========================= */
 .file-item {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  background: white;
+  border-radius: 15px;
 
   padding: 15px;
 
-  border-radius: 15px;
-  background: #ffffff;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
 
-  box-shadow: 0 6px 15px rgba(0,0,0,0.12);
-
-  transition: all 0.25s ease;
+  transition: 0.3s;
 }
 
 .file-item:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.18);
+  transform: translateY(-5px);
 }
 
 /* LABEL */
 .file-item label {
+  font-weight: bold;
   font-size: 14px;
-  font-weight: 600;
   color: #333;
 }
 
 /* TEXTO SUBIDO */
 .uploaded {
-  color: #28a745;
+  color: #22c55e;
   font-size: 12px;
-  margin-left: 10px;
+  margin-left: 8px;
 }
 
-/* INPUT FILE */
+/* INPUT */
 .file-item input[type="file"] {
-  padding: 10px;
+  margin-top: 8px;
+  padding: 8px;
 
-  border-radius: 10px;
-  border: 2px dashed #007bff;
+  border-radius: 8px;
+  border: 2px dashed #0ea5e9;
 
-  background: #f5faff;
   cursor: pointer;
-
-  transition: 0.3s;
 }
 
-.file-item input[type="file"]:hover {
-  background: #e6f2ff;
-  border-color: #0056b3;
-}
-
-/* =========================
-   PDF PREVIEW
-========================= */
+/* PDF */
 .file-item iframe {
   width: 100%;
-  height: 220px;
+  height: 200px;
 
-  border-radius: 12px;
+  margin-top: 10px;
+
+  border-radius: 10px;
   border: none;
-
-  margin-top: 8px;
 
   box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
@@ -216,62 +160,31 @@
    BOTÓN
 ========================= */
 .upload-btn {
-  margin-top: 35px;
+  margin-top: 30px;
 
   width: 100%;
-  padding: 18px;
+  padding: 15px;
 
-  border-radius: 40px;
   border: none;
+  border-radius: 10px;
 
-  background: linear-gradient(135deg, #007bff, #00c6ff);
+  background: #0ea5e9;
   color: white;
 
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
-  letter-spacing: 0.5px;
 
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
-
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
 .upload-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 10px 25px rgba(0,123,255,0.6);
-}
-
-.upload-btn:active {
-  transform: scale(0.97);
-}
-
-/* BRILLO */
-.upload-btn::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255,255,255,0.6),
-    transparent
-  );
-
-  transition: 0.5s;
-}
-
-.upload-btn:hover::before {
-  left: 100%;
+  background: #0284c7;
+  transform: scale(1.03);
 }
 
 /* =========================
-   ANIMACIONES
+   ANIMACIÓN
 ========================= */
 @keyframes fadeIn {
   from {
@@ -285,28 +198,11 @@
 }
 
 /* =========================
-   SCROLL
-========================= */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(0,123,255,0.5);
-  border-radius: 10px;
-}
-
-/* =========================
    RESPONSIVE
 ========================= */
 @media (max-width: 768px) {
-  .student-card {
-    margin: 15px;
-    padding: 25px;
-  }
-
-  .student-name {
-    font-size: 2rem;
+  .student-content {
+    padding: 15px;
   }
 
   .accordion-content {
