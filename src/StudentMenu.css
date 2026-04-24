@@ -1,15 +1,5 @@
 /* =========================
-   RESET
-========================= */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-/* =========================
-   FONDO GENERAL (CENTRADO 🔥)
+   FONDO GENERAL
 ========================= */
 .student-menu {
   min-height: 100vh;
@@ -17,11 +7,11 @@
 
   display: flex;
   justify-content: center;
-  align-items: center; /* 🔥 centra vertical */
+  align-items: center;
 
   padding: 20px;
 
-  background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)),
               url("./imagenes/fondo1.jpg");
 
   background-size: cover;
@@ -29,20 +19,23 @@
 }
 
 /* =========================
-   TARJETA
+   TARJETA (GLASS PRO)
 ========================= */
 .student-card {
   width: 100%;
   max-width: 950px;
 
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(20px);
 
   border-radius: 25px;
   padding: 35px;
 
-  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.1);
+
+  box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+
+  color: white;
 }
 
 /* =========================
@@ -50,17 +43,17 @@
 ========================= */
 .student-name {
   font-size: 2.2rem;
-  font-weight: bold;
+  font-weight: 600;
   text-align: center;
-  margin-bottom: 10px;
-  color: #000; /* 🔥 NEGRO */
+  margin-bottom: 5px;
+  color: #ffffff;
 }
 
 .section-title {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   text-align: center;
   margin-bottom: 25px;
-  color: #ddd;
+  color: #bbb;
 }
 
 /* =========================
@@ -69,15 +62,11 @@
 .accordion {
   margin-bottom: 15px;
   border-radius: 18px;
-  transition: all 0.3s ease;
-}
-
-.accordion.active {
-  transform: scale(1.01);
+  transition: 0.3s;
 }
 
 /* =========================
-   HEADER (🔥 MÁS OSCURO)
+   HEADER PRO
 ========================= */
 .accordion-header {
   display: flex;
@@ -86,36 +75,29 @@
 
   padding: 18px 22px;
 
-  /* 🔥 COLOR MÁS OSCURO */
-  background: linear-gradient(135deg, #0056b3, #007bff);
-
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
   color: #fff;
 
   cursor: pointer;
-  font-weight: 600;
-  font-size: 15px;
+  font-weight: 500;
 
   border-radius: 18px;
-
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
-/* HOVER MÁS PRO */
 .accordion-header:hover {
-  background: linear-gradient(135deg, #004494, #0069d9);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,123,255,0.4);
+  box-shadow: 0 10px 25px rgba(42,82,152,0.6);
 }
 
 /* ACTIVO */
 .accordion.active .accordion-header {
-  background: linear-gradient(135deg, #003f88, #0056b3);
+  background: linear-gradient(135deg, #162c52, #1e3c72);
 }
 
 /* FLECHA */
 .arrow {
-  transition: transform 0.3s ease;
-  font-size: 14px;
+  transition: transform 0.3s;
 }
 
 .arrow.open {
@@ -129,7 +111,7 @@
   margin-top: 10px;
   padding: 18px;
 
-  background: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.05);
 
   border-radius: 18px;
 
@@ -137,7 +119,7 @@
   flex-direction: column;
   gap: 12px;
 
-  animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn 0.3s ease;
 }
 
 /* =========================
@@ -148,54 +130,63 @@
   flex-direction: column;
   gap: 6px;
 
-  padding: 12px;
+  padding: 14px;
 
   border-radius: 12px;
-  background: #ffffff;
 
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-}
-
-.file-item label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-}
-
-.uploaded {
-  color: #28a745;
-  font-size: 12px;
-  margin-left: 10px;
-}
-
-/* INPUT */
-.file-item input[type="file"] {
-  padding: 10px;
-
-  border-radius: 10px;
-  border: 2px dashed #007bff;
-
-  background: #f5faff;
-  cursor: pointer;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
 
   transition: 0.3s;
 }
 
-.file-item input[type="file"]:hover {
-  background: #e6f2ff;
-  border-color: #0056b3;
+.file-item:hover {
+  background: rgba(255,255,255,0.12);
 }
 
-/* PDF */
+/* LABEL */
+.file-item label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #eee;
+}
+
+/* ESTADO */
+.uploaded {
+  color: #00ffae;
+  font-size: 12px;
+  margin-left: 10px;
+}
+
+/* INPUT FILE PRO */
+.file-item input[type="file"] {
+  padding: 10px;
+
+  border-radius: 10px;
+  border: 2px dashed rgba(255,255,255,0.3);
+
+  background: rgba(255,255,255,0.05);
+  color: white;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.file-item input[type="file"]:hover {
+  border-color: #00c6ff;
+  background: rgba(0,198,255,0.1);
+}
+
+/* PDF PREVIEW */
 .file-item iframe {
   border-radius: 10px;
   margin-top: 8px;
   height: 200px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.5);
 }
 
 /* =========================
-   BOTÓN
+   BOTÓN PRO
 ========================= */
 .upload-btn {
   margin-top: 30px;
@@ -206,31 +197,30 @@
   border-radius: 40px;
   border: none;
 
-  background: linear-gradient(135deg, #0056b3, #007bff);
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
 
   color: white;
 
-  font-size: 17px;
+  font-size: 16px;
   font-weight: bold;
-  letter-spacing: 0.5px;
 
   cursor: pointer;
   position: relative;
   overflow: hidden;
 
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
 .upload-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 10px 25px rgba(0,123,255,0.6);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(0,198,255,0.6);
 }
 
 .upload-btn:active {
   transform: scale(0.97);
 }
 
-/* BRILLO */
+/* EFECTO BRILLO */
 .upload-btn::before {
   content: "";
   position: absolute;
@@ -272,7 +262,6 @@
 ========================= */
 @media (max-width: 768px) {
   .student-card {
-    margin: 10px;
     padding: 20px;
   }
 
