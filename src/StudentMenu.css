@@ -18,7 +18,7 @@
   display: flex;
   justify-content: center;
 
-  padding: 50px 30px;
+  padding: 60px 20px; /* 🔥 más aire arriba/abajo */
 
   background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
               url("./imagenes/fondo1.jpg");
@@ -26,7 +26,6 @@
   background-size: cover;
   background-position: center;
 }
-
 /* =========================
    TARJETA PRINCIPAL (FULL WIDTH)
 ========================= */
@@ -217,7 +216,16 @@
     grid-template-columns: 1fr;
   }
 
-  .student-card {
-    padding: 25px;
-  }
+ .student-card {
+  width: 100%;
+  max-width: 1200px;   /* 🔥 antes 1600 → ahora más equilibrado */
+  
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(18px);
+
+  border-radius: 25px;
+  padding: 45px;
+
+  box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+}
 }
