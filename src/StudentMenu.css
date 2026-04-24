@@ -1,0 +1,167 @@
+/* CONTENEDOR PRINCIPAL */
+.student-menu {
+  min-height: 100vh;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 20px;
+
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)),
+              url("./imagenes/fondo1.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+/* CARD PRINCIPAL */
+.student-card {
+  width: 900px; /* 🔥 tamaño del card */
+  max-width: 95%;
+
+  padding: 30px;
+
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+
+  color: white;
+}
+
+/* TITULOS */
+.student-name {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.section-title {
+  margin-bottom: 20px;
+  font-weight: normal;
+  opacity: 0.8;
+}
+
+/* ACORDEON */
+.accordion {
+  margin-bottom: 15px;
+  border-radius: 12px;
+  overflow: hidden;
+
+  background: rgba(255,255,255,0.05);
+  transition: 0.3s;
+}
+
+.accordion.active {
+  background: rgba(255,255,255,0.1);
+}
+
+/* HEADER */
+.accordion-header {
+  padding: 15px 20px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  cursor: pointer;
+
+  font-weight: bold;
+
+  transition: 0.3s;
+}
+
+.accordion-header:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* FLECHA */
+.arrow {
+  transition: transform 0.3s;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+/* CONTENIDO */
+.accordion-content {
+  padding: 15px 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+/* ITEM DE ARCHIVO */
+.file-item {
+  margin-bottom: 15px;
+  padding: 10px;
+
+  border-radius: 10px;
+
+  background: rgba(0,0,0,0.2);
+}
+
+/* LABEL */
+.file-item label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+/* TEXTO SUBIDO */
+.uploaded {
+  color: #00ff99;
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+/* INPUT FILE */
+.file-item input[type="file"] {
+  width: 100%;
+  padding: 6px;
+
+  border-radius: 6px;
+  border: none;
+
+  background: rgba(255,255,255,0.1);
+  color: white;
+  cursor: pointer;
+}
+
+/* BOTON */
+.upload-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #00bcd4;
+  color: white;
+
+  font-size: 16px;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.upload-btn:hover {
+  background: #0097a7;
+  transform: scale(1.02);
+}
+
+/* ANIMACION */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
