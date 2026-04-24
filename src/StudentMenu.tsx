@@ -5,7 +5,7 @@ const StudentMenu = ({ studentData }: any) => {
 
   const [pdfs, setPdfs] = useState<any>({});
 
-  // 🔥 CORRECCIÓN: soporta objeto o array
+  // 🔥 SOPORTA OBJETO (nuevo) o array (viejo)
   const [docs, setDocs] = useState<any>(
     typeof studentData.documentos === "object" && !Array.isArray(studentData.documentos)
       ? studentData.documentos
@@ -17,6 +17,10 @@ const StudentMenu = ({ studentData }: any) => {
   const toggleSection = (index: number) => {
     setOpenSection(openSection === index ? null : index);
   };
+
+  // 🔥 NORMALIZAR KEY (IMPORTANTE)
+  const normalizeKey = (text: string) =>
+    text.replace(/\./g, "_");
 
   const sections = [
     {
@@ -91,11 +95,11 @@ const StudentMenu = ({ studentData }: any) => {
         const updatedUser = await res.json();
         console.log("RESPONSE:", updatedUser);
 
-        // 🔥 IMPORTANTE: actualizar docs correctamente
         updatedDocs = updatedUser.documentos;
       }
 
       setDocs({ ...updatedDocs });
+      setPdfs({}); // 🔥 limpiar inputs
       alert("Documentos guardados correctamente");
 
     } catch (err) {
@@ -132,7 +136,10 @@ const StudentMenu = ({ studentData }: any) => {
               <div className="accordion-content">
 
                 {section.items.map((item, j) => {
-                  const key = `${section.title}-${item}`;
+
+                  const rawKey = `${section.title}-${item}`;
+                  const key = normalizeKey(rawKey);
+
                   const uploaded = docs?.[key];
 
                   return (
@@ -156,7 +163,7 @@ const StudentMenu = ({ studentData }: any) => {
                         }
                       />
 
-                      {/* 🔥 Vista previa FIX */}
+                      {/* 🔥 Vista previa */}
                       {uploaded && typeof uploaded === "string" && (
                         <iframe
                           src={uploaded}
