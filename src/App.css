@@ -1,6 +1,4 @@
-/* =========================
-   RESET SOLO LOGIN (AISLADO)
-========================= */
+
 .auth-background * {
   margin: 0;
   padding: 0;
@@ -8,9 +6,7 @@
   font-family: 'Montserrat', sans-serif;
 }
 
-/* =========================
-   CONTENEDOR PRINCIPAL LOGIN
-========================= */
+
 .auth-background {
   position: fixed;
   inset: 0;
@@ -28,7 +24,7 @@
   justify-content: center;
 }
 
-/* Overlay oscuro elegante */
+
 .auth-background::before {
   content: "";
   position: absolute;
@@ -36,15 +32,13 @@
   background: rgba(0, 0, 0, 0.45);
 }
 
-/* Contenido encima del overlay */
+
 .auth-background > * {
   position: relative;
   z-index: 1;
 }
 
-/* =========================
-   CONTENEDOR FORM
-========================= */
+
 .auth-background .container-form {
   display: flex;
   width: 90%;
@@ -60,9 +54,7 @@
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
 }
 
-/* =========================
-   PANEL IZQUIERDO
-========================= */
+
 .auth-background .information {
   width: 45%;
   background: linear-gradient(135deg, #2f4dd3, #00c6ff);
@@ -92,7 +84,7 @@
   opacity: 0.9;
 }
 
-/* BOTÓN IZQUIERDO */
+
 .auth-background .info-childs button {
   margin-top: 15px;
   padding: 12px 25px;
@@ -113,9 +105,7 @@
   color: #2f4dd3;
 }
 
-/* =========================
-   PANEL DERECHO
-========================= */
+
 .auth-background .form-information {
   width: 55%;
   background: rgba(255, 255, 255, 0.95);
@@ -125,9 +115,7 @@
   justify-content: center;
 }
 
-/* =========================
-   FORMULARIO
-========================= */
+
 .auth-background .form-information-childs {
   width: 100%;
   max-width: 350px;
@@ -144,7 +132,7 @@
   flex-direction: column;
 }
 
-/* INPUTS */
+
 .auth-background .form-information-childs form input {
   width: 100%;
   padding: 14px 18px;
@@ -165,7 +153,7 @@
   box-shadow: 0 0 0 2px #2f4dd3;
 }
 
-/* BOTÓN LOGIN */
+
 .auth-background .form-information-childs form button {
   width: 100%;
   padding: 14px;
@@ -188,9 +176,7 @@
   box-shadow: 0 10px 20px rgba(0,0,0,0.25);
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+
 @media (max-width: 768px) {
   .auth-background .container-form {
     flex-direction: column;

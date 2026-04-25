@@ -20,7 +20,7 @@ const AdminPanel = () => {
     }
   };
 
-  // 🔥 LOGOUT
+ 
   const handleLogout = () => {
     localStorage.removeItem("user");
     window.location.reload();
@@ -29,14 +29,14 @@ const AdminPanel = () => {
   return (
     <div className="admin-container">
 
-      {/* 🔴 BOTÓN LOGOUT */}
+      {}
       <button className="admin-logout-btn" onClick={handleLogout}>
         Cerrar sesión
       </button>
 
       <h1>Panel Administrador</h1>
 
-      {/* 🔍 BUSCADOR */}
+      {}
       <div className="search-box center">
         <input
           type="text"
@@ -48,7 +48,7 @@ const AdminPanel = () => {
         <button onClick={buscar}>Buscar</button>
       </div>
 
-      {/* 📋 RESULTADOS */}
+      {}
       <div className="results">
         {students.map((s, i) => {
 
@@ -67,7 +67,7 @@ const AdminPanel = () => {
         })}
       </div>
 
-      {/* 📂 DETALLE DEL ALUMNO */}
+      {}
       {selected && (
         <div className="admin-student-info">
 

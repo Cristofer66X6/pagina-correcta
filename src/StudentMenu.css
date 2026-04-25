@@ -1,14 +1,10 @@
-/* =========================
-   RESET LOCAL
-========================= */
+
 .student-menu * {
   box-sizing: border-box;
   font-family: 'Segoe UI', sans-serif;
 }
 
-/* =========================
-   CONTENEDOR GENERAL
-========================= */
+
 .student-menu {
   min-height: 100vh;
   width: 100%;
@@ -26,9 +22,7 @@
   background-position: center;
 }
 
-/* =========================
-   CARD PRINCIPAL (GLASS)
-========================= */
+
 .student-card {
   width: 100%;
   max-width: 1100px;
@@ -52,9 +46,7 @@
   color: white;
 }
 
-/* =========================
-   TEXTOS
-========================= */
+
 .student-name {
   font-size: 2.5rem;
   text-align: center;
@@ -68,9 +60,7 @@
   color: #aaa;
 }
 
-/* =========================
-   ACORDEÓN AZUL
-========================= */
+
 .accordion {
   margin-bottom: 18px;
 }
@@ -111,9 +101,7 @@
   transform: rotate(180deg);
 }
 
-/* =========================
-   CONTENIDO (LISTA VERTICAL 🔥)
-========================= */
+
 .accordion-content {
   margin-top: 10px;
   padding: 20px;
@@ -129,9 +117,7 @@
   gap: 15px;
 }
 
-/* =========================
-   ITEMS (PDFS)
-========================= */
+
 .student-menu .file-item {
   width: 100%;
 
@@ -176,7 +162,7 @@
   color: white;
 }
 
-/* PDF */
+
 .file-item iframe {
   width: 100%;
   height: 220px;
@@ -184,9 +170,6 @@
   margin-top: 10px;
 }
 
-/* =========================
-   BOTÓN CRISTAL CON BRILLO ✨
-========================= */
 .upload-btn {
   position: relative;
   overflow: hidden;
@@ -214,7 +197,7 @@
     0 10px 25px rgba(0,0,0,0.6);
 }
 
-/* ✨ BRILLO QUE PASA */
+
 .upload-btn::before {
   content: "";
   position: absolute;
@@ -262,9 +245,7 @@
     inset 0 4px 10px rgba(0,0,0,0.7);
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+
 @media (max-width: 768px) {
   .student-card {
     padding: 25px;
@@ -293,7 +274,7 @@
 
   backdrop-filter: blur(10px);
 
-  /* 🔥 CLAVE PARA QUE EL BRILLO NO SE SALGA */
+  
   overflow: hidden;
   position: fixed;
 
@@ -308,7 +289,7 @@
   content: "";
   position: absolute;
   top: 0;
-  left: -100%; /* 🔥 empieza dentro del botón */
+  left: -100%; 
 
   width: 50%;
   height: 100%;
@@ -323,18 +304,18 @@
   transform: skewX(-25deg);
 }
 
-/* 🔥 animación limpia dentro */
+
 .logout-btn:hover::before {
   animation: shineInside 0.8s ease;
 }
 
 @keyframes shineInside {
   100% {
-    left: 120%; /* 🔥 termina dentro */
+    left: 120%; 
   }
 }
 
-/* HOVER */
+
 .logout-btn:hover {
   transform: translateY(-2px) scale(1.03);
 
@@ -346,7 +327,7 @@
     0 12px 30px rgba(0,0,0,0.8);
 }
 
-/* CLICK */
+
 .logout-btn:active {
   transform: translateY(1px);
 

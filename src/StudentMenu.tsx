@@ -20,13 +20,13 @@ const StudentMenu = ({ studentData }: any) => {
   const normalizeKey = (text: string) =>
     text.replace(/\./g, "_");
 
-  // 🔥 LOGOUT
+  
   const handleLogout = () => {
     localStorage.removeItem("user");
     window.location.reload();
   };
 
-  // 🔥 NOMBRE COMPLETO
+ 
   const fullName = `${studentData.nombre || ""} ${studentData.apellidoPaterno || ""} ${studentData.apellidoMaterno || ""}`;
 
   const sections = [
@@ -109,7 +109,7 @@ const StudentMenu = ({ studentData }: any) => {
       alert("Documentos guardados correctamente");
 
     } catch (err) {
-      console.log("❌ ERROR FRONT:", err);
+      console.log("ERROR FRONT:", err);
     }
   };
 
@@ -118,13 +118,13 @@ const StudentMenu = ({ studentData }: any) => {
 
       <div className="student-card">
 
-        {/* 🔥 HEADER */}
+        {}
         <div className="student-header">
 
           <div>
             <h1 className="student-name">{fullName}</h1>
 
-            {/* 🔥 INFO EXTRA */}
+            {}
             <p className="student-info">
               📧 {studentData.email}
             </p>

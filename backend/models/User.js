@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   periodo: String,
   genero: String,
 
-  // 🔥 FIX REAL
+  
   documentos: {
     type: Map,
     of: String,
@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
   type: String,
-  default: "student" // o "admin"
+  default: "student" 
 }
 });
 

@@ -4,7 +4,7 @@ import SchoolForm from './SchoolForm';
 import StudentMenu from './StudentMenu';
 import AdminPanel from './AdminPanel';
 
-// 🔥 URL dinámica (LOCAL + PRODUCCIÓN)
+
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 function App() {
@@ -13,12 +13,12 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [studentData, setStudentData] = useState<any>(null);
 
-  // 🔥 NUEVO: evita flash
+ 
   const [loading, setLoading] = useState(true);
 
   const handleToggle = () => setIsLogin(!isLogin);
 
-  // 🔥 RECUPERAR SESIÓN
+ 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
 
@@ -33,7 +33,7 @@ function App() {
       }
     }
 
-    // 🔥 TERMINA CARGA
+    
     setLoading(false);
   }, []);
 
@@ -78,7 +78,7 @@ const handleLoginSubmit = async (e: any) => {
   }
 };
 
-  // 📝 REGISTRO
+  
   const handleRegisterSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -102,7 +102,7 @@ const handleLoginSubmit = async (e: any) => {
     }
   };
 
-  // 🎓 GUARDAR DATOS ESCOLARES
+  
   const handleSchoolSave = async (data: any) => {
     try {
       const res = await fetch(`${API}/student`, {
@@ -118,7 +118,7 @@ const handleLoginSubmit = async (e: any) => {
 
       setStudentData(updatedUser);
 
-      // 🔥 ACTUALIZA LOCALSTORAGE
+      
       localStorage.setItem("user", JSON.stringify(updatedUser));
 
     } catch (err) {
@@ -126,7 +126,7 @@ const handleLoginSubmit = async (e: any) => {
     }
   };
 
-  // 🔥 EVITA FLASH (MUY IMPORTANTE)
+  
   if (loading) {
     return (
       <div style={{
@@ -140,7 +140,7 @@ const handleLoginSubmit = async (e: any) => {
     );
   }
 
-  // 🔐 LOGIN / REGISTRO
+
   if (!isAuthenticated) {
     return (
       <div className="auth-background">
@@ -194,15 +194,15 @@ const handleLoginSubmit = async (e: any) => {
     );
   }
 
-  // 🧑‍💻 ADMIN
+ 
   if (isAdmin) return <AdminPanel />;
 
-  // 📋 FORMULARIO
+  
   if (!studentData?.numControl) {
     return <SchoolForm onSave={handleSchoolSave} />;
   }
 
-  // 📂 PANEL ESTUDIANTE
+  
   return <StudentMenu studentData={studentData} />;
 }
 
