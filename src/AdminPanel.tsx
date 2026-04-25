@@ -20,8 +20,19 @@ const AdminPanel = () => {
     }
   };
 
+  // 🔥 LOGOUT
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    window.location.reload();
+  };
+
   return (
     <div className="admin-container">
+
+      {/* 🔴 BOTÓN LOGOUT */}
+      <button className="admin-logout-btn" onClick={handleLogout}>
+        Cerrar sesión
+      </button>
 
       <h1>Panel Administrador</h1>
 
@@ -39,23 +50,30 @@ const AdminPanel = () => {
 
       {/* 📋 RESULTADOS */}
       <div className="results">
-        {students.map((s, i) => (
-          <div key={i} className="admin-student-card">
-            <p><b>{s.nombre}</b></p>
-            <p>No. Control: {s.numControl}</p>
+        {students.map((s, i) => {
 
-            <button onClick={() => setSelected(s)}>
-              Ver expediente
-            </button>
-          </div>
-        ))}
+          const fullName = `${s.nombre || ""} ${s.apellidoPaterno || ""} ${s.apellidoMaterno || ""}`;
+
+          return (
+            <div key={i} className="admin-student-card">
+              <p><b>{fullName}</b></p>
+              <p>No. Control: {s.numControl || "N/A"}</p>
+
+              <button onClick={() => setSelected(s)}>
+                Ver expediente
+              </button>
+            </div>
+          );
+        })}
       </div>
 
       {/* 📂 DETALLE DEL ALUMNO */}
       {selected && (
         <div className="admin-student-info">
 
-          <h2>{selected.nombre}</h2>
+          <h2>
+            {selected.nombre} {selected.apellidoPaterno} {selected.apellidoMaterno}
+          </h2>
 
           <p><b>Email:</b> {selected.email}</p>
           <p><b>No. Control:</b> {selected.numControl}</p>
@@ -73,8 +91,8 @@ const AdminPanel = () => {
                   <iframe
                     src={selected.documentos[key]}
                     width="100%"
-                    height="300px"
-                    style={{ border: "none", marginTop: "10px" }}
+                    height="350px"
+                    style={{ border: "none", marginTop: "10px", borderRadius: "10px" }}
                   />
                 </div>
               ))
