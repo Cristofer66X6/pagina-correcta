@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import './StudentMenu.css';
+import { useState } from "react";
+import "./StudentMenu.css";
 
 const StudentMenu = ({ studentData }: any) => {
 
   const [pdfs, setPdfs] = useState<any>({});
 
-  // 🔥 SOPORTA OBJETO (nuevo) o array (viejo)
+  // 🔥 SOPORTA OBJETO o ARRAY
   const [docs, setDocs] = useState<any>(
     typeof studentData.documentos === "object" && !Array.isArray(studentData.documentos)
       ? studentData.documentos
@@ -18,9 +18,15 @@ const StudentMenu = ({ studentData }: any) => {
     setOpenSection(openSection === index ? null : index);
   };
 
-  // 🔥 NORMALIZAR KEY (IMPORTANTE)
+  // 🔥 NORMALIZAR KEY
   const normalizeKey = (text: string) =>
     text.replace(/\./g, "_");
+
+  // 🔥 LOGOUT
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    window.location.reload(); // regresa al login
+  };
 
   const sections = [
     {
@@ -86,23 +92,19 @@ const StudentMenu = ({ studentData }: any) => {
         formData.append("name", key);
 
         const res = await fetch(
-  `${API}/upload?email=${studentData.email}&name=${key}`,
-  {
-    method: "POST",
-    body: formData
-  }
-);
-
-        console.log("STATUS:", res.status);
+          `${API}/upload?email=${studentData.email}&name=${key}`,
+          {
+            method: "POST",
+            body: formData
+          }
+        );
 
         const updatedUser = await res.json();
-        console.log("RESPONSE:", updatedUser);
-
         updatedDocs = updatedUser.documentos;
       }
 
       setDocs({ ...updatedDocs });
-      setPdfs({}); // 🔥 limpiar inputs
+      setPdfs({});
       alert("Documentos guardados correctamente");
 
     } catch (err) {
@@ -110,87 +112,96 @@ const StudentMenu = ({ studentData }: any) => {
     }
   };
 
- return (
-  <div className="student-menu"> {/* 🔥 CONTENEDOR PADRE */}
-    
-    <div className="student-card">
+  return (
+    <div className="student-menu">
 
-      <h1 className="student-name">{studentData.nombre}</h1>
-      <h2 className="section-title">Subir Documentos</h2>
+      <div className="student-card">
 
-      {sections.map((section, i) => (
-        <div 
-          key={i} 
-          className={`accordion ${openSection === i ? "active" : ""}`}
-        >
+        {/* 🔥 HEADER CON LOGOUT */}
+        <div className="student-header">
+          <h1 className="student-name">{studentData.nombre}</h1>
 
-          <div 
-            className="accordion-header"
-            onClick={() => toggleSection(i)}
-          >
-            <span>{section.title}</span>
-            <span className={`arrow ${openSection === i ? "open" : ""}`}>
-              ▼
-            </span>
-          </div>
-
-          {openSection === i && (
-            <div className="accordion-content">
-
-              {section.items.map((item, j) => {
-
-                const rawKey = `${section.title}-${item}`;
-                const key = normalizeKey(rawKey);
-                const uploaded = docs?.[key];
-
-                return (
-                  <div key={j} className="file-item">
-
-                    <label>
-                      {item}
-                      {uploaded && (
-                        <span className="uploaded"> ✔ Subido</span>
-                      )}
-                    </label>
-
-                    <input
-                      type="file"
-                      accept="application/pdf"
-                      onChange={(e) =>
-                        handleFileChange(
-                          key,
-                          e.target.files?.[0] || null
-                        )
-                      }
-                    />
-
-                    {uploaded && typeof uploaded === "string" && (
-                      <iframe
-                        src={uploaded}
-                        title={key}
-                        width="100%"
-                        height="200px"
-                      />
-                    )}
-
-                  </div>
-                );
-              })}
-
-            </div>
-          )}
-
+          <button className="logout-btn" onClick={handleLogout}>
+            Cerrar sesión
+          </button>
         </div>
-      ))}
 
-      <button className="upload-btn" onClick={handleSave}>
-        Subir PDFs
-      </button>
+        <h2 className="section-title">Subir Documentos</h2>
+
+        {sections.map((section, i) => (
+          <div
+            key={i}
+            className={`accordion ${openSection === i ? "active" : ""}`}
+          >
+
+            <div
+              className="accordion-header"
+              onClick={() => toggleSection(i)}
+            >
+              <span>{section.title}</span>
+              <span className={`arrow ${openSection === i ? "open" : ""}`}>
+                ▼
+              </span>
+            </div>
+
+            {openSection === i && (
+              <div className="accordion-content">
+
+                {section.items.map((item, j) => {
+
+                  const rawKey = `${section.title}-${item}`;
+                  const key = normalizeKey(rawKey);
+                  const uploaded = docs?.[key];
+
+                  return (
+                    <div key={j} className="file-item">
+
+                      <label>
+                        {item}
+                        {uploaded && (
+                          <span className="uploaded"> ✔ Subido</span>
+                        )}
+                      </label>
+
+                      <input
+                        type="file"
+                        accept="application/pdf"
+                        onChange={(e) =>
+                          handleFileChange(
+                            key,
+                            e.target.files?.[0] || null
+                          )
+                        }
+                      />
+
+                      {/* 🔥 PDF UNO POR UNO (YA CORRECTO) */}
+                      {uploaded && typeof uploaded === "string" && (
+                        <iframe
+                          src={uploaded}
+                          title={key}
+                          width="100%"
+                          height="400px"
+                        />
+                      )}
+
+                    </div>
+                  );
+                })}
+
+              </div>
+            )}
+
+          </div>
+        ))}
+
+        <button className="upload-btn" onClick={handleSave}>
+          Subir PDFs
+        </button>
+
+      </div>
 
     </div>
-
-  </div>
-);
+  );
 };
 
 export default StudentMenu;
