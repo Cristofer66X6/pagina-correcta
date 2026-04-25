@@ -126,11 +126,11 @@ const StudentMenu = ({ studentData }: any) => {
 
             {}
             <p className="student-info">
-              📧 {studentData.email}
+              {studentData.email}
             </p>
 
             <p className="student-info">
-              🎓 No. Control: {studentData.numControl || "No registrado"}
+               No. Control: {studentData.numControl || "No registrado"}
             </p>
           </div>
 
