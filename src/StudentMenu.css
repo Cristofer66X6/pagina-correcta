@@ -112,7 +112,7 @@
 }
 
 /* =========================
-   CONTENIDO (PDFS EN LISTA 🔥)
+   CONTENIDO (LISTA VERTICAL 🔥)
 ========================= */
 .accordion-content {
   margin-top: 10px;
@@ -123,16 +123,17 @@
   background: rgba(255,255,255,0.04);
   border-radius: 15px;
 
-  display: flex;              /* 🔥 CAMBIO CLAVE */
-  flex-direction: column;     /* 🔥 UNO DEBAJO DE OTRO */
-  gap: 18px;
+  display: flex;
+  flex-direction: column;
+
+  gap: 15px;
 }
 
 /* =========================
-   ITEMS
+   ITEMS (PDFS)
 ========================= */
 .student-menu .file-item {
-  width: 100%; /* 🔥 ocupa todo */
+  width: 100%;
 
   padding: 16px;
 
@@ -175,9 +176,10 @@
   color: white;
 }
 
-/* PDF PREVIEW */
+/* PDF */
 .file-item iframe {
   width: 100%;
+  height: 220px;
   border-radius: 10px;
   margin-top: 10px;
 }
@@ -212,7 +214,7 @@
     0 10px 25px rgba(0,0,0,0.6);
 }
 
-/* 🔥 EFECTO BRILLO QUE PASA */
+/* ✨ BRILLO QUE PASA */
 .upload-btn::before {
   content: "";
   position: absolute;
@@ -224,14 +226,13 @@
   background: linear-gradient(
     120deg,
     transparent,
-    rgba(255,255,255,0.6),
+    rgba(255,255,255,0.7),
     transparent
   );
 
   transform: skewX(-25deg);
 }
 
-/* 🔥 ACTIVACIÓN DEL BRILLO */
 .upload-btn:hover::before {
   animation: shine 0.8s ease;
 }
