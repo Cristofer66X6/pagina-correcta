@@ -35,7 +35,7 @@
   gap: 15px;
 }
 
-.student-card {
+.admin-student-card {
   background: #fff;
   padding: 15px;
   border-radius: 12px;
@@ -43,7 +43,7 @@
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-.student-card button {
+.admin-student-card button {
   margin-top: 10px;
   padding: 8px 15px;
   border: none;
@@ -54,7 +54,7 @@
 }
 
 /* 📂 DETALLE */
-.student-info {
+.admin-student-info {
   margin-top: 30px;
   text-align: left;
   background: #f5f5f5;
