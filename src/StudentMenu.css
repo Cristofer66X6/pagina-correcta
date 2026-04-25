@@ -1,4 +1,32 @@
 /* =========================
+   RESET LOCAL
+========================= */
+.student-menu * {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* =========================
+   CONTENEDOR GENERAL
+========================= */
+.student-menu {
+  min-height: 100vh;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  padding: 50px 20px;
+
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.9)),
+              url("./imagenes/fondoNegro2.jpg");
+
+  background-size: cover;
+  background-position: center;
+}
+
+/* =========================
    CARD PRINCIPAL (GLASS 🔥)
 ========================= */
 .student-card {
@@ -9,24 +37,45 @@
 
   padding: 45px 50px;
 
-  /* 🔥 MÁS TRANSPARENTE */
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(22px);
+  /* 🔥 glass real */
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
 
   border-radius: 25px;
 
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.18);
 
   box-shadow: 
-    0 25px 70px rgba(0,0,0,0.7),
-    inset 0 1px 0 rgba(255,255,255,0.08);
+    0 25px 60px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.15);
 
   color: white;
 }
 
 /* =========================
-   ACORDEÓN AZUL PRO 🔵
+   TEXTOS
 ========================= */
+.student-name {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.section-title {
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #aaa;
+}
+
+/* =========================
+   ACORDEÓN AZUL 🔵
+========================= */
+.accordion {
+  margin-bottom: 18px;
+}
+
 .accordion-header {
   display: flex;
   justify-content: space-between;
@@ -34,33 +83,101 @@
 
   padding: 18px 24px;
 
-  /* 🔥 AZUL PROFESIONAL */
   background: linear-gradient(145deg, #1e3c72, #2a5298);
 
   border-radius: 16px;
 
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
 
   cursor: pointer;
   transition: all 0.25s ease;
 
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.25),
     0 5px 15px rgba(0,0,0,0.5);
 }
 
 .accordion-header:hover {
   transform: translateY(-2px);
 
-  background: linear-gradient(145deg, #244a8f, #3366cc);
+  background: linear-gradient(145deg, #2b5bbf, #3a7bff);
 
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.2),
-    0 10px 25px rgba(0,0,0,0.7);
+    inset 0 1px 0 rgba(255,255,255,0.35),
+    0 10px 25px rgba(0,0,0,0.7),
+    0 0 12px rgba(58,123,255,0.5);
+}
+
+.arrow.open {
+  transform: rotate(180deg);
 }
 
 /* =========================
-   BOTÓN METAL + AZUL 🔥
+   GRID CONTENIDO
+========================= */
+.accordion-content {
+  margin-top: 10px;
+  padding: 20px;
+
+  width: 100%;
+
+  background: rgba(255,255,255,0.04);
+  border-radius: 15px;
+
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+  gap: 18px;
+}
+
+/* =========================
+   ITEMS
+========================= */
+.student-menu .file-item {
+  padding: 16px;
+
+  border-radius: 12px;
+
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  transition: all 0.25s ease;
+}
+
+.student-menu .file-item:hover {
+  background: rgba(255,255,255,0.1);
+  transform: translateY(-2px);
+}
+
+.file-item label {
+  font-size: 13px;
+  color: #eee;
+}
+
+.uploaded {
+  color: #00ffae;
+  font-size: 12px;
+}
+
+/* INPUT */
+.file-item input {
+  width: 100%;
+  padding: 10px;
+
+  border-radius: 8px;
+  border: 1px dashed rgba(255,255,255,0.3);
+
+  background: rgba(255,255,255,0.05);
+  color: white;
+}
+
+/* =========================
+   BOTÓN AZUL CRISTAL 💎
 ========================= */
 .upload-btn {
   margin-top: 35px;
@@ -71,44 +188,32 @@
   border-radius: 35px;
   border: none;
 
-  /* 🔥 METAL BASE */
-  background: linear-gradient(
-    145deg,
-    #dcdcdc,
-    #a6a6a6
-  );
+  background: linear-gradient(145deg, #2a6cff, #1e3c72);
 
-  color: #111;
+  color: white;
   font-size: 16px;
   font-weight: bold;
 
   cursor: pointer;
   transition: all 0.25s ease;
 
-  /* 🔥 PROFUNDIDAD + BORDE AZUL SUTIL */
   box-shadow: 
-    inset 0 2px 6px rgba(255,255,255,0.8),
-    inset 0 -3px 6px rgba(0,0,0,0.5),
+    inset 0 2px 6px rgba(255,255,255,0.3),
+    inset 0 -3px 6px rgba(0,0,0,0.4),
     0 10px 25px rgba(0,0,0,0.6),
-    0 0 0 1px rgba(0,114,255,0.4);
+    0 0 10px rgba(42,108,255,0.4);
 }
 
 .upload-btn:hover {
   transform: translateY(-2px);
 
-  /* 🔥 METAL MÁS BRILLANTE */
-  background: linear-gradient(
-    145deg,
-    #ffffff,
-    #cfcfcf
-  );
+  background: linear-gradient(145deg, #3a7bff, #2a6cff);
 
-  /* 🔥 GLOW AZUL PRO */
   box-shadow: 
-    inset 0 2px 8px rgba(255,255,255,1),
-    inset 0 -3px 8px rgba(0,0,0,0.6),
+    inset 0 2px 8px rgba(255,255,255,0.5),
+    inset 0 -3px 8px rgba(0,0,0,0.5),
     0 15px 35px rgba(0,0,0,0.8),
-    0 0 12px rgba(0,114,255,0.6);
+    0 0 15px rgba(58,123,255,0.6);
 }
 
 .upload-btn:active {
@@ -116,4 +221,17 @@
 
   box-shadow: 
     inset 0 4px 10px rgba(0,0,0,0.7);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+  .student-card {
+    padding: 25px;
+  }
+
+  .accordion-content {
+    grid-template-columns: 1fr;
+  }
 }
