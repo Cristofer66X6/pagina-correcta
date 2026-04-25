@@ -7,17 +7,15 @@
 }
 
 /* =========================
-   CONTENEDOR FULL
+   CONTENEDOR FULL REAL
 ========================= */
 .student-menu {
   min-height: 100vh;
   width: 100%;
 
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* 🔥 mejor para scroll */
+  display: block; /* 🔥 quitamos flex */
 
-  padding: 20px;
+  padding: 0; /* 🔥 quitamos padding que reduce ancho */
 
   background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.85)),
               url("./imagenes/fondoNegro2.jpg");
@@ -31,18 +29,20 @@
 ========================= */
 .student-card {
   width: 100%;
-  max-width: none; /* 🔥 ELIMINA EL LÍMITE */
-  
-  /* opcional: margen interno visual */
-  margin: 0 20px;
+
+  /* 🔥 CONTROL REAL DEL ANCHO */
+  max-width: 1600px;
+
+  /* 🔥 CENTRADO CORRECTO */
+  margin: 0 auto;
+
+  padding: 50px 60px;
 
   background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
 
   border-radius: 30px;
-  padding: 50px;
-
   border: 1px solid rgba(255,255,255,0.15);
 
   box-shadow: 0 30px 80px rgba(0,0,0,0.8);
@@ -97,7 +97,7 @@
 }
 
 /* =========================
-   CONTENIDO (GRID PRO)
+   CONTENIDO GRID
 ========================= */
 .accordion-content {
   margin-top: 12px;
@@ -107,8 +107,8 @@
   border-radius: 20px;
 
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
 }
 
 /* =========================
@@ -187,7 +187,6 @@
 @media (max-width: 768px) {
   .student-card {
     padding: 25px;
-    margin: 10px;
   }
 
   .accordion-content {
