@@ -1,209 +1,209 @@
-import { useState, useEffect } from 'react';
-import './App.css';
-import SchoolForm from './SchoolForm';
-import StudentMenu from './StudentMenu';
-import AdminPanel from './AdminPanel';
+import { useState } from "react";
+import "./StudentMenu.css";
 
+const StudentMenu = ({ studentData }: any) => {
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const [pdfs, setPdfs] = useState<any>({});
+  const [docs, setDocs] = useState<any>(
+    typeof studentData.documentos === "object" && !Array.isArray(studentData.documentos)
+      ? studentData.documentos
+      : {}
+  );
+  const [openSection, setOpenSection] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
 
-function App() {
-  const [isLogin, setIsLogin] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [studentData, setStudentData] = useState<any>(null);
+  const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
- 
-  const [loading, setLoading] = useState(true);
+  const toggleSection = (index: number) => {
+    setOpenSection(openSection === index ? null : index);
+  };
 
-  const handleToggle = () => setIsLogin(!isLogin);
+  const normalizeKey = (text: string) =>
+    text.replace(/\./g, "_");
 
- 
-  useEffect(() => {
-    const savedUser = localStorage.getItem("user");
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    window.location.reload();
+  };
 
-    if (savedUser) {
-      const user = JSON.parse(savedUser);
+  const sections = [
+    {
+      title: "1. Carpeta de Apertura",
+      items: [
+        "Autorización de RP",
+        "Carta Presentación",
+        "Carta aceptación",
+        "Asignación de asesor interno",
+        "Solicitud de RP",
+        "Carnet IMSS",
+        "Anteproyecto"
+      ]
+    },
+    {
+      title: "2. Carpeta de Asesorías Semanales",
+      items: [
+        "Asesorías semanales",
+        "Bitácora de sellos",
+        "Informe semestral de asesorías"
+      ]
+    },
+    {
+      title: "3. Cierre",
+      items: [
+        "Informe técnico",
+        "Carta término",
+        "Formato de liberación"
+      ]
+    },
+    {
+      title: "4. Carpeta de Evaluaciones",
+      items: [
+        "1era evaluación de RP",
+        "2da evaluación de RP",
+        "3era evaluación de RP"
+      ]
+    }
+  ];
 
-      setStudentData(user);
-      setIsAuthenticated(true);
+  const handleFileChange = (name: string, file: File | null) => {
+    if (!file) return;
 
-      if (user.email === "admin@escuela.com") {
-        setIsAdmin(true);
+    setPdfs((prev: any) => ({
+      ...prev,
+      [name]: file
+    }));
+  };
+
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+
+      const results = await Promise.all(
+        Object.keys(pdfs).map(async (key) => {
+          const file = pdfs[key];
+          if (!(file instanceof File)) return null;
+
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("email", studentData.email);
+          formData.append("name", key);
+
+          const res = await fetch(
+            `${API}/upload?email=${studentData.email}&name=${key}`,
+            {
+              method: "POST",
+              body: formData
+            }
+          );
+
+          return res.json();
+        })
+      );
+
+      const lastValid = results.reverse().find(r => r && r.documentos);
+
+      if (lastValid) {
+        setDocs({ ...lastValid.documentos });
+        localStorage.setItem("user", JSON.stringify(lastValid));
       }
+
+      setPdfs({});
+      alert("Documentos guardados correctamente");
+
+    } catch (err) {
+      console.log("ERROR:", err);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    
-    setLoading(false);
-  }, []);
+  return (
+    <div className="student-menu">
 
-const handleLoginSubmit = async (e: any) => {
-  e.preventDefault();
+      <button className="logout-btn" onClick={handleLogout}>
+        Cerrar sesión
+      </button>
 
-  const email = e.target.email.value;
-  const password = e.target.password.value;
+      <div className="student-card">
 
-  try {
-    const res = await fetch(`${API}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, password })
-    });
+        <h1 className="student-name">
+          {studentData.nombre} {studentData.apellidoPaterno} {studentData.apellidoMaterno}
+        </h1>
 
-    const data = await res.json();
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+          <p>{studentData.email}</p>
+          <p>No. Control: {studentData.numControl}</p>
+        </div>
 
-    if (!res.ok) {
-      alert(data.msg || "Error en login");
-      return;
-    }
+        <h2 className="section-title">Subir Documentos</h2>
 
-    // 🔥 GUARDAR SESIÓN
-    localStorage.setItem("user", JSON.stringify(data));
+        {sections.map((section, i) => (
+          <div key={i} className={`accordion ${openSection === i ? "active" : ""}`}>
 
-    setStudentData(data);
-    setIsAuthenticated(true);
+            <div className="accordion-header" onClick={() => toggleSection(i)}>
+              <span>{section.title}</span>
+              <span className={`arrow ${openSection === i ? "open" : ""}`}>
+                ▼
+              </span>
+            </div>
 
-    // 🔥 DETECTAR ADMIN CORRECTAMENTE
-    if (data.role === "admin") {
-      setIsAdmin(true);
-    } else {
-      setIsAdmin(false);
-    }
+            {openSection === i && (
+              <div className="accordion-content">
 
-  } catch (err) {
-    console.log("ERROR LOGIN:", err);
-    alert("Error conectando con el servidor");
-  }
+                {section.items.map((item, j) => {
+
+                  const rawKey = `${section.title}-${item}`;
+                  const key = normalizeKey(rawKey);
+                  const uploaded = docs?.[key];
+
+                  return (
+                    <div key={j} className="file-item">
+
+                      <label>
+                        {item}
+                        {uploaded && (
+                          <span className="uploaded"> ✔ Subido</span>
+                        )}
+                      </label>
+
+                      <input
+                        type="file"
+                        accept="application/pdf"
+                        onChange={(e) =>
+                          handleFileChange(
+                            key,
+                            e.target.files?.[0] || null
+                          )
+                        }
+                      />
+
+                      {uploaded && typeof uploaded === "string" && (
+                        <iframe
+                          src={uploaded}
+                          title={key}
+                          width="100%"
+                          height="350px"
+                        />
+                      )}
+
+                    </div>
+                  );
+                })}
+
+              </div>
+            )}
+
+          </div>
+        ))}
+
+        <button className="upload-btn" onClick={handleSave} disabled={loading}>
+          {loading ? "Subiendo..." : "Subir PDFs"}
+        </button>
+
+      </div>
+
+    </div>
+  );
 };
 
-  
-  const handleRegisterSubmit = async (e: any) => {
-    e.preventDefault();
-
-    const data = {
-      nombre: e.target[0].value,
-      email: e.target[1].value,
-      password: e.target[2].value
-    };
-
-    try {
-      await fetch(`${API}/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-
-      alert("Registrado correctamente");
-      setIsLogin(true);
-    } catch (err) {
-      console.log("ERROR REGISTER:", err);
-    }
-  };
-
-  
-  const handleSchoolSave = async (data: any) => {
-    try {
-      const res = await fetch(`${API}/student`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: studentData.email,
-          data
-        })
-      });
-
-      const updatedUser = await res.json();
-
-      setStudentData(updatedUser);
-
-      
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-
-    } catch (err) {
-      console.log("ERROR SCHOOL:", err);
-    }
-  };
-
-  
-  if (loading) {
-    return (
-      <div style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center"
-      }}>
-        <h2>Cargando...</h2>
-      </div>
-    );
-  }
-
-
-  if (!isAuthenticated) {
-    return (
-      <div className="auth-background">
-        <div className="container-form">
-
-          <div className="information">
-            <div className="info-childs">
-              {isLogin ? (
-                <>
-                  <h2>¡Bienvenido nuevamente!</h2>
-                  <p>Inicia sesión</p>
-                  <button onClick={handleToggle}>Registrarse</button>
-                </>
-              ) : (
-                <>
-                  <h2>Crear cuenta</h2>
-                  <button onClick={handleToggle}>Iniciar sesión</button>
-                </>
-              )}
-            </div>
-          </div>
-
-          <div className="form-information">
-            <div className="form-information-childs">
-
-              {isLogin ? (
-                <>
-                  <h2>Login</h2>
-                  <form onSubmit={handleLoginSubmit}>
-                    <input name="email" type="email" placeholder="Correo" required />
-                    <input name="password" type="password" placeholder="Contraseña" required />
-                    <button type="submit">Entrar</button>
-                  </form>
-                </>
-              ) : (
-                <>
-                  <h2>Registro</h2>
-                  <form onSubmit={handleRegisterSubmit}>
-                    <input placeholder="Nombre" required />
-                    <input type="email" placeholder="Correo" required />
-                    <input type="password" placeholder="Contraseña" required />
-                    <button type="submit">Registrar</button>
-                  </form>
-                </>
-              )}
-
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
- 
-  if (isAdmin) return <AdminPanel />;
-
-  
-  if (!studentData?.numControl) {
-    return <SchoolForm onSave={handleSchoolSave} />;
-  }
-
-  
-  return <StudentMenu studentData={studentData} />;
-}
-
-export default App;
+export default StudentMenu;
