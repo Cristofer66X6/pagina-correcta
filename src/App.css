@@ -1,28 +1,20 @@
 /* =========================
-   RESET TOTAL
+   RESET SOLO LOGIN (AISLADO)
 ========================= */
-* {
+.auth-background * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
 }
 
-html, body, #root {
-  height: 100%;
-}
-
-body {
-  overflow-x: hidden;
-}
-
 /* =========================
-   FONDO LOGIN / REGISTRO
+   CONTENEDOR PRINCIPAL LOGIN
 ========================= */
 .auth-background {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
+
   width: 100%;
   height: 100%;
 
@@ -30,7 +22,6 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  background-attachment: fixed;
 
   display: flex;
   align-items: center;
@@ -42,19 +33,19 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.45);
 }
 
-/* Asegura contenido encima */
+/* Contenido encima del overlay */
 .auth-background > * {
   position: relative;
   z-index: 1;
 }
 
 /* =========================
-   CONTENEDOR LOGIN
+   CONTENEDOR FORM
 ========================= */
-.container-form {
+.auth-background .container-form {
   display: flex;
   width: 90%;
   max-width: 950px;
@@ -72,7 +63,7 @@ body {
 /* =========================
    PANEL IZQUIERDO
 ========================= */
-.information {
+.auth-background .information {
   width: 45%;
   background: linear-gradient(135deg, #2f4dd3, #00c6ff);
 
@@ -86,23 +77,23 @@ body {
   padding: 40px;
 }
 
-.info-childs {
+.auth-background .info-childs {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.info-childs h2 {
+.auth-background .info-childs h2 {
   font-size: 2rem;
 }
 
-.info-childs p {
+.auth-background .info-childs p {
   font-size: 14px;
   opacity: 0.9;
 }
 
-/* Botón izquierdo */
-.info-childs button {
+/* BOTÓN IZQUIERDO */
+.auth-background .info-childs button {
   margin-top: 15px;
   padding: 12px 25px;
 
@@ -117,7 +108,7 @@ body {
   transition: 0.3s;
 }
 
-.info-childs button:hover {
+.auth-background .info-childs button:hover {
   background: white;
   color: #2f4dd3;
 }
@@ -125,7 +116,7 @@ body {
 /* =========================
    PANEL DERECHO
 ========================= */
-.form-information {
+.auth-background .form-information {
   width: 55%;
   background: rgba(255, 255, 255, 0.95);
 
@@ -137,24 +128,24 @@ body {
 /* =========================
    FORMULARIO
 ========================= */
-.form-information-childs {
+.auth-background .form-information-childs {
   width: 100%;
   max-width: 350px;
 }
 
-.form-information-childs h2 {
+.auth-background .form-information-childs h2 {
   text-align: center;
   margin-bottom: 25px;
   color: #333;
 }
 
-.form-information-childs form {
+.auth-background .form-information-childs form {
   display: flex;
   flex-direction: column;
 }
 
 /* INPUTS */
-.form-information-childs form input {
+.auth-background .form-information-childs form input {
   width: 100%;
   padding: 14px 18px;
   margin-bottom: 15px;
@@ -168,14 +159,14 @@ body {
   transition: 0.3s;
 }
 
-.form-information-childs form input:focus {
+.auth-background .form-information-childs form input:focus {
   background: #e0e7ff;
   outline: none;
   box-shadow: 0 0 0 2px #2f4dd3;
 }
 
 /* BOTÓN LOGIN */
-.form-information-childs form button {
+.auth-background .form-information-childs form button {
   width: 100%;
   padding: 14px;
 
@@ -192,133 +183,22 @@ body {
   transition: 0.3s;
 }
 
-.form-information-childs form button:hover {
+.auth-background .form-information-childs form button:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 20px rgba(0,0,0,0.25);
-}
-
-/* =========================
-   STUDENT / ADMIN PANEL
-========================= */
-.admin-login,
-.admin-panel {
-  max-width: 900px;
-  margin: 30px auto;
-  padding: 25px;
-
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 20px;
-
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-.student-name,
-.admin-title {
-  font-size: 2rem;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.section-title {
-  font-size: 1.3rem;
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.menu-section {
-  margin-bottom: 20px;
-}
-
-.menu-section button {
-  width: 100%;
-  padding: 12px;
-
-  font-size: 1rem;
-
-  background: linear-gradient(135deg, #007BFF, #00c6ff);
-  color: white;
-
-  border: none;
-  border-radius: 10px;
-
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.menu-section button:hover {
-  transform: translateY(-2px);
-}
-
-/* =========================
-   ARCHIVOS
-========================= */
-.file-upload {
-  margin-top: 10px;
-}
-
-.file-upload input[type="file"] {
-  margin-bottom: 10px;
-}
-
-.file-item {
-  background-color: #f1f1f1;
-  padding: 10px;
-
-  border-radius: 8px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  margin-bottom: 5px;
-}
-
-.file-item button {
-  background-color: #dc3545;
-  color: white;
-
-  border: none;
-  padding: 5px 10px;
-
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.file-item button:hover {
-  background-color: #c82333;
-}
-
-/* BOTÓN GUARDAR */
-.save-button {
-  background: linear-gradient(135deg, #28a745, #5cd65c);
-  color: white;
-
-  border: none;
-  padding: 12px 25px;
-
-  border-radius: 10px;
-  cursor: pointer;
-
-  font-weight: bold;
-  margin-top: 20px;
-}
-
-.save-button:hover {
-  transform: translateY(-2px);
 }
 
 /* =========================
    RESPONSIVE
 ========================= */
 @media (max-width: 768px) {
-  .container-form {
+  .auth-background .container-form {
     flex-direction: column;
     height: auto;
   }
 
-  .information,
-  .form-information {
+  .auth-background .information,
+  .auth-background .form-information {
     width: 100%;
     padding: 30px 20px;
   }
