@@ -25,7 +25,7 @@ const AdminPanel = () => {
 
       <h1>Panel Administrador</h1>
 
-      {/* 🔍 BUSCADOR CENTRADO */}
+      {/* 🔍 BUSCADOR */}
       <div className="search-box center">
         <input
           type="text"
@@ -40,7 +40,7 @@ const AdminPanel = () => {
       {/* 📋 RESULTADOS */}
       <div className="results">
         {students.map((s, i) => (
-          <div key={i} className="student-card">
+          <div key={i} className="admin-student-card">
             <p><b>{s.nombre}</b></p>
             <p>No. Control: {s.numControl}</p>
 
@@ -53,7 +53,7 @@ const AdminPanel = () => {
 
       {/* 📂 DETALLE DEL ALUMNO */}
       {selected && (
-        <div className="student-info">
+        <div className="admin-student-info">
 
           <h2>{selected.nombre}</h2>
 
