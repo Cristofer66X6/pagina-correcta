@@ -5,7 +5,6 @@ const StudentMenu = ({ studentData }: any) => {
 
   const [pdfs, setPdfs] = useState<any>({});
 
-  // 🔥 SOPORTA OBJETO o ARRAY
   const [docs, setDocs] = useState<any>(
     typeof studentData.documentos === "object" && !Array.isArray(studentData.documentos)
       ? studentData.documentos
@@ -18,15 +17,17 @@ const StudentMenu = ({ studentData }: any) => {
     setOpenSection(openSection === index ? null : index);
   };
 
-  // 🔥 NORMALIZAR KEY
   const normalizeKey = (text: string) =>
     text.replace(/\./g, "_");
 
   // 🔥 LOGOUT
   const handleLogout = () => {
     localStorage.removeItem("user");
-    window.location.reload(); // regresa al login
+    window.location.reload();
   };
+
+  // 🔥 NOMBRE COMPLETO
+  const fullName = `${studentData.nombre || ""} ${studentData.apellidoPaterno || ""} ${studentData.apellidoMaterno || ""}`;
 
   const sections = [
     {
@@ -117,13 +118,26 @@ const StudentMenu = ({ studentData }: any) => {
 
       <div className="student-card">
 
-        {/* 🔥 HEADER CON LOGOUT */}
+        {/* 🔥 HEADER */}
         <div className="student-header">
-          <h1 className="student-name">{studentData.nombre}</h1>
+
+          <div>
+            <h1 className="student-name">{fullName}</h1>
+
+            {/* 🔥 INFO EXTRA */}
+            <p className="student-info">
+              📧 {studentData.email}
+            </p>
+
+            <p className="student-info">
+              🎓 No. Control: {studentData.numControl || "No registrado"}
+            </p>
+          </div>
 
           <button className="logout-btn" onClick={handleLogout}>
             Cerrar sesión
           </button>
+
         </div>
 
         <h2 className="section-title">Subir Documentos</h2>
@@ -174,7 +188,6 @@ const StudentMenu = ({ studentData }: any) => {
                         }
                       />
 
-                      {/* 🔥 PDF UNO POR UNO (YA CORRECTO) */}
                       {uploaded && typeof uploaded === "string" && (
                         <iframe
                           src={uploaded}
