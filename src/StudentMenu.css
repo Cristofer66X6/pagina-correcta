@@ -1,5 +1,5 @@
 /* =========================
-   RESET LOCAL (NO GLOBAL)
+   RESET LOCAL
 ========================= */
 .student-menu * {
   box-sizing: border-box;
@@ -15,11 +15,11 @@
 
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* 🔥 mejor para scroll */
 
   padding: 20px;
 
-  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)),
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.85)),
               url("./imagenes/fondoNegro2.jpg");
 
   background-size: cover;
@@ -27,18 +27,21 @@
 }
 
 /* =========================
-   🔥 TARJETA GRANDE REAL
+   🔥 CARD FULL WIDTH REAL
 ========================= */
 .student-card {
   width: 100%;
-  max-width: 1400px; /* 🔥 ANCHO GRANDE REAL */
+  max-width: none; /* 🔥 ELIMINA EL LÍMITE */
+  
+  /* opcional: margen interno visual */
+  margin: 0 20px;
 
   background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
 
   border-radius: 30px;
-  padding: 45px;
+  padding: 50px;
 
   border: 1px solid rgba(255,255,255,0.15);
 
@@ -51,15 +54,15 @@
    TEXTOS
 ========================= */
 .student-name {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   text-align: center;
   margin-bottom: 10px;
 }
 
 .section-title {
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 35px;
   color: #bbb;
 }
 
@@ -67,7 +70,7 @@
    ACORDEÓN
 ========================= */
 .accordion {
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 .accordion-header {
@@ -75,7 +78,7 @@
   justify-content: space-between;
   align-items: center;
 
-  padding: 20px 25px;
+  padding: 22px 28px;
 
   background: linear-gradient(135deg, #1e3c72, #2a5298);
   border-radius: 20px;
@@ -94,25 +97,25 @@
 }
 
 /* =========================
-   CONTENIDO
+   CONTENIDO (GRID PRO)
 ========================= */
 .accordion-content {
   margin-top: 12px;
-  padding: 20px;
+  padding: 25px;
 
   background: rgba(255,255,255,0.05);
   border-radius: 20px;
 
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* 🔥 GRID BONITO */
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
 }
 
 /* =========================
-   🔥 ITEMS (FIX CONFLICTO)
+   ITEMS
 ========================= */
 .student-menu .file-item {
-  padding: 15px;
+  padding: 18px;
 
   border-radius: 15px;
 
@@ -120,8 +123,8 @@
   border: 1px solid rgba(255,255,255,0.15);
 
   display: flex;
-  flex-direction: column; /* 🔥 FORZAMOS */
-  gap: 8px;
+  flex-direction: column;
+  gap: 10px;
 
   transition: 0.3s;
 }
@@ -142,7 +145,7 @@
 
 /* INPUT */
 .file-item input {
-  padding: 10px;
+  padding: 12px;
 
   border-radius: 10px;
   border: 2px dashed rgba(255,255,255,0.3);
@@ -158,7 +161,7 @@
   margin-top: 40px;
 
   width: 100%;
-  padding: 18px;
+  padding: 20px;
 
   border-radius: 40px;
   border: none;
@@ -166,7 +169,7 @@
   background: linear-gradient(135deg, #00c6ff, #0072ff);
 
   color: white;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: bold;
 
   cursor: pointer;
@@ -184,6 +187,7 @@
 @media (max-width: 768px) {
   .student-card {
     padding: 25px;
+    margin: 10px;
   }
 
   .accordion-content {
