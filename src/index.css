@@ -75,3 +75,15 @@ button:hover {
     color: #fff;
   }
 }
+/* 🔥 FORZAR FULL WIDTH REAL */
+html, body, #root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* 🔥 ELIMINA CUALQUIER CENTRADO GLOBAL */
+#root {
+  margin: 0 !important;
+  padding: 0 !important;
+}
