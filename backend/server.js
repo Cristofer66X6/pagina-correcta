@@ -2,14 +2,15 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import fs from "fs";
-import { google } from "googleapis";
 import User from "./models/User.js";
 import { v2 as cloudinary } from "cloudinary";
 import multer from "multer";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 import bcrypt from "bcrypt";
 
 dotenv.config();
+
+/* ================= CLOUDINARY ================= */
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -17,49 +18,30 @@ cloudinary.config({
   api_secret: process.env.API_SECRET
 });
 
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: async (req, file) => {
+    const email = req.query.email || "sin_email";
+    const name = req.query.name || "sin_nombre";
+
+    const safeEmail = email.replace(/[@.]/g, "_");
+    const safeName = name.replace(/\s+/g, "_").replace(/\./g, "_");
+
+    return {
+      folder: `pdfs/${safeEmail}/${safeName}`,
+      resource_type: "auto",
+      public_id: Date.now() + "-" + file.originalname
+    };
+  }
+});
+
+const upload = multer({ storage });
+
+/* ================= APP ================= */
+
 const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());
-
-/* ================= GOOGLE DRIVE ================= */
-
-const auth = new google.auth.GoogleAuth({
-  credentials: JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON),
-  scopes: ["https://www.googleapis.com/auth/drive"]
-});
-
-const drive = google.drive({
-  version: "v3",
-  auth
-});
-
-const getOrCreateFolder = async (name, parentId = null) => {
-  const query = `name='${name}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
-
-  const res = await drive.files.list({
-    q: parentId ? `${query} and '${parentId}' in parents` : query,
-    fields: "files(id, name)"
-  });
-
-  if (res.data.files.length > 0) {
-    return res.data.files[0].id;
-  }
-
-  const folder = await drive.files.create({
-    requestBody: {
-      name,
-      mimeType: "application/vnd.google-apps.folder",
-      parents: parentId ? [parentId] : []
-    },
-    fields: "id"
-  });
-
-  return folder.data.id;
-};
-
-/* ================= MULTER (TEMPORAL) ================= */
-
-const upload = multer({ dest: "uploads/" });
 
 /* ================= DB ================= */
 
@@ -167,7 +149,7 @@ app.get("/students", async (req, res) => {
   res.json(users);
 });
 
-/* ================= UPLOAD (DRIVE + CLOUDINARY) ================= */
+/* ================= UPLOAD SOLO CLOUDINARY ================= */
 
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
@@ -178,52 +160,9 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     }
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ msg: "No existe usuario" });
+    if (!user) return res.status(404).json({ msg: "Usuario no encontrado" });
 
-    const filePath = req.file.path;
-
-    /* ===== CLOUDINARY ===== */
-
-    const cloudinaryResult = await cloudinary.uploader.upload(filePath, {
-      folder: `pdfs/${email.replace(/[@.]/g, "_")}`,
-      resource_type: "auto"
-    });
-
-    const cloudUrl = cloudinaryResult.secure_url;
-
-    /* ===== GOOGLE DRIVE ===== */
-
-    const rootFolder = process.env.DRIVE_ROOT_FOLDER;
-
-    const periodoFolder = await getOrCreateFolder(
-      user.periodo || "sin_periodo",
-      rootFolder
-    );
-
-    const userFolder = await getOrCreateFolder(
-      email.replace(/[@.]/g, "_"),
-      periodoFolder
-    );
-
-    const driveFile = await drive.files.create({
-      requestBody: {
-        name: req.file.originalname,
-        parents: [userFolder]
-      },
-      media: {
-        mimeType: req.file.mimetype,
-        body: fs.createReadStream(filePath)
-      },
-      fields: "id"
-    });
-
-    const driveLink = `https://drive.google.com/file/d/${driveFile.data.id}/view`;
-
-    /* ===== LIMPIAR ARCHIVO TEMPORAL ===== */
-
-    fs.unlinkSync(filePath);
-
-    /* ===== GUARDAR EN BD ===== */
+    const fileUrl = req.file.path; // URL de Cloudinary
 
     if (!(user.documentos instanceof Map)) {
       user.documentos = new Map(Object.entries(user.documentos || {}));
@@ -231,17 +170,21 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 
     const safeKey = name.replace(/\./g, "_");
 
-    user.documentos.set(safeKey, driveLink);
+    user.documentos.set(safeKey, fileUrl);
 
     await user.save();
+
+    console.log("GUARDADO EN CLOUDINARY:", fileUrl);
 
     res.json(user);
 
   } catch (err) {
     console.log("ERROR UPLOAD:", err);
-    res.status(500).json({ msg: "Error upload" });
+    res.status(500).json({ msg: "Error al subir archivo" });
   }
 });
+
+/* ================= SERVER ================= */
 
 const PORT = process.env.PORT || 5000;
 
