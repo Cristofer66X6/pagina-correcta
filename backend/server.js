@@ -58,36 +58,42 @@ mongoose.connect(process.env.MONGO_URI)
 
 app.post("/register", async (req, res) => {
   try {
-    console.log("REGISTER:", req.body);
+    const {
+      nombre,
+      apellidoPaterno,
+      apellidoMaterno,
+      telefono,
+      numControl,
+      numProyecto,
+      periodo,
+      genero,
+      email,
+      password
+    } = req.body;
 
-    const { nombre, email, password } = req.body;
-
-   
-    if (!nombre || !email || !password) {
-      return res.status(400).json({ msg: "Faltan datos" });
-    }
-
-    const exists = await User.findOne({ email });
-    if (exists) {
-      return res.status(400).json({ msg: "Usuario ya existe" });
-    }
-
-   
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = new User({
+    const newUser = new User({
       nombre,
+      apellidoPaterno,
+      apellidoMaterno,
+      telefono,
+      numControl,
+      numProyecto,
+      periodo,
+      genero,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      documentos: {},
+      role: "student"
     });
 
-    await user.save();
+    await newUser.save();
 
-    res.json(user);
+    res.json(newUser);
 
   } catch (err) {
-    console.log("ERROR REGISTER:", err);
-    res.status(500).json({ msg: "Error al registrar" });
+    res.status(500).json({ msg: "Error en registro" });
   }
 });
 
