@@ -23,17 +23,62 @@ const AdminPanel = () => {
   const [formData, setFormData] = useState<any>(INITIAL_FORM);
   const [isEditing, setIsEditing] = useState(false);
 
+  const [pdfs, setPdfs] = useState<any>({});
+  const [docs, setDocs] = useState<any>({});
+  const [openSection, setOpenSection] = useState<number | null>(null);
+
   const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-  const buscar = async () => {
-    try {
-      const res = await fetch(`${API}/students?search=${search}`);
-      const data = await res.json();
-      setStudents(data);
-      setSelected(null);
-    } catch (err) {
-      console.log(err);
+  const sections = [
+    {
+      title: "1. Carpeta de Apertura",
+      items: [
+        "Autorización de RP",
+        "Carta Presentación",
+        "Carta aceptación",
+        "Asignación de asesor interno",
+        "Solicitud de RP",
+        "Carnet IMSS",
+        "Anteproyecto"
+      ]
+    },
+    {
+      title: "2. Carpeta de Asesorías Semanales",
+      items: [
+        "Asesorías semanales",
+        "Bitácora de sellos",
+        "Informe semestral de asesorías"
+      ]
+    },
+    {
+      title: "3. Cierre",
+      items: [
+        "Informe técnico",
+        "Carta término",
+        "Formato de liberación"
+      ]
+    },
+    {
+      title: "4. Carpeta de Evaluaciones",
+      items: [
+        "1era evaluación de RP",
+        "2da evaluación de RP",
+        "3era evaluación de RP"
+      ]
     }
+  ];
+
+  const normalizeKey = (text: string) => text.replace(/\./g, "_");
+
+  const toggleSection = (index: number) => {
+    setOpenSection(openSection === index ? null : index);
+  };
+
+  const buscar = async () => {
+    const res = await fetch(`${API}/students?search=${search}`);
+    const data = await res.json();
+    setStudents(data);
+    setSelected(null);
   };
 
   const handleLogout = () => {
@@ -50,71 +95,54 @@ const AdminPanel = () => {
   };
 
   const handleCreate = async () => {
-    try {
-      const res = await fetch(`${API}/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
-      });
+    const res = await fetch(`${API}/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    });
 
-      await res.json();
-      alert("Residente creado");
-      setFormData(INITIAL_FORM);
-      buscar();
-    } catch (err) {
-      console.log(err);
-    }
+    const newUser = await res.json();
+
+    setStudents((prev) => [...prev, newUser]);
+    setFormData(INITIAL_FORM);
   };
 
   const handleUpdate = async () => {
-    try {
-      const res = await fetch(`${API}/student`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          data: formData
-        })
-      });
+    const res = await fetch(`${API}/student`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: formData.email,
+        data: formData
+      })
+    });
 
-      await res.json();
-      alert("Residente actualizado");
-      setIsEditing(false);
-      setFormData(INITIAL_FORM);
-      buscar();
-    } catch (err) {
-      console.log(err);
-    }
+    const updated = await res.json();
+
+    setStudents((prev) =>
+      prev.map((s) => (s.email === updated.email ? updated : s))
+    );
+
+    setIsEditing(false);
+    setFormData(INITIAL_FORM);
   };
 
- const handleDelete = async (email: string) => {
-  if (!confirm("¿Eliminar residente?")) return;
+  const handleDelete = async (email: string) => {
+    if (!confirm("¿Eliminar residente?")) return;
 
-  try {
     const res = await fetch(`${API}/student?email=${email}`, {
       method: "DELETE"
     });
 
-    if (!res.ok) {
-      const err = await res.json();
-      alert(err.msg || "Error al eliminar");
-      return;
-    }
+    if (!res.ok) return;
 
     setStudents((prev) => prev.filter((s) => s.email !== email));
-
     setSelected(null);
-
-    alert("Eliminado correctamente");
-
-  } catch (err) {
-    console.log(err);
-  }
-};
+  };
 
   const handleEdit = (student: any) => {
     setIsEditing(true);
@@ -123,6 +151,54 @@ const AdminPanel = () => {
       ...student
     });
     setSelected(null);
+  };
+
+  const handleSelect = (student: any) => {
+    setSelected(student);
+    setDocs(student.documentos || {});
+    setPdfs({});
+  };
+
+  const handleFileChange = (name: string, file: File | null) => {
+    if (!file) return;
+
+    setPdfs((prev: any) => ({
+      ...prev,
+      [name]: file
+    }));
+  };
+
+  const handleUpload = async () => {
+    let updatedDocs = { ...docs };
+
+    for (const key of Object.keys(pdfs)) {
+      const file = pdfs[key];
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("email", selected.email);
+      formData.append("name", key);
+
+      const res = await fetch(
+        `${API}/upload?email=${selected.email}&name=${key}`,
+        {
+          method: "POST",
+          body: formData
+        }
+      );
+
+      const updatedUser = await res.json();
+      updatedDocs = updatedUser.documentos;
+    }
+
+    setDocs(updatedDocs);
+    setPdfs({});
+
+    setStudents((prev) =>
+      prev.map((s) =>
+        s.email === selected.email ? { ...s, documentos: updatedDocs } : s
+      )
+    );
   };
 
   return (
@@ -148,7 +224,6 @@ const AdminPanel = () => {
         <h2>{isEditing ? "Actualizar Residente" : "Crear Residente"}</h2>
 
         <div className="form-grid">
-
           <input name="nombre" placeholder="Nombre" value={formData.nombre} onChange={handleChange} />
           <input name="apellidoPaterno" placeholder="Apellido Paterno" value={formData.apellidoPaterno} onChange={handleChange} />
           <input name="apellidoMaterno" placeholder="Apellido Materno" value={formData.apellidoMaterno} onChange={handleChange} />
@@ -157,19 +232,10 @@ const AdminPanel = () => {
           <input name="numProyecto" placeholder="Proyecto" value={formData.numProyecto} onChange={handleChange} />
           <input name="periodo" placeholder="Periodo" value={formData.periodo} onChange={handleChange} />
           <input name="genero" placeholder="Genero" value={formData.genero} onChange={handleChange} />
-
           <input name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
-
           {!isEditing && (
-            <input
-              name="password"
-              type="password"
-              placeholder="Contraseña"
-              value={formData.password}
-              onChange={handleChange}
-            />
+            <input name="password" type="password" placeholder="Contraseña" value={formData.password} onChange={handleChange} />
           )}
-
         </div>
 
         {isEditing ? (
@@ -181,7 +247,6 @@ const AdminPanel = () => {
 
       <div className="results">
         {students.map((s, i) => {
-
           const fullName = `${s.nombre || ""} ${s.apellidoPaterno || ""} ${s.apellidoMaterno || ""}`;
 
           return (
@@ -189,17 +254,9 @@ const AdminPanel = () => {
               <p><b>{fullName}</b></p>
               <p>No. Control: {s.numControl || "N/A"}</p>
 
-              <button onClick={() => setSelected(s)}>
-                Ver expediente
-              </button>
-
-              <button onClick={() => handleEdit(s)}>
-                Editar
-              </button>
-
-              <button onClick={() => handleDelete(s.email)}>
-                Eliminar
-              </button>
+              <button onClick={() => handleSelect(s)}>Ver expediente</button>
+              <button onClick={() => handleEdit(s)}>Editar</button>
+              <button onClick={() => handleDelete(s.email)}>Eliminar</button>
             </div>
           );
         })}
@@ -214,30 +271,52 @@ const AdminPanel = () => {
 
           <p><b>Email:</b> {selected.email}</p>
           <p><b>No. Control:</b> {selected.numControl}</p>
-          <p><b>Proyecto:</b> {selected.numProyecto}</p>
-          <p><b>Periodo:</b> {selected.periodo}</p>
 
-          <div className="admin-section">
-            <h3>Documentos</h3>
+          {sections.map((section, i) => (
+            <div key={i} className="accordion">
 
-            {selected.documentos && Object.keys(selected.documentos).length > 0 ? (
-              Object.keys(selected.documentos).map((key, i) => (
-                <div key={i} className="admin-file">
-                  <p>{key}</p>
+              <div className="accordion-header" onClick={() => toggleSection(i)}>
+                <span>{section.title}</span>
+              </div>
 
-                  <iframe
-                    src={selected.documentos[key]}
-                    width="100%"
-                    height="350px"
-                    style={{ border: "none", marginTop: "10px", borderRadius: "10px" }}
-                  />
+              {openSection === i && (
+                <div className="accordion-content">
+                  {section.items.map((item, j) => {
+                    const key = normalizeKey(`${section.title}-${item}`);
+                    const uploaded = docs[key];
+
+                    return (
+                      <div key={j} className="file-item">
+
+                        <label>
+                          {item}
+                          {uploaded && <span className="uploaded"> ✔</span>}
+                        </label>
+
+                        <input
+                          type="file"
+                          accept="application/pdf"
+                          onChange={(e) =>
+                            handleFileChange(key, e.target.files?.[0] || null)
+                          }
+                        />
+
+                        {uploaded && (
+                          <iframe src={uploaded} width="100%" height="300px" />
+                        )}
+
+                      </div>
+                    );
+                  })}
                 </div>
-              ))
-            ) : (
-              <p className="missing">No hay documentos</p>
-            )}
+              )}
 
-          </div>
+            </div>
+          ))}
+
+          <button className="upload-btn" onClick={handleUpload}>
+            Subir PDFs
+          </button>
 
         </div>
       )}
