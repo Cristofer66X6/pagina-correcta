@@ -1,33 +1,41 @@
 import { useState } from "react";
-import "./StudentMenu.css";
+import "./AdminPanel.css";
 
-const StudentMenu = ({ studentData }: any) => {
+const INITIAL_FORM = {
+  nombre: "",
+  apellidoPaterno: "",
+  apellidoMaterno: "",
+  telefono: "",
+  numControl: "",
+  numProyecto: "",
+  periodo: "",
+  genero: "",
+  email: "",
+  password: ""
+};
+
+const AdminPanel = () => {
+
+  const [search, setSearch] = useState("");
+  const [students, setStudents] = useState<any[]>([]);
+  const [selected, setSelected] = useState<any>(null);
+
+  const [formData, setFormData] = useState<any>(INITIAL_FORM);
+  const [isEditing, setIsEditing] = useState(false);
 
   const [pdfs, setPdfs] = useState<any>({});
-
-  const [docs, setDocs] = useState<any>(
-    typeof studentData.documentos === "object" && !Array.isArray(studentData.documentos)
-      ? studentData.documentos
-      : {}
-  );
+  const [docs, setDocs] = useState<any>({});
 
   const [openSection, setOpenSection] = useState<number | null>(null);
 
-  const toggleSection = (index: number) => {
-    setOpenSection(openSection === index ? null : index);
-  };
+  const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   const normalizeKey = (text: string) =>
     text.replace(/\./g, "_");
 
-  
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    window.location.reload();
+  const toggleSection = (index: number) => {
+    setOpenSection(openSection === index ? null : index);
   };
-
- 
-  const fullName = `${studentData.nombre || ""} ${studentData.apellidoPaterno || ""} ${studentData.apellidoMaterno || ""}`;
 
   const sections = [
     {
@@ -68,6 +76,88 @@ const StudentMenu = ({ studentData }: any) => {
     }
   ];
 
+  const buscar = async () => {
+    const res = await fetch(`${API}/students?search=${search}`);
+    const data = await res.json();
+    setStudents(data);
+    setSelected(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    window.location.reload();
+  };
+
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setFormData((prev: any) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleCreate = async () => {
+    const res = await fetch(`${API}/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    });
+
+    await res.json();
+    setFormData(INITIAL_FORM);
+    buscar();
+  };
+
+  const handleUpdate = async () => {
+    const res = await fetch(`${API}/student`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: formData.email,
+        data: formData
+      })
+    });
+
+    await res.json();
+
+    setStudents(prev =>
+      prev.map(s =>
+        s.email === formData.email ? { ...s, ...formData } : s
+      )
+    );
+
+    setIsEditing(false);
+    setFormData(INITIAL_FORM);
+  };
+
+  const handleDelete = async (email: string) => {
+    await fetch(`${API}/student?email=${email}`, {
+      method: "DELETE"
+    });
+
+    setStudents(prev => prev.filter(s => s.email !== email));
+    setSelected(null);
+  };
+
+  const handleEdit = (student: any) => {
+    setIsEditing(true);
+    setFormData({
+      ...INITIAL_FORM,
+      ...student
+    });
+    setSelected(null);
+  };
+
+  const handleSelect = (student: any) => {
+    setSelected(student);
+    setDocs(student.documentos || {});
+    setPdfs({});
+  };
+
   const handleFileChange = (name: string, file: File | null) => {
     if (!file) return;
 
@@ -77,144 +167,182 @@ const StudentMenu = ({ studentData }: any) => {
     }));
   };
 
-  const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const handleUpload = async () => {
+    let updatedDocs = { ...docs };
 
-  const handleSave = async () => {
-    try {
-      let updatedDocs: any = { ...docs };
+    for (const key of Object.keys(pdfs)) {
+      const file = pdfs[key];
 
-      for (const key of Object.keys(pdfs)) {
-        const file = pdfs[key];
-        if (!(file instanceof File)) continue;
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("email", selected.email);
+      formData.append("name", key);
 
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("email", studentData.email);
-        formData.append("name", key);
+      const res = await fetch(
+        `${API}/upload?email=${selected.email}&name=${key}`,
+        {
+          method: "POST",
+          body: formData
+        }
+      );
 
-        const res = await fetch(
-          `${API}/upload?email=${studentData.email}&name=${key}`,
-          {
-            method: "POST",
-            body: formData
-          }
-        );
-
-        const updatedUser = await res.json();
-        updatedDocs = updatedUser.documentos;
-      }
-
-      setDocs({ ...updatedDocs });
-      setPdfs({});
-      alert("Documentos guardados correctamente");
-
-    } catch (err) {
-      console.log("ERROR FRONT:", err);
+      const updatedUser = await res.json();
+      updatedDocs = updatedUser.documentos;
     }
+
+    setDocs(updatedDocs);
+
+    setStudents(prev =>
+      prev.map(s =>
+        s.email === selected.email
+          ? { ...s, documentos: updatedDocs }
+          : s
+      )
+    );
+
+    setSelected((prev: any) => ({
+      ...prev,
+      documentos: updatedDocs
+    }));
+
+    setPdfs({});
   };
 
   return (
-    <div className="student-menu">
+    <div className="admin-container">
 
-      <div className="student-card">
+      <button className="admin-logout-btn" onClick={handleLogout}>
+        Cerrar sesión
+      </button>
 
-        {}
-        <div className="student-header">
+      <h1>Panel Administrador</h1>
 
-          <div>
-            <h1 className="student-name">{fullName}</h1>
+      <div className="search-box center">
+        <input
+          type="text"
+          placeholder="Buscar"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <button onClick={buscar}>Buscar</button>
+      </div>
 
-            {}
-            <p className="student-info">
-              {studentData.email}
-            </p>
+      <div className="admin-form">
+        <h2>{isEditing ? "Actualizar" : "Crear"}</h2>
 
-            <p className="student-info">
-               No. Control: {studentData.numControl || "No registrado"}
-            </p>
+        <div className="form-grid">
+          <input name="nombre" value={formData.nombre} onChange={handleChange} />
+          <input name="apellidoPaterno" value={formData.apellidoPaterno} onChange={handleChange} />
+          <input name="apellidoMaterno" value={formData.apellidoMaterno} onChange={handleChange} />
+          <input name="telefono" value={formData.telefono} onChange={handleChange} />
+          <input name="numControl" value={formData.numControl} onChange={handleChange} />
+          <input name="numProyecto" value={formData.numProyecto} onChange={handleChange} />
+          <input name="periodo" value={formData.periodo} onChange={handleChange} />
+          <input name="genero" value={formData.genero} onChange={handleChange} />
+          <input name="email" value={formData.email} onChange={handleChange} />
+
+          {!isEditing && (
+            <input
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+            />
+          )}
+        </div>
+
+        {isEditing ? (
+          <button onClick={handleUpdate}>Actualizar</button>
+        ) : (
+          <button onClick={handleCreate}>Crear</button>
+        )}
+      </div>
+
+      <div className="results">
+        {students.map((s, i) => (
+          <div key={i} className="admin-student-card">
+            <p><b>{s.nombre}</b></p>
+
+            <button onClick={() => handleSelect(s)}>
+              Ver expediente
+            </button>
+
+            <button onClick={() => handleEdit(s)}>
+              Editar
+            </button>
+
+            <button onClick={() => handleDelete(s.email)}>
+              Eliminar
+            </button>
           </div>
+        ))}
+      </div>
 
-          <button className="logout-btn" onClick={handleLogout}>
-            Cerrar sesión
+      {selected && (
+        <div className="admin-student-info">
+
+          <h2>{selected.nombre}</h2>
+
+          {sections.map((section, i) => (
+            <div key={i} className="accordion">
+
+              <div
+                className="accordion-header"
+                onClick={() => toggleSection(i)}
+              >
+                <span>{section.title}</span>
+              </div>
+
+              {openSection === i && (
+                <div className="accordion-content">
+
+                  {section.items.map((item, j) => {
+
+                    const key = normalizeKey(`${section.title}-${item}`);
+                    const uploaded = docs?.[key];
+
+                    return (
+                      <div key={j} className="file-item">
+
+                        <label>{item}</label>
+
+                        <input
+                          type="file"
+                          onChange={(e) =>
+                            handleFileChange(
+                              key,
+                              e.target.files?.[0] || null
+                            )
+                          }
+                        />
+
+                        {uploaded && (
+                          <iframe
+                            src={uploaded}
+                            width="100%"
+                            height="300px"
+                          />
+                        )}
+
+                      </div>
+                    );
+                  })}
+
+                </div>
+              )}
+
+            </div>
+          ))}
+
+          <button onClick={handleUpload}>
+            Subir documentos
           </button>
 
         </div>
-
-        <h2 className="section-title">Subir Documentos</h2>
-
-        {sections.map((section, i) => (
-          <div
-            key={i}
-            className={`accordion ${openSection === i ? "active" : ""}`}
-          >
-
-            <div
-              className="accordion-header"
-              onClick={() => toggleSection(i)}
-            >
-              <span>{section.title}</span>
-              <span className={`arrow ${openSection === i ? "open" : ""}`}>
-                ▼
-              </span>
-            </div>
-
-            {openSection === i && (
-              <div className="accordion-content">
-
-                {section.items.map((item, j) => {
-
-                  const rawKey = `${section.title}-${item}`;
-                  const key = normalizeKey(rawKey);
-                  const uploaded = docs?.[key];
-
-                  return (
-                    <div key={j} className="file-item">
-
-                      <label>
-                        {item}
-                        {uploaded && (
-                          <span className="uploaded"> ✔ Subido</span>
-                        )}
-                      </label>
-
-                      <input
-                        type="file"
-                        accept="application/pdf"
-                        onChange={(e) =>
-                          handleFileChange(
-                            key,
-                            e.target.files?.[0] || null
-                          )
-                        }
-                      />
-
-                      {uploaded && typeof uploaded === "string" && (
-                        <iframe
-                          src={uploaded}
-                          title={key}
-                          width="100%"
-                          height="400px"
-                        />
-                      )}
-
-                    </div>
-                  );
-                })}
-
-              </div>
-            )}
-
-          </div>
-        ))}
-
-        <button className="upload-btn" onClick={handleSave}>
-          Subir PDFs
-        </button>
-
-      </div>
+      )}
 
     </div>
   );
 };
 
-export default StudentMenu;
+export default AdminPanel;
