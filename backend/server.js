@@ -2,10 +2,11 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+import fs from "fs";
+import { google } from "googleapis";
 import User from "./models/User.js";
 import { v2 as cloudinary } from "cloudinary";
 import multer from "multer";
-import { CloudinaryStorage } from "multer-storage-cloudinary";
 import bcrypt from "bcrypt";
 
 dotenv.config();
@@ -17,79 +18,71 @@ cloudinary.config({
 });
 
 const app = express();
-app.use(cors({
-  origin: "*"
-}));
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
+/* ================= GOOGLE DRIVE ================= */
 
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: async (req, file) => {
-
-
-    const email = req.query.email || "sin_email";
-    const name = req.query.name || "sin_nombre";
-
-    const safeEmail = email.replace(/[@.]/g, "_");
-    const safeName = name
-      .replace(/\s+/g, "_")
-      .replace(/\./g, "_");
-
-    return {
-      folder: `pdfs/${safeEmail}/${safeName}`,
-      resource_type: "auto",
-      type: "upload",
-      access_mode: "public",
-      public_id: Date.now() + "-" + file.originalname,
-      use_filename: true,
-      unique_filename: false
-    };
-  }
+const auth = new google.auth.GoogleAuth({
+  credentials: JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON),
+  scopes: ["https://www.googleapis.com/auth/drive"]
 });
 
-const upload = multer({ storage });
+const drive = google.drive({
+  version: "v3",
+  auth
+});
 
+const getOrCreateFolder = async (name, parentId = null) => {
+  const query = `name='${name}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
+
+  const res = await drive.files.list({
+    q: parentId ? `${query} and '${parentId}' in parents` : query,
+    fields: "files(id, name)"
+  });
+
+  if (res.data.files.length > 0) {
+    return res.data.files[0].id;
+  }
+
+  const folder = await drive.files.create({
+    requestBody: {
+      name,
+      mimeType: "application/vnd.google-apps.folder",
+      parents: parentId ? [parentId] : []
+    },
+    fields: "id"
+  });
+
+  return folder.data.id;
+};
+
+/* ================= MULTER (TEMPORAL) ================= */
+
+const upload = multer({ dest: "uploads/" });
+
+/* ================= DB ================= */
 
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log(" Mongo conectado"))
-  .catch(err => console.log(" Mongo error:", err));
+  .then(() => console.log("Mongo conectado"))
+  .catch(err => console.log("Mongo error:", err));
 
+/* ================= AUTH ================= */
 
 app.post("/register", async (req, res) => {
   try {
-    const {
-      nombre,
-      apellidoPaterno,
-      apellidoMaterno,
-      telefono,
-      numControl,
-      numProyecto,
-      periodo,
-      genero,
-      email,
-      password
-    } = req.body;
+    const { password } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
-      nombre,
-      apellidoPaterno,
-      apellidoMaterno,
-      telefono,
-      numControl,
-      numProyecto,
-      periodo,
-      genero,
-      email,
+      ...req.body,
       password: hashedPassword,
       documentos: {},
       role: "student"
     });
 
     await newUser.save();
-
     res.json(newUser);
 
   } catch (err) {
@@ -97,37 +90,24 @@ app.post("/register", async (req, res) => {
   }
 });
 
-
 app.post("/login", async (req, res) => {
   try {
-    console.log("BODY LOGIN:", req.body);
-
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ msg: "Faltan datos" });
-    }
-
     const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(401).json({ msg: "Credenciales incorrectas" });
-    }
+    if (!user) return res.status(401).json({ msg: "Credenciales incorrectas" });
 
     const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ msg: "Credenciales incorrectas" });
 
-    if (!isMatch) {
-      return res.status(401).json({ msg: "Credenciales incorrectas" });
-    }
-
-    return res.status(200).json(user);
+    res.json(user);
 
   } catch (err) {
-    console.log("ERROR LOGIN:", err);
-    return res.status(500).json({ msg: "Error del servidor" });
+    res.status(500).json({ msg: "Error del servidor" });
   }
 });
 
+/* ================= CRUD ================= */
 
 app.post("/student", async (req, res) => {
   try {
@@ -141,26 +121,54 @@ app.post("/student", async (req, res) => {
 
     res.json(user);
   } catch (err) {
-    console.log("ERROR STUDENT:", err);
     res.status(500).json(err);
   }
 });
+
+app.put("/student", async (req, res) => {
+  try {
+    const { email, data } = req.body;
+
+    const updated = await User.findOneAndUpdate(
+      { email },
+      { $set: data },
+      { new: true }
+    );
+
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 app.delete("/student", async (req, res) => {
   try {
     const { email } = req.query;
 
-    const deleted = await User.findOneAndDelete({ email });
+    await User.findOneAndDelete({ email });
 
-    if (!deleted) {
-      return res.status(404).json({ msg: "Usuario no encontrado" });
-    }
-
-    res.json({ msg: "Usuario eliminado correctamente" });
-
+    res.json({ msg: "Eliminado" });
   } catch (err) {
-    res.status(500).json({ msg: "Error eliminando usuario" });
+    res.status(500).json(err);
   }
 });
+
+app.get("/students", async (req, res) => {
+  const { search = "" } = req.query;
+
+  const users = await User.find({
+    role: { $ne: "admin" },
+    $or: [
+      { nombre: { $regex: search, $options: "i" } },
+      { numControl: { $regex: search, $options: "i" } }
+    ]
+  });
+
+  res.json(users);
+});
+
+/* ================= UPLOAD (DRIVE + CLOUDINARY) ================= */
+
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
     const { email, name } = req.body;
@@ -169,102 +177,74 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       return res.status(400).json({ msg: "No file recibido" });
     }
 
-    const fileUrl = req.file.path;
-
     const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ msg: "No existe usuario" });
 
-    if (!user) {
-      return res.status(404).json({ msg: "Usuario no encontrado" });
-    }
+    const filePath = req.file.path;
 
-   
-    if (Array.isArray(user.documentos)) {
-      user.documentos = new Map();
-    }
+    /* ===== CLOUDINARY ===== */
 
-    
+    const cloudinaryResult = await cloudinary.uploader.upload(filePath, {
+      folder: `pdfs/${email.replace(/[@.]/g, "_")}`,
+      resource_type: "auto"
+    });
+
+    const cloudUrl = cloudinaryResult.secure_url;
+
+    /* ===== GOOGLE DRIVE ===== */
+
+    const rootFolder = process.env.DRIVE_ROOT_FOLDER;
+
+    const periodoFolder = await getOrCreateFolder(
+      user.periodo || "sin_periodo",
+      rootFolder
+    );
+
+    const userFolder = await getOrCreateFolder(
+      email.replace(/[@.]/g, "_"),
+      periodoFolder
+    );
+
+    const driveFile = await drive.files.create({
+      requestBody: {
+        name: req.file.originalname,
+        parents: [userFolder]
+      },
+      media: {
+        mimeType: req.file.mimetype,
+        body: fs.createReadStream(filePath)
+      },
+      fields: "id"
+    });
+
+    const driveLink = `https://drive.google.com/file/d/${driveFile.data.id}/view`;
+
+    /* ===== LIMPIAR ARCHIVO TEMPORAL ===== */
+
+    fs.unlinkSync(filePath);
+
+    /* ===== GUARDAR EN BD ===== */
+
     if (!(user.documentos instanceof Map)) {
       user.documentos = new Map(Object.entries(user.documentos || {}));
     }
 
-   
     const safeKey = name.replace(/\./g, "_");
 
-    
-    user.documentos.set(safeKey, fileUrl);
+    user.documentos.set(safeKey, driveLink);
 
     await user.save();
-
-    console.log("GUARDADO REAL:", user.documentos);
 
     res.json(user);
 
   } catch (err) {
     console.log("ERROR UPLOAD:", err);
-    res.status(500).json({ msg: "Error al subir archivo" });
+    res.status(500).json({ msg: "Error upload" });
   }
-});
-app.get("/students", async (req, res) => {
-  try {
-    const { search = "" } = req.query;
-
-    const users = await User.find({
-      role: { $ne: "admin" }, 
-      $or: [
-        { nombre: { $regex: search, $options: "i" } },
-        { numControl: { $regex: search, $options: "i" } }
-      ]
-    });
-
-    res.json(users);
-
-  } catch (err) {
-    console.log("ERROR SEARCH:", err);
-    res.status(500).json({ msg: "Error buscando alumnos" });
-  }
-});
-app.put("/student", async (req, res) => {
-  try {
-    const { email, data } = req.body;
-
-    if (!email) {
-      return res.status(400).json({ msg: "Email requerido" });
-    }
-
-    const updated = await User.findOneAndUpdate(
-      { email },
-      {
-        $set: {
-          nombre: data.nombre,
-          apellidoPaterno: data.apellidoPaterno,
-          apellidoMaterno: data.apellidoMaterno,
-          telefono: data.telefono,
-          numControl: data.numControl,
-          numProyecto: data.numProyecto,
-          periodo: data.periodo,
-          genero: data.genero
-        }
-      },
-      { new: true }
-    );
-
-    if (!updated) {
-      return res.status(404).json({ msg: "Usuario no encontrado" });
-    }
-
-    res.json(updated);
-
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ msg: "Error del servidor" });
-  }
-});
-bcrypt.hash("admin123", 10).then(hash => {
-  console.log("HASH:", hash);
 });
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log("Servidor corriendo en puerto " + PORT);
 });
