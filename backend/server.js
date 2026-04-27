@@ -145,6 +145,22 @@ app.post("/student", async (req, res) => {
     res.status(500).json(err);
   }
 });
+app.delete("/student", async (req, res) => {
+  try {
+    const { email } = req.query;
+
+    const deleted = await User.findOneAndDelete({ email });
+
+    if (!deleted) {
+      return res.status(404).json({ msg: "Usuario no encontrado" });
+    }
+
+    res.json({ msg: "Usuario eliminado correctamente" });
+
+  } catch (err) {
+    res.status(500).json({ msg: "Error eliminando usuario" });
+  }
+});
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
     const { email, name } = req.body;
@@ -188,7 +204,6 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     res.status(500).json({ msg: "Error al subir archivo" });
   }
 });
-
 app.get("/students", async (req, res) => {
   try {
     const { search = "" } = req.query;

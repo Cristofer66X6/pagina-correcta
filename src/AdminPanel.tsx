@@ -91,21 +91,30 @@ const AdminPanel = () => {
     }
   };
 
-  const handleDelete = async (email: string) => {
-    if (!confirm("¿Eliminar residente?")) return;
+ const handleDelete = async (email: string) => {
+  if (!confirm("¿Eliminar residente?")) return;
 
-    try {
-      await fetch(`${API}/student?email=${email}`, {
-        method: "DELETE"
-      });
+  try {
+    const res = await fetch(`${API}/student?email=${email}`, {
+      method: "DELETE"
+    });
 
-      alert("Eliminado");
-      buscar();
-      setSelected(null);
-    } catch (err) {
-      console.log(err);
+    if (!res.ok) {
+      const err = await res.json();
+      alert(err.msg || "Error al eliminar");
+      return;
     }
-  };
+
+    setStudents((prev) => prev.filter((s) => s.email !== email));
+
+    setSelected(null);
+
+    alert("Eliminado correctamente");
+
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   const handleEdit = (student: any) => {
     setIsEditing(true);
