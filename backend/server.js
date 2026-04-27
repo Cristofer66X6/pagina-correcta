@@ -223,6 +223,42 @@ app.get("/students", async (req, res) => {
     res.status(500).json({ msg: "Error buscando alumnos" });
   }
 });
+app.put("/student", async (req, res) => {
+  try {
+    const { email, data } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ msg: "Email requerido" });
+    }
+
+    const updated = await User.findOneAndUpdate(
+      { email },
+      {
+        $set: {
+          nombre: data.nombre,
+          apellidoPaterno: data.apellidoPaterno,
+          apellidoMaterno: data.apellidoMaterno,
+          telefono: data.telefono,
+          numControl: data.numControl,
+          numProyecto: data.numProyecto,
+          periodo: data.periodo,
+          genero: data.genero
+        }
+      },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ msg: "Usuario no encontrado" });
+    }
+
+    res.json(updated);
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "Error del servidor" });
+  }
+});
 bcrypt.hash("admin123", 10).then(hash => {
   console.log("HASH:", hash);
 });
