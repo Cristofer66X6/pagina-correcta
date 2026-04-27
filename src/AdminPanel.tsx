@@ -1,11 +1,27 @@
 import { useState } from "react";
 import "./AdminPanel.css";
 
+const INITIAL_FORM = {
+  nombre: "",
+  apellidoPaterno: "",
+  apellidoMaterno: "",
+  telefono: "",
+  numControl: "",
+  numProyecto: "",
+  periodo: "",
+  genero: "",
+  email: "",
+  password: ""
+};
+
 const AdminPanel = () => {
 
   const [search, setSearch] = useState("");
   const [students, setStudents] = useState<any[]>([]);
   const [selected, setSelected] = useState<any>(null);
+
+  const [formData, setFormData] = useState<any>(INITIAL_FORM);
+  const [isEditing, setIsEditing] = useState(false);
 
   const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -16,27 +32,99 @@ const AdminPanel = () => {
       setStudents(data);
       setSelected(null);
     } catch (err) {
-      console.log("ERROR BUSQUEDA:", err);
+      console.log(err);
     }
   };
 
- 
   const handleLogout = () => {
     localStorage.removeItem("user");
     window.location.reload();
   };
 
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setFormData((prev: any) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleCreate = async () => {
+    try {
+      const res = await fetch(`${API}/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+
+      await res.json();
+      alert("Residente creado");
+      setFormData(INITIAL_FORM);
+      buscar();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const res = await fetch(`${API}/student`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          data: formData
+        })
+      });
+
+      await res.json();
+      alert("Residente actualizado");
+      setIsEditing(false);
+      setFormData(INITIAL_FORM);
+      buscar();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDelete = async (email: string) => {
+    if (!confirm("¿Eliminar residente?")) return;
+
+    try {
+      await fetch(`${API}/student?email=${email}`, {
+        method: "DELETE"
+      });
+
+      alert("Eliminado");
+      buscar();
+      setSelected(null);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleEdit = (student: any) => {
+    setIsEditing(true);
+    setFormData({
+      ...INITIAL_FORM,
+      ...student
+    });
+    setSelected(null);
+  };
+
   return (
     <div className="admin-container">
 
-      {}
       <button className="admin-logout-btn" onClick={handleLogout}>
         Cerrar sesión
       </button>
 
       <h1>Panel Administrador</h1>
 
-      {}
       <div className="search-box center">
         <input
           type="text"
@@ -44,11 +132,44 @@ const AdminPanel = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-
         <button onClick={buscar}>Buscar</button>
       </div>
 
-      {}
+      <div className="admin-form">
+        <h2>{isEditing ? "Actualizar Residente" : "Crear Residente"}</h2>
+
+        <div className="form-grid">
+
+          <input name="nombre" placeholder="Nombre" value={formData.nombre} onChange={handleChange} />
+          <input name="apellidoPaterno" placeholder="Apellido Paterno" value={formData.apellidoPaterno} onChange={handleChange} />
+          <input name="apellidoMaterno" placeholder="Apellido Materno" value={formData.apellidoMaterno} onChange={handleChange} />
+          <input name="telefono" placeholder="Teléfono" value={formData.telefono} onChange={handleChange} />
+          <input name="numControl" placeholder="No. Control" value={formData.numControl} onChange={handleChange} />
+          <input name="numProyecto" placeholder="Proyecto" value={formData.numProyecto} onChange={handleChange} />
+          <input name="periodo" placeholder="Periodo" value={formData.periodo} onChange={handleChange} />
+          <input name="genero" placeholder="Genero" value={formData.genero} onChange={handleChange} />
+
+          <input name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
+
+          {!isEditing && (
+            <input
+              name="password"
+              type="password"
+              placeholder="Contraseña"
+              value={formData.password}
+              onChange={handleChange}
+            />
+          )}
+
+        </div>
+
+        {isEditing ? (
+          <button onClick={handleUpdate}>Actualizar</button>
+        ) : (
+          <button onClick={handleCreate}>Crear</button>
+        )}
+      </div>
+
       <div className="results">
         {students.map((s, i) => {
 
@@ -62,12 +183,19 @@ const AdminPanel = () => {
               <button onClick={() => setSelected(s)}>
                 Ver expediente
               </button>
+
+              <button onClick={() => handleEdit(s)}>
+                Editar
+              </button>
+
+              <button onClick={() => handleDelete(s.email)}>
+                Eliminar
+              </button>
             </div>
           );
         })}
       </div>
 
-      {}
       {selected && (
         <div className="admin-student-info">
 
