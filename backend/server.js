@@ -342,33 +342,37 @@ app.post(
         );
 
       const driveFile =
-  await drive.files.create({
+        await drive.files.create({
 
-    requestBody: {
-      name: req.file.originalname,
-      parents: [userFolder]
-    },
+          requestBody: {
+            name: req.file.originalname,
+            parents: [userFolder]
+          },
 
-    media: {
-      mimeType: req.file.mimetype,
-      body: fs.createReadStream(filePath)
-    },
+          media: {
+            mimeType: req.file.mimetype,
+            body: fs.createReadStream(filePath)
+          },
 
-    fields: "id"
-  });
+          fields: "id"
+        });
 
-/* ===== HACER PUBLICO ===== */
+      console.log("SUBIDO DRIVE");
 
-await drive.permissions.create({
-  fileId: driveFile.data.id,
-  requestBody: {
-    role: "reader",
-    type: "anyone"
-  }
-});
+      /* ===== HACER PUBLICO ===== */
 
-const driveLink =
-  `https://drive.google.com/file/d/${driveFile.data.id}/view`;
+      await drive.permissions.create({
+        fileId: driveFile.data.id,
+        requestBody: {
+          role: "reader",
+          type: "anyone"
+        }
+      });
+
+      console.log("PERMISOS PUBLICOS OK");
+
+      const driveLink =
+        `https://drive.google.com/file/d/${driveFile.data.id}/preview`;
 
       /* ===== BORRAR TEMP ===== */
 
@@ -379,6 +383,7 @@ const driveLink =
       if (
         !(user.documentos instanceof Map)
       ) {
+
         user.documentos =
           new Map(
             Object.entries(
