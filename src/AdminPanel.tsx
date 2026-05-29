@@ -88,6 +88,29 @@ const AdminPanel = () => {
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
+
+    if (name === "telefono") {
+      const onlyNumbers = value.replace(/\D/g, "").slice(0, 10);
+
+      setFormData((prev: any) => ({
+        ...prev,
+        telefono: onlyNumbers
+      }));
+
+      return;
+    }
+
+    if (name === "numControl") {
+      const onlyNumbers = value.replace(/\D/g, "").slice(0, 9);
+
+      setFormData((prev: any) => ({
+        ...prev,
+        numControl: onlyNumbers
+      }));
+
+      return;
+    }
+
     setFormData((prev: any) => ({
       ...prev,
       [name]: value
@@ -95,6 +118,17 @@ const AdminPanel = () => {
   };
 
   const handleCreate = async () => {
+
+    if (formData.telefono.length !== 10) {
+      alert("El teléfono debe tener 10 dígitos");
+      return;
+    }
+
+    if (formData.numControl.length !== 9) {
+      alert("El número de control debe tener 9 dígitos");
+      return;
+    }
+
     const res = await fetch(`${API}/register`, {
       method: "POST",
       headers: {
@@ -110,6 +144,17 @@ const AdminPanel = () => {
   };
 
   const handleUpdate = async () => {
+
+    if (formData.telefono.length !== 10) {
+      alert("El teléfono debe tener 10 dígitos");
+      return;
+    }
+
+    if (formData.numControl.length !== 9) {
+      alert("El número de control debe tener 9 dígitos");
+      return;
+    }
+
     const res = await fetch(`${API}/student`, {
       method: "PUT",
       headers: {
@@ -146,10 +191,12 @@ const AdminPanel = () => {
 
   const handleEdit = (student: any) => {
     setIsEditing(true);
+
     setFormData({
       ...INITIAL_FORM,
       ...student
     });
+
     setSelected(null);
   };
 
@@ -169,12 +216,15 @@ const AdminPanel = () => {
   };
 
   const handleUpload = async () => {
+
     let updatedDocs = { ...docs };
 
     for (const key of Object.keys(pdfs)) {
+
       const file = pdfs[key];
 
       const formData = new FormData();
+
       formData.append("file", file);
       formData.append("email", selected.email);
       formData.append("name", key);
@@ -188,15 +238,19 @@ const AdminPanel = () => {
       );
 
       const updatedUser = await res.json();
+
       updatedDocs = updatedUser.documentos;
     }
 
     setDocs(updatedDocs);
+
     setPdfs({});
 
     setStudents((prev) =>
       prev.map((s) =>
-        s.email === selected.email ? { ...s, documentos: updatedDocs } : s
+        s.email === selected.email
+          ? { ...s, documentos: updatedDocs }
+          : s
       )
     );
   };
@@ -204,117 +258,260 @@ const AdminPanel = () => {
   return (
     <div className="admin-container">
 
-      <button className="admin-logout-btn" onClick={handleLogout}>
+      <button
+        className="admin-logout-btn"
+        onClick={handleLogout}
+      >
         Cerrar sesión
       </button>
 
       <h1>Panel Administrador</h1>
 
       <div className="search-box center">
+
         <input
           type="text"
           placeholder="Buscar por nombre o No. Control"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button onClick={buscar}>Buscar</button>
+
+        <button onClick={buscar}>
+          Buscar
+        </button>
+
       </div>
 
       <div className="admin-form">
-        <h2>{isEditing ? "Actualizar Residente" : "Crear Residente"}</h2>
+
+        <h2>
+          {isEditing
+            ? "Actualizar Residente"
+            : "Crear Residente"}
+        </h2>
 
         <div className="form-grid">
-          <input name="nombre" placeholder="Nombre" value={formData.nombre} onChange={handleChange} />
-          <input name="apellidoPaterno" placeholder="Apellido Paterno" value={formData.apellidoPaterno} onChange={handleChange} />
-          <input name="apellidoMaterno" placeholder="Apellido Materno" value={formData.apellidoMaterno} onChange={handleChange} />
-          <input name="telefono" placeholder="Teléfono" value={formData.telefono} onChange={handleChange} />
-          <input name="numControl" placeholder="No. Control" value={formData.numControl} onChange={handleChange} />
-          <input name="numProyecto" placeholder="Proyecto" value={formData.numProyecto} onChange={handleChange} />
-          <input name="periodo" placeholder="Periodo" value={formData.periodo} onChange={handleChange} />
-          <input name="genero" placeholder="Genero" value={formData.genero} onChange={handleChange} />
-          <input name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
+
+          <input
+            name="nombre"
+            placeholder="Nombre"
+            value={formData.nombre}
+            onChange={handleChange}
+          />
+
+          <input
+            name="apellidoPaterno"
+            placeholder="Apellido Paterno"
+            value={formData.apellidoPaterno}
+            onChange={handleChange}
+          />
+
+          <input
+            name="apellidoMaterno"
+            placeholder="Apellido Materno"
+            value={formData.apellidoMaterno}
+            onChange={handleChange}
+          />
+
+          <input
+            name="telefono"
+            placeholder="Teléfono"
+            maxLength={10}
+            value={formData.telefono}
+            onChange={handleChange}
+          />
+
+          <input
+            name="numControl"
+            placeholder="No. Control"
+            maxLength={9}
+            value={formData.numControl}
+            onChange={handleChange}
+          />
+
+          <input
+            name="numProyecto"
+            placeholder="Proyecto"
+            value={formData.numProyecto}
+            onChange={handleChange}
+          />
+
+          <input
+            name="periodo"
+            placeholder="Periodo"
+            value={formData.periodo}
+            onChange={handleChange}
+          />
+
+          <input
+            name="genero"
+            placeholder="Genero"
+            value={formData.genero}
+            onChange={handleChange}
+          />
+
+          <input
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+
           {!isEditing && (
-            <input name="password" type="password" placeholder="Contraseña" value={formData.password} onChange={handleChange} />
+            <input
+              name="password"
+              type="password"
+              placeholder="Contraseña"
+              value={formData.password}
+              onChange={handleChange}
+            />
           )}
+
         </div>
 
         {isEditing ? (
-          <button onClick={handleUpdate}>Actualizar</button>
+          <button onClick={handleUpdate}>
+            Actualizar
+          </button>
         ) : (
-          <button onClick={handleCreate}>Crear</button>
+          <button onClick={handleCreate}>
+            Crear
+          </button>
         )}
+
       </div>
 
       <div className="results">
+
         {students.map((s, i) => {
-          const fullName = `${s.nombre || ""} ${s.apellidoPaterno || ""} ${s.apellidoMaterno || ""}`;
+
+          const fullName =
+            `${s.nombre || ""} ${s.apellidoPaterno || ""} ${s.apellidoMaterno || ""}`;
 
           return (
-            <div key={i} className="admin-student-card">
-              <p><b>{fullName}</b></p>
-              <p>No. Control: {s.numControl || "N/A"}</p>
+            <div
+              key={i}
+              className="admin-student-card"
+            >
 
-              <button onClick={() => handleSelect(s)}>Ver expediente</button>
-              <button onClick={() => handleEdit(s)}>Editar</button>
-              <button onClick={() => handleDelete(s.email)}>Eliminar</button>
+              <p>
+                <b>{fullName}</b>
+              </p>
+
+              <p>
+                No. Control: {s.numControl || "N/A"}
+              </p>
+
+              <button onClick={() => handleSelect(s)}>
+                Ver expediente
+              </button>
+
+              <button onClick={() => handleEdit(s)}>
+                Editar
+              </button>
+
+              <button onClick={() => handleDelete(s.email)}>
+                Eliminar
+              </button>
+
             </div>
           );
         })}
+
       </div>
 
       {selected && (
+
         <div className="admin-student-info">
 
           <h2>
-            {selected.nombre} {selected.apellidoPaterno} {selected.apellidoMaterno}
+            {selected.nombre}
+            {" "}
+            {selected.apellidoPaterno}
+            {" "}
+            {selected.apellidoMaterno}
           </h2>
 
-          <p><b>Email:</b> {selected.email}</p>
-          <p><b>No. Control:</b> {selected.numControl}</p>
+          <p>
+            <b>Email:</b>
+            {" "}
+            {selected.email}
+          </p>
+
+          <p>
+            <b>No. Control:</b>
+            {" "}
+            {selected.numControl}
+          </p>
 
           {sections.map((section, i) => (
+
             <div key={i} className="accordion">
 
-              <div className="accordion-header" onClick={() => toggleSection(i)}>
+              <div
+                className="accordion-header"
+                onClick={() => toggleSection(i)}
+              >
                 <span>{section.title}</span>
               </div>
 
               {openSection === i && (
+
                 <div className="accordion-content">
+
                   {section.items.map((item, j) => {
-                    const key = normalizeKey(`${section.title}-${item}`);
+
+                    const key =
+                      normalizeKey(`${section.title}-${item}`);
+
                     const uploaded = docs[key];
 
                     return (
+
                       <div key={j} className="file-item">
 
                         <label>
                           {item}
-                          {uploaded && <span className="uploaded"> ✔</span>}
+                          {uploaded && (
+                            <span className="uploaded">
+                              {" "}✔
+                            </span>
+                          )}
                         </label>
 
                         <input
                           type="file"
                           accept="application/pdf"
                           onChange={(e) =>
-                            handleFileChange(key, e.target.files?.[0] || null)
+                            handleFileChange(
+                              key,
+                              e.target.files?.[0] || null
+                            )
                           }
                         />
 
                         {uploaded && (
-                          <iframe src={uploaded} width="100%" height="300px" />
+                          <iframe
+                            src={uploaded}
+                            width="100%"
+                            height="300px"
+                          />
                         )}
 
                       </div>
                     );
                   })}
+
                 </div>
               )}
 
             </div>
           ))}
 
-          <button className="upload-btn" onClick={handleUpload}>
+          <button
+            className="upload-btn"
+            onClick={handleUpload}
+          >
             Subir PDFs
           </button>
 
