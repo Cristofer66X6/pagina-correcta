@@ -3,27 +3,20 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
-/* CONTENEDOR PRINCIPAL */
 .admin-container {
   min-height: 100vh;
   padding: 40px 30px;
   text-align: center;
 
-  /* FONDO CLARO */
-  background:
-    linear-gradient(
-      rgba(255,255,255,0.15),
-      rgba(255,255,255,0.15)
-    ),
-    url("./imagenes/fondo1.jpg");
+  background: #ffffff;
 
+  background-image: url("./imagenes/fondo1.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
 
-/* TITULO */
 .admin-container h1 {
   color: white;
   margin-bottom: 25px;
@@ -33,10 +26,6 @@
     0 3px 10px rgba(0,0,0,0.7);
 }
 
-/* =========================
-   FORMULARIO ADMIN
-========================= */
-
 .admin-form {
   max-width: 1100px;
   margin: 0 auto 40px auto;
@@ -45,11 +34,11 @@
 
   border-radius: 25px;
 
-  background: rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.10);
 
   backdrop-filter: blur(18px);
 
-  border: 1px solid rgba(255,255,255,0.25);
+  border: 1px solid rgba(255,255,255,0.20);
 
   box-shadow:
     0 20px 50px rgba(0,0,0,0.45);
@@ -79,7 +68,7 @@
   border-radius: 14px;
   border: none;
 
-  background: rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.15);
 
   color: white;
   font-size: 15px;
@@ -96,7 +85,7 @@
 }
 
 .form-grid input:focus {
-  background: rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.22);
 
   box-shadow:
     0 0 0 2px rgba(255,255,255,0.3);
@@ -130,10 +119,6 @@
     linear-gradient(145deg, #25d5ff, #008cff);
 }
 
-/* =========================
-   BUSCADOR
-========================= */
-
 .search-box.center {
   display: flex;
   justify-content: center;
@@ -151,7 +136,7 @@
   border-radius: 14px;
   border: none;
 
-  background: rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.15);
 
   color: white;
   font-size: 15px;
@@ -168,7 +153,7 @@
 }
 
 .search-box input:focus {
-  background: rgba(255,255,255,0.24);
+  background: rgba(255,255,255,0.22);
 
   box-shadow:
     0 0 0 2px rgba(255,255,255,0.25);
@@ -203,10 +188,6 @@
     linear-gradient(145deg, #3d82ff, #2a6cff);
 }
 
-/* =========================
-   RESULTADOS
-========================= */
-
 .results {
   display: flex;
   flex-wrap: wrap;
@@ -216,7 +197,6 @@
   gap: 25px;
 }
 
-/* TARJETAS */
 .admin-student-card {
   width: 245px;
 
@@ -224,11 +204,11 @@
 
   border-radius: 24px;
 
-  background: rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.10);
 
   backdrop-filter: blur(18px);
 
-  border: 1px solid rgba(255,255,255,0.22);
+  border: 1px solid rgba(255,255,255,0.20);
 
   color: white;
 
@@ -243,7 +223,7 @@
     translateY(-6px)
     scale(1.02);
 
-  background: rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.15);
 }
 
 .admin-student-card h3 {
@@ -254,7 +234,6 @@
   margin: 5px 0;
 }
 
-/* BOTONES TARJETA */
 .admin-student-card button {
   width: 100%;
 
@@ -273,19 +252,16 @@
   transition: 0.25s;
 }
 
-/* VER */
 .admin-student-card button:nth-child(3) {
   background:
     linear-gradient(145deg, #2a6cff, #1e3c72);
 }
 
-/* EDITAR */
 .admin-student-card button:nth-child(4) {
   background:
     linear-gradient(145deg, #ffb703, #fb8500);
 }
 
-/* ELIMINAR */
 .admin-student-card button:nth-child(5) {
   background:
     linear-gradient(145deg, #c1121f, #780000);
@@ -294,10 +270,6 @@
 .admin-student-card button:hover {
   transform: translateY(-2px);
 }
-
-/* =========================
-   DETALLE ESTUDIANTE
-========================= */
 
 .admin-student-info {
   margin-top: 45px;
@@ -308,11 +280,11 @@
 
   border-radius: 25px;
 
-  background: rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.10);
 
   backdrop-filter: blur(18px);
 
-  border: 1px solid rgba(255,255,255,0.22);
+  border: 1px solid rgba(255,255,255,0.20);
 
   color: white;
 
@@ -338,7 +310,6 @@
   margin-bottom: 12px;
 }
 
-/* ARCHIVOS */
 .admin-file {
   margin-bottom: 25px;
 
@@ -346,7 +317,7 @@
 
   border-radius: 16px;
 
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.08);
 
   border: 1px solid rgba(255,255,255,0.15);
 }
@@ -365,15 +336,10 @@
   border-radius: 12px;
 }
 
-/* FALTANTE */
 .missing {
   color: #ff4d4d;
   font-weight: bold;
 }
-
-/* =========================
-   BOTON LOGOUT
-========================= */
 
 .admin-logout-btn {
   position: fixed;
@@ -415,10 +381,6 @@
   background:
     linear-gradient(145deg, #a30000, #ff2e2e);
 }
-
-/* =========================
-   RESPONSIVE
-========================= */
 
 @media (max-width: 768px) {
 
